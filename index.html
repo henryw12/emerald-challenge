@@ -4,16 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sam's Emerald Challenge</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏆</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #040907;
-      --card-bg: rgba(9, 23, 19, 0.85);
+      --card-bg: rgba(9, 23, 19, 0.88);
       --card-border: rgba(16, 185, 129, 0.28);
       --emerald: #10b981;
       --emerald-glow: #34d399;
+      --gold: #fbbf24;
       --win: #38bdf8;
       --loss: #f43f5e;
       --text: #f0fdf4;
@@ -27,29 +29,18 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      background: radial-gradient(circle at 50% 12%, #0e3729 0%, var(--bg) 80%);
+      background: radial-gradient(circle at 50% 10%, #0e3729 0%, var(--bg) 85%);
       color: var(--text);
       font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-      padding: 2.5rem 1.25rem;
-      text-align: center;
+      padding: 2.5rem 1.5rem;
     }
 
-    /* Base Container (Pre-October: Centered Single Column) */
-    .container {
-      max-width: 780px;
+    /* Fixed 3-Column Dashboard */
+    .dashboard-container {
+      max-width: 1420px;
       width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1.5rem;
-      transition: max-width 0.4s ease;
-    }
-
-    /* Dynamic October 3-Column Grid */
-    .container.challenge-active {
-      max-width: 1400px;
       display: grid;
-      grid-template-columns: 290px 1fr 300px;
+      grid-template-columns: 290px 1fr 310px;
       grid-template-areas:
         "header header header"
         "left   center right";
@@ -57,6 +48,7 @@
       align-items: start;
     }
 
+    /* Top Banner Header */
     .header-zone {
       grid-area: header;
       display: flex;
@@ -64,33 +56,8 @@
       align-items: center;
       gap: 0.6rem;
       width: 100%;
-    }
-
-    .left-zone {
-      grid-area: left;
-      display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
-      position: sticky;
-      top: 2rem;
-    }
-
-    .center-zone {
-      grid-area: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1.5rem;
-      width: 100%;
-    }
-
-    .right-zone {
-      grid-area: right;
-      display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
-      position: sticky;
-      top: 2rem;
+      text-align: center;
+      margin-bottom: 0.5rem;
     }
 
     .trophy-badge {
@@ -111,7 +78,7 @@
 
     h1 {
       font-family: 'Cinzel', serif;
-      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      font-size: clamp(2.3rem, 5vw, 3.6rem);
       font-weight: 900;
       letter-spacing: 0.04em;
       background: linear-gradient(135deg, #d1fae5 0%, #34d399 45%, #10b981 100%);
@@ -122,12 +89,134 @@
 
     .subtitle {
       color: #94a3b8;
-      font-size: 1.05rem;
+      font-size: 1.1rem;
     }
 
+    /* Left Zone (Static Countdown) */
+    .left-zone {
+      grid-area: left;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    /* Center Zone (Profile, Huge Crest, Analytics) */
+    .center-zone {
+      grid-area: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.6rem;
+      width: 100%;
+    }
+
+    /* Right Zone (Vertical Progress Pathway) */
+    .right-zone {
+      grid-area: right;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    /* Sidebar Cards */
+    .sidebar-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(14px);
+      border-radius: 20px;
+      padding: 1.6rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .status-banner {
+      font-size: 0.95rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--emerald-glow);
+      text-align: center;
+    }
+
+    .countdown-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.85rem;
+      width: 100%;
+    }
+
+    .timer-card {
+      background: rgba(13, 31, 26, 0.9);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(12px);
+      padding: 1.25rem 0.5rem;
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    }
+
+    .timer-card .number {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      font-weight: 900;
+      color: #ffffff;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .timer-card .label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--subtext);
+      margin-top: 0.4rem;
+      font-weight: 700;
+    }
+
+    .month-bar-wrap {
+      text-align: left;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .month-bar-label {
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #94a3b8;
+    }
+
+    .horizontal-bar-box {
+      width: 100%;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .horizontal-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #10b981, #34d399);
+      transition: width 0.5s ease;
+      box-shadow: 0 0 10px var(--emerald);
+    }
+
+    .month-pct-text {
+      font-size: 0.82rem;
+      color: #94a3b8;
+    }
+
+    /* Sam's Image */
     .image-container {
-      width: 200px;
-      height: 200px;
+      width: 195px;
+      height: 195px;
       border-radius: 26px;
       padding: 5px;
       background: linear-gradient(145deg, var(--emerald-glow), #065f46, rgba(255, 255, 255, 0.15));
@@ -143,17 +232,17 @@
       display: block;
     }
 
-    /* Player Profile Card */
+    /* Center Player Card */
     .player-card {
       width: 100%;
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       backdrop-filter: blur(14px);
       border-radius: 22px;
-      padding: 1.8rem;
+      padding: 2rem;
       display: flex;
       flex-direction: column;
-      gap: 1.5rem;
+      gap: 1.6rem;
       box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
     }
 
@@ -169,7 +258,7 @@
 
     .player-id {
       font-weight: 900;
-      font-size: 1.3rem;
+      font-size: 1.35rem;
       color: #ffffff;
     }
 
@@ -194,59 +283,60 @@
     }
     .opgg-link:hover { opacity: 0.88; transform: translateY(-1px); }
 
-    /* Rank Showcase */
+    /* LARGE, PROPERLY-ALIGNED RANK CREST DISPLAY */
     .rank-showcase {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 2rem;
-      background: radial-gradient(circle at center, rgba(16, 185, 129, 0.15) 0%, rgba(0, 0, 0, 0.4) 100%);
-      padding: 1.8rem 1.4rem;
-      border-radius: 20px;
-      border: 1px solid rgba(16, 185, 129, 0.3);
+      gap: 2.5rem;
+      background: radial-gradient(circle at center, rgba(16, 185, 129, 0.16) 0%, rgba(0, 0, 0, 0.5) 100%);
+      padding: 2.2rem 1.8rem;
+      border-radius: 22px;
+      border: 1px solid rgba(16, 185, 129, 0.35);
     }
 
     .emblem-wrapper {
       position: relative;
-      width: 160px;
-      height: 160px;
+      width: 220px;
+      height: 220px;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
     }
 
+    /* Official Current League Emblem */
     .emblem-img {
       width: 100%;
       height: 100%;
       object-fit: contain;
-      filter: drop-shadow(0 0 35px rgba(245, 158, 11, 0.5));
-      animation: gentle-float 4s ease-in-out infinite alternate;
+      filter: drop-shadow(0 0 40px rgba(245, 158, 11, 0.6));
+      animation: gentle-glow 4s ease-in-out infinite alternate;
     }
 
-    @keyframes gentle-float {
-      from { transform: translateY(0px) scale(1); }
-      to { transform: translateY(-5px) scale(1.02); }
+    @keyframes gentle-glow {
+      from { transform: scale(1); filter: drop-shadow(0 0 25px rgba(245, 158, 11, 0.45)); }
+      to { transform: scale(1.03); filter: drop-shadow(0 0 45px rgba(16, 185, 129, 0.65)); }
     }
 
     .rank-text-block {
       text-align: left;
       display: flex;
       flex-direction: column;
-      gap: 0.4rem;
+      gap: 0.45rem;
     }
 
     .rank-tier-title {
       font-family: 'Cinzel', serif;
       font-weight: 900;
-      font-size: 2.3rem;
+      font-size: 2.6rem;
       color: #fcd34d;
       letter-spacing: 0.04em;
       line-height: 1;
     }
 
     .rank-lp-text {
-      font-size: 1.25rem;
+      font-size: 1.35rem;
       color: #f1f5f9;
       font-weight: 800;
     }
@@ -254,7 +344,7 @@
     .rank-stats-pill {
       display: inline-flex;
       gap: 0.6rem;
-      font-size: 0.95rem;
+      font-size: 1rem;
       color: #cbd5e1;
       font-weight: 700;
     }
@@ -266,7 +356,7 @@
     .overall-analysis-card {
       background: rgba(0, 0, 0, 0.4);
       border-left: 4px solid var(--emerald-glow);
-      padding: 1.25rem 1.4rem;
+      padding: 1.3rem 1.4rem;
       border-radius: 12px;
       text-align: left;
       display: flex;
@@ -281,7 +371,7 @@
     }
 
     .analysis-label {
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.09em;
@@ -304,7 +394,7 @@
       color: #e2e8f0;
     }
 
-    /* Matches Section */
+    /* Recent Matches Section */
     .matches-section { text-align: left; }
     .section-title {
       font-size: 0.88rem;
@@ -321,7 +411,7 @@
     .matches-list {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 1.1rem;
     }
 
     .match-card {
@@ -407,230 +497,152 @@
     }
     .match-roast strong { color: var(--emerald-glow); font-weight: 700; }
 
-    /* Voting Card */
-    .voting-card {
-      width: 100%;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      backdrop-filter: blur(14px);
-      border-radius: 22px;
-      padding: 1.6rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.15rem;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
-    }
-
-    .voting-title { font-weight: 800; font-size: 1.3rem; color: #ffffff; }
-    .voting-subtitle { font-size: 0.88rem; color: #94a3b8; margin-top: -0.65rem; }
-
-    .vote-buttons-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    .vote-btn {
-      padding: 0.95rem 1rem;
-      border-radius: 12px;
-      border: none;
-      font-family: inherit;
-      font-size: 0.95rem;
+    /* RIGHT SIDEBAR: VERTICAL PROGRESS LINE & RANK STEPS */
+    .progress-header {
+      font-size: 0.9rem;
       font-weight: 800;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      transition: transform 0.15s, opacity 0.2s, box-shadow 0.2s;
-    }
-    .vote-btn:active { transform: scale(0.97); }
-
-    .btn-yes { background: linear-gradient(135deg, #10b981, #059669); color: #ffffff; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
-    .btn-yes:hover { opacity: 0.92; box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45); }
-    .btn-no { background: linear-gradient(135deg, #f43f5e, #be123c); color: #ffffff; box-shadow: 0 4px 15px rgba(244, 63, 94, 0.3); }
-    .btn-no:hover { opacity: 0.92; box-shadow: 0 6px 20px rgba(244, 63, 94, 0.45); }
-
-    .vote-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
-
-    .poll-bar-container {
-      width: 100%;
-      height: 24px;
-      background: #be123c;
-      border-radius: 9999px;
-      overflow: hidden;
-      display: flex;
-      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.5);
-    }
-
-    .poll-yes-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #10b981, #34d399);
-      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-      width: 50%;
-    }
-
-    .poll-stats { display: flex; justify-content: space-between; font-size: 0.9rem; font-weight: 700; }
-    .poll-stats .yes-label { color: var(--emerald-glow); }
-    .poll-stats .no-label { color: var(--loss); }
-    .voted-msg { font-size: 0.85rem; color: #a7f3d0; font-weight: 600; }
-
-    /* LEFT SIDEBAR: COUNTDOWN */
-    .sidebar-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      backdrop-filter: blur(14px);
-      border-radius: 20px;
-      padding: 1.5rem 1.25rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.15rem;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
-    }
-
-    .status-banner {
-      font-size: 1rem;
-      font-weight: 800;
-      letter-spacing: 0.08em;
       text-transform: uppercase;
+      letter-spacing: 0.09em;
       color: var(--emerald-glow);
-    }
-
-    /* Timer Grid */
-    .countdown-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0.75rem;
-      width: 100%;
-    }
-
-    /* Stack to 2 columns in sidebars */
-    .container.challenge-active .countdown-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    .card {
-      background: rgba(13, 31, 26, 0.9);
-      border: 1px solid var(--card-border);
-      backdrop-filter: blur(12px);
-      padding: 1.15rem 0.5rem;
-      border-radius: 14px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-    }
-
-    .number {
-      font-size: clamp(1.8rem, 3vw, 2.5rem);
-      font-weight: 900;
-      color: #ffffff;
-      line-height: 1;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .label {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--subtext);
-      margin-top: 0.4rem;
-      font-weight: 700;
-    }
-
-    /* RIGHT SIDEBAR: PROGRESS & LP TRACKER */
-    .progress-section {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
       text-align: left;
     }
 
-    .progress-title {
-      font-size: 0.85rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--emerald-glow);
-    }
-
-    .progress-bar-container {
-      width: 100%;
-      background: rgba(255, 255, 255, 0.08);
-      height: 14px;
-      border-radius: 9999px;
-      overflow: hidden;
-      margin-top: 0.35rem;
-    }
-
-    .progress-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #10b981, #34d399);
-      transition: width 0.5s ease;
-      box-shadow: 0 0 14px var(--emerald);
-    }
-
-    .progress-text {
-      font-size: 0.85rem;
-      color: #94a3b8;
-      margin-top: 0.3rem;
-    }
-
-    /* Rank Climb Tracker */
-    .climb-track {
+    .vertical-stepper {
+      position: relative;
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
-      margin-top: 0.5rem;
+      gap: 1.15rem;
+      padding: 0.5rem 0 0.5rem 0.5rem;
+      text-align: left;
     }
 
-    .track-step {
+    /* The Continuous Vertical Background Line */
+    .vertical-stepper::before {
+      content: "";
+      position: absolute;
+      top: 14px;
+      bottom: 14px;
+      left: 17px;
+      width: 3px;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 9999px;
+      z-index: 1;
+    }
+
+    /* The Active Illuminated Progress Overlay Line */
+    .vertical-active-line {
+      position: absolute;
+      bottom: 14px; /* fills upward from bottom */
+      left: 17px;
+      width: 3px;
+      height: 35%;
+      background: linear-gradient(to top, #f59e0b, #10b981, #34d399);
+      border-radius: 9999px;
+      box-shadow: 0 0 12px var(--emerald);
+      z-index: 2;
+      transition: height 0.6s ease;
+    }
+
+    .step-item {
+      position: relative;
       display: flex;
       align-items: center;
-      gap: 0.65rem;
-      font-size: 0.82rem;
-      color: #94a3b8;
-      font-weight: 600;
+      gap: 0.85rem;
+      z-index: 3;
+      transition: transform 0.2s;
     }
 
-    .track-dot {
-      width: 10px;
-      height: 10px;
+    .step-node {
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.2);
+      background: #061511;
+      border: 3px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.3s;
     }
 
-    .track-step.done { color: #fcd34d; font-weight: 700; }
-    .track-step.done .track-dot { background: #fcd34d; box-shadow: 0 0 8px #fcd34d; }
+    .step-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #64748b;
+      display: flex;
+      flex-direction: column;
+    }
 
-    .track-step.current { color: var(--emerald-glow); font-weight: 800; }
-    .track-step.current .track-dot { background: var(--emerald-glow); box-shadow: 0 0 10px var(--emerald-glow); }
+    .step-label span {
+      font-size: 0.72rem;
+      color: #94a3b8;
+      font-weight: 500;
+    }
 
-    .track-step.goal { color: #34d399; font-weight: 900; }
-    .track-step.goal .track-dot { background: #34d399; }
+    /* Passed/Conquered Ranks */
+    .step-item.passed .step-node {
+      border-color: #f59e0b;
+      background: #f59e0b;
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+    }
+    .step-item.passed .step-label { color: #f1f5f9; }
 
-    /* Responsive fallbacks */
-    @media (max-width: 1080px) {
-      .container.challenge-active {
+    /* Current Active Rank */
+    .step-item.active {
+      transform: translateX(4px);
+    }
+    .step-item.active .step-node {
+      border-color: var(--emerald-glow);
+      background: #10b981;
+      box-shadow: 0 0 15px var(--emerald);
+      animation: pulse-node 1.8s infinite alternate;
+    }
+    @keyframes pulse-node {
+      from { box-shadow: 0 0 8px var(--emerald); }
+      to { box-shadow: 0 0 20px var(--emerald-glow); }
+    }
+    .step-item.active .step-label {
+      color: var(--emerald-glow);
+      font-weight: 900;
+      font-size: 0.92rem;
+    }
+
+    /* Ultimate Goal (Emerald IV) */
+    .step-item.goal-step .step-node {
+      border-color: #34d399;
+    }
+    .step-item.goal-step.active .step-node,
+    .step-item.goal-step.passed .step-node {
+      background: #34d399;
+      box-shadow: 0 0 18px #34d399;
+    }
+    .step-item.goal-step .step-label {
+      color: #34d399;
+      font-weight: 800;
+    }
+
+    /* Responsive Breakpoints */
+    @media (max-width: 1100px) {
+      .dashboard-container {
         display: flex;
         flex-direction: column;
         max-width: 780px;
       }
-      .left-zone, .right-zone {
-        position: static;
-        width: 100%;
-      }
-      .container.challenge-active .countdown-grid {
-        grid-template-columns: repeat(4, 1fr);
-      }
+      .left-zone, .right-zone { width: 100%; }
+      .countdown-grid { grid-template-columns: repeat(4, 1fr); }
     }
 
     @media (max-width: 600px) {
-      .rank-showcase { flex-direction: column; text-align: center; gap: 1.25rem; }
+      .rank-showcase { flex-direction: column; text-align: center; gap: 1.5rem; }
       .rank-text-block { text-align: center; align-items: center; }
-      .countdown-grid, .container.challenge-active .countdown-grid { grid-template-columns: repeat(2, 1fr); }
+      .countdown-grid { grid-template-columns: repeat(2, 1fr); }
+      .emblem-wrapper { width: 180px; height: 180px; }
     }
   </style>
 </head>
 <body>
 
-  <div class="container" id="main-container">
+  <div class="dashboard-container">
 
     <!-- TOP HEADER -->
     <header class="header-zone">
@@ -639,38 +651,45 @@
       <p class="subtitle">October 1 – October 31</p>
     </header>
 
-    <!-- LEFT ZONE: LIVE COUNTDOWN SIDEBAR -->
+    <!-- LEFT ZONE: PERMANENT LIVE COUNTDOWN SIDEBAR -->
     <aside class="left-zone">
       <div class="sidebar-card">
-        <div class="status-banner" id="status-banner">Loading...</div>
+        <div class="status-banner" id="status-banner">Time Remaining in Challenge</div>
         <div class="countdown-grid" id="timer">
-          <div class="card">
+          <div class="timer-card">
             <span class="number" id="days">00</span>
             <span class="label">Days</span>
           </div>
-          <div class="card">
+          <div class="timer-card">
             <span class="number" id="hours">00</span>
             <span class="label">Hours</span>
           </div>
-          <div class="card">
+          <div class="timer-card">
             <span class="number" id="minutes">00</span>
             <span class="label">Minutes</span>
           </div>
-          <div class="card">
+          <div class="timer-card">
             <span class="number" id="seconds">00</span>
             <span class="label">Seconds</span>
           </div>
         </div>
+
+        <div class="month-bar-wrap">
+          <span class="month-bar-label">Month Elapsed</span>
+          <div class="horizontal-bar-box">
+            <div class="horizontal-bar-fill" id="month-fill"></div>
+          </div>
+          <span class="month-pct-text" id="month-text">0.0% Complete</span>
+        </div>
       </div>
     </aside>
 
-    <!-- CENTER ZONE: PHOTO, RANK SHOWCASE, RECENT GAMES & POLL -->
+    <!-- CENTER ZONE: PHOTO, LARGE CURRENT EMBLEM, PER-GAME ROASTS & MACRO ANALYSIS -->
     <main class="center-zone">
       <div class="image-container">
         <img src="sam.jpg" alt="Sam with Emerald Trophy" />
       </div>
 
-      <!-- Live Player Card -->
       <div class="player-card">
         <div class="player-header">
           <div class="player-id">BRODOODOOFART<span>#1738</span> (NA)</div>
@@ -679,10 +698,10 @@
           </a>
         </div>
 
-        <!-- Huge Rank Crest Showcase -->
+        <!-- LARGE, CENTERED CURRENT RANK EMBLEM -->
         <div class="rank-showcase">
           <div class="emblem-wrapper">
-            <img id="rank-emblem" class="emblem-img" src="https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/wings/wings_gold.png" alt="Rank Crest" />
+            <img id="rank-emblem" class="emblem-img" src="https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-gold.png" alt="League Ranked Emblem" />
           </div>
           <div class="rank-text-block">
             <div class="rank-tier-title" id="current-tier">GOLD II</div>
@@ -704,7 +723,7 @@
           </p>
         </div>
 
-        <!-- Recent Match Breakdowns & Build Roasts -->
+        <!-- Recent Matches & Item Build Roasts -->
         <div class="matches-section">
           <div class="section-title">
             <span>Recent Match Breakdowns & Build Roasts</span>
@@ -715,67 +734,62 @@
           </div>
         </div>
       </div>
-
-      <!-- Community Voting Card -->
-      <div class="voting-card">
-        <div class="voting-title">Will Sam Hit Emerald by October 31?</div>
-        <div class="voting-subtitle">Cast your verdict (1 vote per device)</div>
-
-        <div class="vote-buttons-row">
-          <button class="vote-btn btn-yes" id="btn-vote-yes" onclick="castVote('yes')">
-            🟢 Yes, He Claims It
-          </button>
-          <button class="vote-btn btn-no" id="btn-vote-no" onclick="castVote('no')">
-            🔴 No, Gold Hardstuck
-          </button>
-        </div>
-
-        <div class="poll-bar-container">
-          <div class="poll-yes-fill" id="poll-yes-bar" style="width: 50%;"></div>
-        </div>
-
-        <div class="poll-stats">
-          <span class="yes-label" id="yes-stats-text">Yes: 0 votes (50%)</span>
-          <span class="no-label" id="no-stats-text">No: 0 votes (50%)</span>
-        </div>
-
-        <div class="voted-msg" id="voted-status-msg" style="display:none;">
-          ✓ Your vote is locked in on this device!
-        </div>
-      </div>
     </main>
 
-    <!-- RIGHT ZONE: MONTH & RANK PROGRESS SIDEBAR -->
+    <!-- RIGHT ZONE: VERTICAL RANK PROGRESS PATHWAY -->
     <aside class="right-zone">
       <div class="sidebar-card">
-        <!-- Month Time Progress -->
-        <div class="progress-section">
-          <div class="progress-title">October Month Progress</div>
-          <div class="progress-bar-container">
-            <div class="progress-fill" id="progress-fill"></div>
-          </div>
-          <div class="progress-text" id="progress-text">Challenge Progress: 0%</div>
-        </div>
+        <div class="progress-header">Vertical Rank Pathway</div>
 
-        <!-- Rank Milestone Climb Tracker -->
-        <div class="progress-section" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.25rem;">
-          <div class="progress-title">Climb Pathway</div>
-          <div class="climb-track">
-            <div class="track-step done">
-              <span class="track-dot"></span> Gold II (Current: 87 LP)
-            </div>
-            <div class="track-step current">
-              <span class="track-dot"></span> Gold I (Promotion Target)
-            </div>
-            <div class="track-step">
-              <span class="track-dot"></span> Platinum IV
-            </div>
-            <div class="track-step">
-              <span class="track-dot"></span> Platinum I
-            </div>
-            <div class="track-step goal">
-              <span class="track-dot"></span> Emerald IV (🏆 TROPHY UNLOCKED)
-            </div>
+        <div class="vertical-stepper" id="stepper">
+          <div class="vertical-active-line" id="active-line"></div>
+
+          <!-- Emerald (Goal) -->
+          <div class="step-item goal-step" data-rank="emerald-4">
+            <div class="step-node"></div>
+            <div class="step-label">Emerald IV <span>🏆 Trophy Claimed</span></div>
+          </div>
+
+          <!-- Platinum -->
+          <div class="step-item" data-rank="platinum-1">
+            <div class="step-node"></div>
+            <div class="step-label">Platinum I <span>Border to Emerald</span></div>
+          </div>
+          <div class="step-item" data-rank="platinum-2">
+            <div class="step-node"></div>
+            <div class="step-label">Platinum II <span>Upper Platinum</span></div>
+          </div>
+          <div class="step-item" data-rank="platinum-3">
+            <div class="step-node"></div>
+            <div class="step-label">Platinum III <span>Mid Platinum</span></div>
+          </div>
+          <div class="step-item" data-rank="platinum-4">
+            <div class="step-node"></div>
+            <div class="step-label">Platinum IV <span>Escaped Gold</span></div>
+          </div>
+
+          <!-- Gold -->
+          <div class="step-item" data-rank="gold-1">
+            <div class="step-node"></div>
+            <div class="step-label">Gold I <span>Promotion Doorway</span></div>
+          </div>
+          <div class="step-item active" data-rank="gold-2">
+            <div class="step-node"></div>
+            <div class="step-label">Gold II <span id="current-step-lp">Current • 87 LP</span></div>
+          </div>
+          <div class="step-item passed" data-rank="gold-3">
+            <div class="step-node"></div>
+            <div class="step-label">Gold III <span>Passed</span></div>
+          </div>
+          <div class="step-item passed" data-rank="gold-4">
+            <div class="step-node"></div>
+            <div class="step-label">Gold IV <span>Passed</span></div>
+          </div>
+
+          <!-- Demotion Warning / Danger Zone -->
+          <div class="step-item passed" data-rank="silver-1">
+            <div class="step-node"></div>
+            <div class="step-label">Silver I <span>Demotion Danger</span></div>
           </div>
         </div>
       </div>
@@ -784,10 +798,10 @@
   </div>
 
   <script>
-    const WORKER_URL = "https://sam-rank-tracker.hwong951.workers.dev";
+    const BASE_WORKER_URL = "https://sam-rank-tracker.hwong951.workers.dev";
     const DDRAGON_VER = "14.19.1";
 
-    // Item roast analyzer
+    // Build Roast Analyzer
     function analyzeItemBuild(champ, items, win, kills, deaths) {
       const activeItems = (items || []).filter(id => id > 0);
       if (activeItems.length === 0) return "Did not manage to purchase any legendary items. Economy was completely starved.";
@@ -803,7 +817,7 @@
       }
     }
 
-    // Per-game tactical breakdown
+    // Per-Game Tactical Breakdown
     function analyzeGamePerformance(m) {
       const kdaRatio = m.deaths === 0 ? (m.kills + m.assists) : ((m.kills + m.assists) / m.deaths).toFixed(1);
       const csPerMin = m.durationMin > 0 ? (m.cs / m.durationMin).toFixed(1) : 0;
@@ -819,18 +833,15 @@
       }
     }
 
-    // Macro overall calculation
+    // Overall Macro Probability Calculation
     function generateOverallForecast(tier, lp, winrateNum) {
       let probability = 50;
       let text = "";
 
-      if (tier === 'gold') {
-        probability = lp > 70 ? 62 : 48;
-      } else if (tier === 'platinum') {
-        probability = 78;
-      } else if (tier === 'emerald') {
-        probability = 100;
-      }
+      if (tier === 'silver') probability = 22;
+      else if (tier === 'gold') probability = lp > 70 ? 62 : 48;
+      else if (tier === 'platinum') probability = 78;
+      else if (tier === 'emerald') probability = 100;
 
       if (tier === 'emerald') {
         text = "The challenge has already been conquered. Sam is in Emerald—all that remains is defending the border.";
@@ -841,6 +852,48 @@
       }
 
       return { probability: probability + "%", text: text };
+    }
+
+    // Dynamic Vertical Progress Line & Stepper
+    const ORDERED_STEPS = [
+      'silver-1',
+      'gold-4',
+      'gold-3',
+      'gold-2',
+      'gold-1',
+      'platinum-4',
+      'platinum-3',
+      'platinum-2',
+      'platinum-1',
+      'emerald-4'
+    ];
+
+    function updateVerticalStepper(tier, division, lp) {
+      const romanMap = { 'I': '1', 'II': '2', 'III': '3', 'IV': '4' };
+      const currentKey = `${tier.toLowerCase()}-${romanMap[division] || '4'}`;
+      let currentIndex = ORDERED_STEPS.indexOf(currentKey);
+      if (currentIndex === -1) currentIndex = 3; // default Gold II
+
+      const stepElements = document.querySelectorAll('.step-item');
+      stepElements.forEach(el => {
+        const stepRank = el.getAttribute('data-rank');
+        const idx = ORDERED_STEPS.indexOf(stepRank);
+
+        el.classList.remove('passed', 'active');
+        if (idx < currentIndex) {
+          el.classList.add('passed');
+        } else if (idx === currentIndex) {
+          el.classList.add('active');
+          const span = el.querySelector('span');
+          if (span) span.textContent = `Current • ${lp} LP`;
+        }
+      });
+
+      // Calculate vertical progress line height
+      const totalSteps = ORDERED_STEPS.length - 1;
+      const progressFraction = (currentIndex + (lp / 100)) / totalSteps;
+      const pct = Math.min(100, Math.max(8, Math.round(progressFraction * 100)));
+      document.getElementById('active-line').style.height = pct + '%';
     }
 
     function updateRankUI(data) {
@@ -854,14 +907,18 @@
 
       const tierKey = (data.tier || 'gold').toLowerCase();
 
-      const crestUrls = {
-        gold: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/wings/wings_gold.png',
-        platinum: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/wings/wings_platinum.png',
-        emerald: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/wings/wings_emerald.png',
-        diamond: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/wings/wings_diamond.png'
+      // Official Full Standalone League Ranked Emblems
+      const emblemMap = {
+        iron: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-iron.png',
+        bronze: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-bronze.png',
+        silver: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-silver.png',
+        gold: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-gold.png',
+        platinum: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-platinum.png',
+        emerald: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-emerald.png',
+        diamond: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-diamond.png'
       };
-      
-      emblem.src = crestUrls[tierKey] || crestUrls['gold'];
+
+      emblem.src = emblemMap[tierKey] || emblemMap['gold'];
 
       const formattedTier = tierKey.toUpperCase();
       tierEl.textContent = `${formattedTier} ${data.division || 'II'}`;
@@ -872,11 +929,16 @@
       const wr = data.winrate || '50%';
       recordEl.innerHTML = `<span class="win-num">${wins}W</span> <span class="loss-num">${losses}L</span> (${wr} Win Rate)`;
 
+      // Macro Calculation
       const winrateNum = parseInt(wr) || 50;
       const forecast = generateOverallForecast(tierKey, data.lp, winrateNum);
       chancePill.textContent = `Probability: ${forecast.probability}`;
       macroText.textContent = forecast.text;
 
+      // Update the Vertical Stepper
+      updateVerticalStepper(tierKey, data.division || 'II', data.lp ?? 87);
+
+      // Render Matches & Roasts
       if (data.matches && data.matches.length > 0) {
         matchesContainer.innerHTML = data.matches.map(m => {
           const outcomeClass = m.win ? 'win' : 'loss';
@@ -891,9 +953,6 @@
             }
           }).join('');
 
-          const gameRoast = analyzeGamePerformance(m);
-          const itemRoast = analyzeItemBuild(m.champion, m.items, m.win, m.kills, m.deaths);
-
           return `
             <div class="match-card ${outcomeClass}">
               <div class="match-top-row">
@@ -907,58 +966,35 @@
                 <div class="match-kda-stat">${m.kills} / ${m.deaths} / ${m.assists} <span>(${m.cs} CS)</span></div>
                 <span class="match-badge">${outcomeText}</span>
               </div>
-
               <div class="items-container">
                 <span class="item-label">Build:</span>
                 ${itemsHtml}
               </div>
-
               <div class="match-roast">
-                ${gameRoast}
+                ${analyzeGamePerformance(m)}
                 <br><br>
-                <strong>Build Assessment:</strong> ${itemRoast}
+                <strong>Build Assessment:</strong> ${analyzeItemBuild(m.champion, m.items, m.win, m.kills, m.deaths)}
               </div>
             </div>
           `;
         }).join('');
-      } else {
-        matchesContainer.innerHTML = '<div style="color: #94a3b8; font-size: 0.85rem;">No recent ranked matches found.</div>';
       }
     }
 
     async function fetchLiveRank() {
       try {
-        const res = await fetch(WORKER_URL);
-        if (!res.ok) throw new Error("Worker responded with error");
+        const res = await fetch(BASE_WORKER_URL);
+        if (!res.ok) throw new Error("Worker error");
         const data = await res.json();
-        if (data.tier) {
-          updateRankUI(data);
-        }
+        if (data.tier) updateRankUI(data);
       } catch (err) {
         console.warn("Using fallback live metrics:", err);
         updateRankUI({
-          tier: 'gold',
-          division: 'II',
-          lp: 87,
-          wins: 226,
-          losses: 228,
-          winrate: '50%',
+          tier: 'gold', division: 'II', lp: 87, wins: 226, losses: 228, winrate: '50%',
           matches: [
-            {
-              champion: 'Aatrox', lane: 'TOP', durationMin: 32, win: true,
-              kills: 8, deaths: 3, assists: 7, cs: 215,
-              items: [3153, 3071, 3053, 3111, 3065, 0, 3340]
-            },
-            {
-              champion: 'Mordekaiser', lane: 'TOP', durationMin: 28, win: false,
-              kills: 3, deaths: 7, assists: 4, cs: 165,
-              items: [3116, 3157, 3047, 1054, 0, 0, 3340]
-            },
-            {
-              champion: 'Garen', lane: 'TOP', durationMin: 25, win: true,
-              kills: 6, deaths: 2, assists: 5, cs: 198,
-              items: [3078, 3006, 3742, 3068, 0, 0, 3363]
-            }
+            { champion: 'Aatrox', lane: 'TOP', durationMin: 32, win: true, kills: 8, deaths: 3, assists: 7, cs: 215, items: [3153, 3071, 3053, 3111, 3065, 0, 3340] },
+            { champion: 'Mordekaiser', lane: 'TOP', durationMin: 28, win: false, kills: 3, deaths: 7, assists: 4, cs: 165, items: [3116, 3157, 3047, 1054, 0, 0, 3340] },
+            { champion: 'Garen', lane: 'TOP', durationMin: 25, win: true, kills: 6, deaths: 2, assists: 5, cs: 198, items: [3078, 3006, 3742, 3068, 0, 0, 3363] }
           ]
         });
       }
@@ -967,98 +1003,49 @@
     fetchLiveRank();
 
     // ==========================================
-    // COMMUNITY VOTING (STARTS AT ZERO, 1 VOTE PER DEVICE)
-    // ==========================================
-    const VOTE_STORAGE_KEY = "sam_emerald_device_voted";
-    const VOTE_COUNTS_KEY = "sam_emerald_fresh_poll_totals";
-
-    let pollTotals = JSON.parse(localStorage.getItem(VOTE_COUNTS_KEY)) || { yes: 0, no: 0 };
-
-    function updatePollUI() {
-      const total = pollTotals.yes + pollTotals.no;
-      let yesPct = 50;
-      let noPct = 50;
-
-      if (total > 0) {
-        yesPct = Math.round((pollTotals.yes / total) * 100);
-        noPct = 100 - yesPct;
-      }
-
-      document.getElementById('poll-yes-bar').style.width = yesPct + '%';
-      document.getElementById('yes-stats-text').textContent = `Yes: ${pollTotals.yes} vote${pollTotals.yes === 1 ? '' : 's'} (${yesPct}%)`;
-      document.getElementById('no-stats-text').textContent = `No: ${pollTotals.no} vote${pollTotals.no === 1 ? '' : 's'} (${noPct}%)`;
-
-      const userVote = localStorage.getItem(VOTE_STORAGE_KEY);
-      if (userVote) {
-        document.getElementById('btn-vote-yes').disabled = true;
-        document.getElementById('btn-vote-no').disabled = true;
-        document.getElementById('voted-status-msg').style.display = 'block';
-        document.getElementById('voted-status-msg').textContent = `✓ You voted "${userVote.toUpperCase()}" on this device.`;
-      }
-    }
-
-    function castVote(choice) {
-      if (localStorage.getItem(VOTE_STORAGE_KEY)) return;
-
-      if (choice === 'yes') pollTotals.yes++;
-      if (choice === 'no') pollTotals.no++;
-
-      localStorage.setItem(VOTE_COUNTS_KEY, JSON.stringify(pollTotals));
-      localStorage.setItem(VOTE_STORAGE_KEY, choice);
-      updatePollUI();
-    }
-
-    updatePollUI();
-
-    // ==========================================
-    // DYNAMIC LAYOUT & OCTOBER COUNTDOWN ENGINE
+    // PERMANENT OCTOBER END-OF-MONTH COUNTDOWN
     // ==========================================
     const currentYear = new Date().getFullYear();
     const startDate = new Date(currentYear, 9, 1, 0, 0, 0).getTime();
     const endDate = new Date(currentYear, 9, 31, 23, 59, 59).getTime();
     const totalDuration = endDate - startDate;
 
-    const mainContainer = document.getElementById('main-container');
     const daysEl = document.getElementById('days');
     const hoursEl = document.getElementById('hours');
     const minutesEl = document.getElementById('minutes');
     const secondsEl = document.getElementById('seconds');
     const bannerEl = document.getElementById('status-banner');
-    const progressFill = document.getElementById('progress-fill');
-    const progressText = document.getElementById('progress-text');
+    const monthFill = document.getElementById('month-fill');
+    const monthText = document.getElementById('month-text');
 
     function updateCountdown() {
       const now = Date.now();
 
       if (now < startDate) {
-        // PRE-OCTOBER: Centered layout
-        mainContainer.classList.remove('challenge-active');
+        // Countdown to start of October
         const distance = startDate - now;
-        bannerEl.textContent = "Time Until Challenge Begins";
+        bannerEl.textContent = "Challenge Begins In";
         setTime(distance);
-        progressFill.style.width = '0%';
-        progressText.textContent = "Challenge starts October 1st!";
+        monthFill.style.width = '0%';
+        monthText.textContent = "0.0% Complete";
       } else if (now >= startDate && now <= endDate) {
-        // ACTIVE IN OCTOBER: 3-column layout (Left Countdown, Center Profile, Right Progress)
-        mainContainer.classList.add('challenge-active');
+        // Countdown remaining until end of October
         const distance = endDate - now;
-        bannerEl.textContent = "Time Remaining";
+        bannerEl.textContent = "Time Remaining in Challenge";
         setTime(distance);
 
         const elapsed = now - startDate;
         const pct = Math.min(100, Math.max(0, (elapsed / totalDuration) * 100));
-        progressFill.style.width = pct.toFixed(1) + '%';
-        progressText.textContent = `Month Elapsed: ${pct.toFixed(1)}%`;
+        monthFill.style.width = pct.toFixed(1) + '%';
+        monthText.textContent = `${pct.toFixed(1)}% Complete`;
       } else {
-        // POST-OCTOBER
-        mainContainer.classList.add('challenge-active');
         bannerEl.textContent = "Challenge Completed! 🎉";
         daysEl.textContent = '00';
         hoursEl.textContent = '00';
         minutesEl.textContent = '00';
         secondsEl.textContent = '00';
-        progressFill.style.width = '100%';
-        progressText.textContent = "October is over! Well done Sam!";
+        monthFill.style.width = '100%';
+        monthText.textContent = "October is over! Well done Sam!";
       }
     }
 
