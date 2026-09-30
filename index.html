@@ -10,11 +10,13 @@
   <style>
     :root {
       --bg: #06110e;
-      --card-bg: rgba(13, 31, 26, 0.7);
+      --card-bg: rgba(13, 31, 26, 0.75);
       --card-border: rgba(16, 185, 129, 0.25);
       --emerald: #10b981;
       --emerald-glow: #34d399;
-      --gold: #fbbf24;
+      --gold: #f59e0b;
+      --win: #38bdf8;
+      --loss: #f43f5e;
       --text: #f0fdf4;
       --subtext: #86efac;
     }
@@ -31,7 +33,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: radial-gradient(circle at 50% 20%, #0f3427 0%, var(--bg) 80%);
+      background: radial-gradient(circle at 50% 15%, #0f3427 0%, var(--bg) 80%);
       color: var(--text);
       font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
       padding: 2.5rem 1.25rem;
@@ -101,19 +103,19 @@
       display: block;
     }
 
-    /* Live Player Card */
+    /* Player Card */
     .player-card {
       width: 100%;
-      background: rgba(13, 31, 26, 0.85);
+      background: var(--card-bg);
       border: 1px solid var(--card-border);
       backdrop-filter: blur(12px);
-      border-radius: 16px;
-      padding: 1.25rem 1.5rem;
+      border-radius: 18px;
+      padding: 1.4rem;
       margin-bottom: 2rem;
       display: flex;
       flex-direction: column;
-      gap: 1rem;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      gap: 1.15rem;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
     }
 
     .player-header {
@@ -150,49 +152,151 @@
       transition: opacity 0.2s;
     }
 
-    .opgg-link:hover {
-      opacity: 0.85;
-    }
+    .opgg-link:hover { opacity: 0.85; }
 
+    /* Enlarged Rank Details */
     .rank-details {
       display: flex;
       align-items: center;
-      gap: 1.25rem;
+      gap: 1.5rem;
       background: rgba(255, 255, 255, 0.03);
-      padding: 0.75rem 1.25rem;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 1rem 1.4rem;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
       text-align: left;
     }
 
+    .emblem-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* MUCH BIGGER EMBLEM */
     .emblem-img {
-      width: 68px;
-      height: 68px;
+      width: 95px;
+      height: 95px;
       object-fit: contain;
-      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+      filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.7));
     }
 
     .rank-text {
       display: flex;
       flex-direction: column;
-      gap: 0.2rem;
+      gap: 0.25rem;
     }
 
     .rank-tier {
       font-weight: 800;
-      font-size: 1.3rem;
+      font-size: 1.5rem;
       color: var(--emerald-glow);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.04em;
       line-height: 1.1;
     }
 
     .rank-lp {
-      font-size: 0.9rem;
-      color: #cbd5e1;
+      font-size: 0.95rem;
+      color: #e2e8f0;
       font-weight: 600;
     }
 
+    .rank-record {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      font-weight: 500;
+    }
+
+    .record-win { color: #38bdf8; font-weight: 700; }
+    .record-loss { color: #f43f5e; font-weight: 700; }
+
+    /* Judgement Box */
+    .judgement-box {
+      background: rgba(0, 0, 0, 0.35);
+      border-left: 3px solid var(--emerald-glow);
+      padding: 0.85rem 1rem;
+      border-radius: 8px;
+      text-align: left;
+      font-size: 0.9rem;
+      line-height: 1.45;
+      color: #cbd5e1;
+    }
+
+    .judgement-title {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--emerald-glow);
+      margin-bottom: 0.25rem;
+    }
+
+    /* Recent Matches Section */
+    .matches-section {
+      text-align: left;
+    }
+
+    .matches-header {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #94a3b8;
+      margin-bottom: 0.6rem;
+    }
+
+    .matches-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.65rem;
+    }
+
+    .match-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 10px;
+      padding: 0.65rem 0.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.35rem;
+      text-align: center;
+    }
+
+    .match-item.win { border-color: rgba(56, 189, 248, 0.4); background: rgba(56, 189, 248, 0.05); }
+    .match-item.loss { border-color: rgba(244, 63, 94, 0.4); background: rgba(244, 63, 94, 0.05); }
+
+    .champ-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      object-fit: cover;
+    }
+
+    .match-outcome {
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .match-item.win .match-outcome { color: var(--win); }
+    .match-item.loss .match-outcome { color: var(--loss); }
+
+    .match-kda {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .match-cs {
+      font-size: 0.68rem;
+      color: #94a3b8;
+    }
+
+    /* Countdown Grid */
     .status-banner {
       font-size: 1rem;
       font-weight: 700;
@@ -262,14 +366,9 @@
     }
 
     @media (max-width: 520px) {
-      .countdown-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      .rank-details {
-        justify-content: center;
-        text-align: center;
-        flex-direction: column;
-      }
+      .countdown-grid { grid-template-columns: repeat(2, 1fr); }
+      .rank-details { flex-direction: column; text-align: center; }
+      .matches-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -284,7 +383,7 @@
       <img src="sam.jpg" alt="Sam with Emerald Trophy" />
     </div>
 
-    <!-- Live Rank & Player Card -->
+    <!-- Live Player Card -->
     <div class="player-card">
       <div class="player-header">
         <div class="player-id">
@@ -295,11 +394,29 @@
         </a>
       </div>
 
+      <!-- Rank & Record -->
       <div class="rank-details">
-        <img id="rank-emblem" class="emblem-img" src="https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-unranked.png" alt="Rank Emblem" />
+        <div class="emblem-wrapper">
+          <img id="rank-emblem" class="emblem-img" src="https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-unranked.png" alt="Rank Emblem" />
+        </div>
         <div class="rank-text">
-          <div class="rank-tier" id="current-tier">Loading Live Rank...</div>
-          <div class="rank-lp" id="current-lp">Connecting to Riot API...</div>
+          <div class="rank-tier" id="current-tier">Loading...</div>
+          <div class="rank-lp" id="current-lp">Connecting to Riot...</div>
+          <div class="rank-record" id="current-record">Loading games...</div>
+        </div>
+      </div>
+
+      <!-- Scout Judgement Box -->
+      <div class="judgement-box">
+        <div class="judgement-title">🤖 Scout Analysis & Judgement</div>
+        <div id="judgement-text">Analyzing recent performance metrics...</div>
+      </div>
+
+      <!-- Recent Matches -->
+      <div class="matches-section">
+        <div class="matches-header">Recent Solo/Duo Matches</div>
+        <div class="matches-grid" id="matches-grid">
+          <div class="match-item">Loading recent games...</div>
         </div>
       </div>
     </div>
@@ -332,24 +449,73 @@
   </div>
 
   <script>
-    // ==========================================
-    // 1. LIVE RANK FETCHER (CLOUDFLARE WORKER)
-    // ==========================================
     const WORKER_URL = "https://sam-rank-tracker.hwong951.workers.dev";
 
-    function updateRankUI(stats) {
+    function passJudgement(tier, lp, winrateNum, matches) {
+      let judge = "";
+      const isEmerald = tier.includes('emerald');
+      const isPlat = tier.includes('platinum');
+      const isGold = tier.includes('gold');
+
+      // Recent form
+      const recentWins = matches ? matches.filter(m => m.win).length : 0;
+
+      if (isEmerald) {
+        judge = "He actually did it. The trophy has been rightfully claimed—now he just has to pray he doesn't demote back into the trenches.";
+      } else if (isGold && lp > 75) {
+        judge = `Sitting at ${lp} LP in Gold II—promos to Gold I are staring him in the face. With a ${winrateNum}% win rate, he is hovering right on the edge; whether he hits Emerald in October comes down to whether he tilts on game 3.`;
+      } else if (recentWins === 3) {
+        judge = "3-0 in his last games! The climb is alive and the momentum is real. Emerald might actually happen if he doesn't throw his lead.";
+      } else if (recentWins === 0 && matches && matches.length > 0) {
+        judge = "Coming off an 0-3 slump. Someone take away his keyboard before he sends himself straight back to Silver.";
+      } else {
+        judge = `Currently grinding at ${winrateNum}% win rate. Perfectly balanced coinflip gameplay—he needs to lock in and carry if he wants that trophy by the end of October.`;
+      }
+      return judge;
+    }
+
+    function updateRankUI(data) {
       const emblem = document.getElementById('rank-emblem');
       const tierEl = document.getElementById('current-tier');
       const lpEl = document.getElementById('current-lp');
+      const recordEl = document.getElementById('current-record');
+      const judgementEl = document.getElementById('judgement-text');
+      const matchesGrid = document.getElementById('matches-grid');
 
-      const tierKey = (stats.tier || 'unranked').toLowerCase();
-      // Official League Emblem CDN
+      const tierKey = (data.tier || 'unranked').toLowerCase();
       emblem.src = `https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-${tierKey}.png`;
-      emblem.alt = `${stats.tier} Emblem`;
+      emblem.alt = `${data.tier} Crest`;
 
       const formattedTier = tierKey.charAt(0).toUpperCase() + tierKey.slice(1);
-      tierEl.textContent = `${formattedTier} ${stats.division || ''}`.trim();
-      lpEl.textContent = `${stats.lp ?? 0} LP • ${stats.winrate || '0%'} Win Rate`;
+      tierEl.textContent = `${formattedTier} ${data.division || ''}`.trim();
+      lpEl.textContent = `${data.lp ?? 0} LP • ${data.winrate || '0%'} Win Rate`;
+      
+      const wins = data.wins || 0;
+      const losses = data.losses || 0;
+      recordEl.innerHTML = `<span class="record-win">${wins}W</span> <span class="record-loss">${losses}L</span> (${wins + losses} Total Games)`;
+
+      // Judgement
+      const winrateNum = parseInt(data.winrate) || 50;
+      judgementEl.textContent = passJudgement(tierKey, data.lp, winrateNum, data.matches);
+
+      // Render Last 3 Matches
+      if (data.matches && data.matches.length > 0) {
+        matchesGrid.innerHTML = data.matches.map(m => {
+          const outcomeClass = m.win ? 'win' : 'loss';
+          const outcomeText = m.win ? 'Victory' : 'Defeat';
+          const champImg = `https://ddragon.leagueoflegends.com/cdn/14.19.1/img/champion/${m.champion}.png`;
+          return `
+            <div class="match-item ${outcomeClass}">
+              <img class="champ-icon" src="${champImg}" alt="${m.champion}" onerror="this.src='https://ddragon.leagueoflegends.com/cdn/14.19.1/img/profileicon/29.png'">
+              <span class="match-outcome">${outcomeText}</span>
+              <span class="match-kda">${m.kills}/${m.deaths}/${m.assists}</span>
+              <span class="match-cs">${m.cs} CS</span>
+            </div>
+          `;
+        }).join('');
+      } else {
+        matchesGrid.innerHTML = '<div style="grid-column: span 3; color: #94a3b8; font-size: 0.8rem;">No recent games recorded.</div>';
+      }
     }
 
     async function fetchLiveRank() {
@@ -362,12 +528,18 @@
         }
       } catch (err) {
         console.warn("Could not fetch live rank, using fallback:", err);
-        // Fallback display if worker API key expires
         updateRankUI({
-          tier: 'platinum',
-          division: 'I',
-          lp: 75,
-          winrate: '54%'
+          tier: 'gold',
+          division: 'II',
+          lp: 87,
+          wins: 45,
+          losses: 45,
+          winrate: '50%',
+          matches: [
+            { champion: 'Aatrox', kills: 6, deaths: 4, assists: 7, win: true, cs: 185 },
+            { champion: 'Mordekaiser', kills: 2, deaths: 7, assists: 3, win: false, cs: 142 },
+            { champion: 'Garen', kills: 8, deaths: 3, assists: 5, win: true, cs: 210 }
+          ]
         });
       }
     }
@@ -375,11 +547,11 @@
     fetchLiveRank();
 
     // ==========================================
-    // 2. COUNTDOWN TIMER LOGIC
+    // COUNTDOWN LOGIC
     // ==========================================
     const currentYear = new Date().getFullYear();
-    const startDate = new Date(currentYear, 9, 1, 0, 0, 0).getTime();      // Oct 1, 00:00:00
-    const endDate = new Date(currentYear, 9, 31, 23, 59, 59).getTime();     // Oct 31, 23:59:59
+    const startDate = new Date(currentYear, 9, 1, 0, 0, 0).getTime();
+    const endDate = new Date(currentYear, 9, 31, 23, 59, 59).getTime();
     const totalDuration = endDate - startDate;
 
     const daysEl = document.getElementById('days');
