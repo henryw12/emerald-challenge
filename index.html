@@ -23,7 +23,6 @@
       --subtext: #86efac;
       --muted: #94a3b8;
       --line: rgba(255, 255, 255, 0.12);
-      /* Emblem size: change this one number to make the crest bigger or smaller. It never animates. */
       --emblem-scale: 2.15;
     }
 
@@ -40,7 +39,6 @@
       padding: 2.5rem 1.5rem;
     }
 
-    /* ---------- LAYOUT: one centered column ---------- */
     .dashboard {
       width: 100%;
       max-width: 980px;
@@ -70,7 +68,6 @@
       margin-bottom: 1.25rem;
     }
 
-    /* ---------- HEADER ---------- */
     .header-zone {
       display: flex;
       flex-direction: column;
@@ -110,7 +107,6 @@
 
     .subtitle { color: var(--muted); font-size: 1.15rem; }
 
-    /* ---------- PHOTO ---------- */
     .image-container {
       width: 280px;
       height: 280px;
@@ -129,7 +125,6 @@
       display: block;
     }
 
-    /* ---------- COUNTDOWN (under photo) ---------- */
     .countdown-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -194,7 +189,6 @@
 
     .month-pct-text { font-size: 0.9rem; color: var(--muted); }
 
-    /* ---------- HORIZONTAL RANK PROGRESS ---------- */
     .stepper-scroll { overflow-x: auto; padding-bottom: 0.5rem; }
 
     .stepper {
@@ -204,7 +198,6 @@
       min-width: 760px;
     }
 
-    /* Track runs from the center of the first node to the center of the last */
     .track {
       position: absolute;
       top: calc(var(--node) / 2 - 2px);
@@ -275,7 +268,6 @@
       box-shadow: 0 0 20px var(--emerald);
     }
 
-    /* Pulse uses opacity only, so it doesn't repaint every frame */
     .step.active .node::after {
       content: "";
       position: absolute;
@@ -291,7 +283,6 @@
     .step.goal.passed .node,
     .step.goal.active .node { background: var(--emerald-glow); box-shadow: 0 0 24px var(--emerald-glow); }
 
-    /* Tier names grouped beneath their divisions */
     .tier-groups {
       display: grid;
       grid-template-columns: repeat(var(--n), 1fr);
@@ -309,7 +300,6 @@
     }
     .tier-groups span.current { color: var(--emerald-glow); border-top-color: var(--emerald-glow); }
 
-    /* ---------- PLAYER CARD ---------- */
     .player-card {
       padding: 2.2rem;
       display: flex;
@@ -345,7 +335,6 @@
     }
     .opgg-link:hover { opacity: 0.88; transform: translateY(-1px); }
 
-    /* ---------- RANK SHOWCASE ---------- */
     .rank-showcase {
       width: 100%;
       display: grid;
@@ -368,16 +357,15 @@
       height: 320px;
     }
 
-    /* Static: no animation, fixed scale */
-.emblem-wrapper img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  transform: translateZ(0) scale(var(--emblem-scale)); 
-  filter: drop-shadow(0 0 24px rgba(245, 158, 11, 0.55));
-  will-change: filter, transform;
-}
+    .emblem-wrapper img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      transform: translateZ(0) scale(var(--emblem-scale)); 
+      filter: drop-shadow(0 0 24px rgba(245, 158, 11, 0.55));
+      will-change: filter, transform;
+    }
 
     .emblem-fallback {
       display: none;
@@ -430,7 +418,6 @@
     .win-num { color: var(--win); font-weight: 800; }
     .loss-num { color: var(--loss); font-weight: 800; }
 
-    /* ---------- ANALYSIS ---------- */
     .overall-analysis-card {
       background: rgba(0, 0, 0, 0.45);
       border-left: 4px solid var(--emerald-glow);
@@ -451,19 +438,8 @@
       color: var(--emerald-glow);
     }
 
-    .chance-pill {
-      font-size: 0.85rem;
-      font-weight: 900;
-      padding: 0.3rem 0.85rem;
-      border-radius: 9999px;
-      background: rgba(16, 185, 129, 0.25);
-      color: #6ee7b7;
-      border: 1px solid var(--emerald);
-    }
-
     .analysis-content { font-size: 0.98rem; line-height: 1.6; color: #e2e8f0; }
 
-    /* ---------- MATCHES ---------- */
     .section-title {
       font-size: 0.95rem;
       font-weight: 800;
@@ -541,7 +517,6 @@
     }
     .match-roast strong { color: var(--emerald-glow); font-weight: 700; }
 
-    /* ---------- RESPONSIVE ---------- */
     @media (max-width: 600px) {
       body { padding: 1.5rem 1rem; }
       .card { padding: 1.25rem; }
@@ -573,7 +548,7 @@
       <img src="sam.jpg" alt="Sam with Emerald Trophy" />
     </div>
 
-    <!-- COUNTDOWN: centered under the photo -->
+    <!-- COUNTDOWN -->
     <section class="card countdown-card" aria-label="Challenge countdown">
       <div class="card-title" id="status-banner">Time Remaining in Challenge</div>
       <div class="countdown-grid">
@@ -589,7 +564,7 @@
       </div>
     </section>
 
-    <!-- RANK PROGRESS: horizontal, built from the ladder config in the script -->
+    <!-- RANK PROGRESS -->
     <section class="card" aria-label="Rank progress">
       <div class="card-title">Rank Progress</div>
       <div class="stepper-scroll" id="stepper-scroll">
@@ -621,10 +596,10 @@
         </div>
       </div>
 
+      <!-- MACRO SCOUTING & PROBABILITY (Telemetry Score Removed) -->
       <div class="overall-analysis-card">
         <div class="analysis-header">
           <span class="analysis-label">🔮 Macro Scouting & Emerald Probability</span>
-          <span class="chance-pill" id="chance-pill">Telemetry Score: —</span>
         </div>
         <p class="analysis-content" id="macro-analysis-text">Analyzing live Solo/Duo telemetry...</p>
       </div>
@@ -655,13 +630,9 @@
     const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
     const cap = s => s[0].toUpperCase() + s.slice(1);
 
-    /* =====================================================================
-       RANK LADDER (single source of truth)
-       Change the goal or starting rank here and the progress bar rebuilds.
-       ===================================================================== */
     const TIERS = ["iron", "bronze", "silver", "gold", "platinum", "emerald", "diamond", "master", "grandmaster", "challenger"];
-    const DIVISIONS = ["IV", "III", "II", "I"];                       // lowest to highest
-    const LADDER_TIERS = [["silver", 4], ["gold", 4], ["platinum", 4], ["emerald", 1]]; // [tier, divisions shown]
+    const DIVISIONS = ["IV", "III", "II", "I"];
+    const LADDER_TIERS = [["silver", 4], ["gold", 4], ["platinum", 4], ["emerald", 1]];
     const STEP_NOTES = {
       "silver-4": "Floor", "silver-1": "Danger threshold", "gold-1": "Promotion doorway",
       "platinum-4": "Escaped Gold", "platinum-3": "Mid Platinum", "platinum-2": "Upper Platinum",
@@ -673,13 +644,9 @@
     );
     LADDER[LADDER.length - 1].goal = true;
 
-    // Comparable number for any rank: Silver IV < Silver III < ... < Emerald IV < Diamond IV ...
     const rankValue = (tier, division) => TIERS.indexOf(tier) * 4 + Math.max(0, DIVISIONS.indexOf(division));
     const LADDER_START = rankValue(LADDER[0].tier, LADDER[0].div);
 
-    /* =====================================================================
-       RANK DATA
-       ===================================================================== */
     function normalizeRankData(raw = {}) {
       const wins = number(raw.wins, DEFAULT_DATA.wins);
       const losses = number(raw.losses, DEFAULT_DATA.losses);
@@ -691,7 +658,7 @@
         ...raw,
         tier: String(raw.tier || DEFAULT_DATA.tier).toLowerCase(),
         division: String(raw.division || DEFAULT_DATA.division).toUpperCase(),
-        lp: Math.max(0, number(raw.lp, DEFAULT_DATA.lp)), // no upper cap: Master+ LP goes past 100
+        lp: Math.max(0, number(raw.lp, DEFAULT_DATA.lp)),
         wins,
         losses,
         winrateNum,
@@ -700,118 +667,6 @@
       };
     }
 
-    /* ---------- per-match helpers (shared by every analysis function) ---------- */
-    const kdaOf = m => (number(m.kills) + number(m.assists)) / Math.max(number(m.deaths), 1);
-    const csPerMin = m => number(m.durationMin) > 0 ? number(m.cs) / number(m.durationMin) : 0;
-
-    function summarizeMatches(matches) {
-      const list = matches.slice(0, 10);
-      if (!list.length) return { recentGames: 0, recentWinRate: 50, avgKda: 0, avgCsPerMin: 0, avgDeaths: 0 };
-      return {
-        recentGames: list.length,
-        recentWinRate: (list.filter(m => m.win).length / list.length) * 100,
-        avgKda: avg(list.map(kdaOf)),
-        avgCsPerMin: avg(list.map(csPerMin)),
-        avgDeaths: avg(list.map(m => number(m.deaths)))
-      };
-    }
-
-    /* Adaptive analysis: each metric produces a signal; the three strongest are explained. */
-    const ANALYSIS_RULES = [
-      {
-        weight: 1.2, score: d => d.winrateNum - 50,
-        positive: d => `The ${d.winrateNum.toFixed(0)}% overall win rate is above an even record.`,
-        negative: d => `The ${d.winrateNum.toFixed(0)}% overall win rate is below an even record.`,
-        neutral: () => `The overall record is close to even.`
-      },
-      {
-        weight: 1.5, score: d => d.recentWinRate - 50,
-        positive: d => `Recent form is ${d.recentWinRate.toFixed(0)}% across the latest ${d.recentGames} Solo/Duo games.`,
-        negative: d => `Recent form is ${d.recentWinRate.toFixed(0)}% across the latest ${d.recentGames} Solo/Duo games.`,
-        neutral: d => `Recent form is roughly even across the latest ${d.recentGames} games.`
-      },
-      {
-        weight: 1.1, score: d => d.avgKda - 2,
-        positive: d => `Average recent KDA is ${d.avgKda.toFixed(1)}, supported by relatively efficient deaths.`,
-        negative: d => `Average recent KDA is ${d.avgKda.toFixed(1)}, leaving less room for repeated deaths.`,
-        neutral: d => `Average recent KDA is ${d.avgKda.toFixed(1)}.`
-      },
-      {
-        weight: 0.9, score: d => d.avgCsPerMin - 6.5,
-        positive: d => `Recent farming averages ${d.avgCsPerMin.toFixed(1)} CS/min.`,
-        negative: d => `Recent farming averages ${d.avgCsPerMin.toFixed(1)} CS/min.`,
-        neutral: d => `Recent farming averages ${d.avgCsPerMin.toFixed(1)} CS/min.`
-      },
-      {
-        weight: 1.0, score: d => 5.5 - d.avgDeaths,
-        positive: d => `Average deaths are ${d.avgDeaths.toFixed(1)} per game.`,
-        negative: d => `Average deaths are ${d.avgDeaths.toFixed(1)} per game, which is the clearest risk signal in the sample.`,
-        neutral: d => `Average deaths are ${d.avgDeaths.toFixed(1)} per game.`
-      },
-      {
-        weight: 0.7, score: d => d.lp - 50,
-        positive: d => `${d.lp} LP leaves meaningful room before the next division.`,
-        negative: d => `${d.lp} LP means the current division still needs more progress.`,
-        neutral: d => `${d.lp} LP puts the account around the middle of the division.`
-      }
-    ];
-
-    function generateAnalysis(metrics) {
-      const sentences = ANALYSIS_RULES
-        .map(rule => ({ rule, score: rule.score(metrics) }))
-        .map(s => ({ ...s, magnitude: Math.abs(s.score) * s.rule.weight }))
-        .filter(s => s.magnitude > 0.15)
-        .sort((a, b) => b.magnitude - a.magnitude)
-        .slice(0, 3)
-        .map(({ rule, score }) => score > 1 ? rule.positive(metrics) : score < -1 ? rule.negative(metrics) : rule.neutral(metrics));
-
-      const rank = `${metrics.tier.toUpperCase()} ${metrics.division} at ${metrics.lp} LP`;
-      const base = sentences.length ? sentences.join(" ") : `Telemetry is limited, so the dashboard is using ${rank} as the primary signal.`;
-      const next = metrics.recentGames
-        ? `The engine weighs recent form, KDA, farming, deaths, overall win rate, and LP rather than relying on a single rule.`
-        : `Add recent Solo/Duo telemetry to make the analysis more specific.`;
-
-      return `${rank}. ${base} ${next}`;
-    }
-
-    function calculateForecast(m) {
-      const signal =
-        clamp((m.winrateNum - 45) * 1.2, -20, 20) +
-        clamp((m.recentWinRate - 50) * 0.7, -15, 15) +
-        clamp((m.avgKda - 2) * 3, -10, 10) +
-        clamp((6.5 - m.avgDeaths) * 2, -8, 8) +
-        clamp((m.lp - 50) * 0.12, -6, 6);
-      return clamp(Math.round(50 + signal), 5, 95);
-    }
-
-    function analyzeBuild(m) {
-      const owned = (m.items || []).filter(id => id > 0).length;
-      if (!owned) return "No completed item telemetry was returned for this match.";
-
-      const kills = number(m.kills), deaths = number(m.deaths), win = Boolean(m.win);
-      const killsPerDeath = deaths === 0 ? kills : kills / deaths;
-
-      if (deaths >= 8) return "The build was paired with a high-death game; defensive or tempo choices are worth reviewing.";
-      if (killsPerDeath >= 2 && win) return "The item path supported a positive combat result.";
-      if (owned < 4) return "The match ended before a full item set was completed.";
-      if (!win) return "The loss was not explained by deaths alone, so objective timing and team-fight context matter.";
-      return "Build context looks ordinary from the available item IDs; compare the purchase order with the game's timing.";
-    }
-
-    function analyzeGame(m) {
-      const kda = kdaOf(m), cs = csPerMin(m), deaths = number(m.deaths);
-      const points = [
-        { score: (m.win ? 2 : -1) + (kda - 2) * 0.4, text: `The ${esc(m.champion)} game finished ${m.win ? "as a victory" : "as a defeat"} with a ${kda.toFixed(1)} KDA.` },
-        { score: cs - 6.5, text: `Farming was ${cs.toFixed(1)} CS/min over ${esc(m.durationMin)} minutes.` },
-        { score: 5 - deaths, text: `Deaths were ${deaths}, which is ${deaths <= 5 ? "relatively controlled" : "the main efficiency issue"} in this sample.` }
-      ].sort((a, b) => Math.abs(b.score) - Math.abs(a.score));
-
-      return `<strong>Match Analysis:</strong> ${points.slice(0, 2).map(p => p.text).join(" ")}`;
-    }
-
-    /* =====================================================================
-       HORIZONTAL RANK PROGRESS
-       ===================================================================== */
     const stepEls = [];
     const tierEls = [];
 
@@ -834,7 +689,6 @@
 
     function updateStepper(tier, division, lp) {
       const last = LADDER.length - 1;
-      // pos < 0: below the ladder | 0..last: on the ladder | > last: past the goal
       const pos = rankValue(tier, division) - LADDER_START;
 
       stepEls.forEach((el, i) => {
@@ -847,7 +701,6 @@
 
       $("active-line").style.width = `${pos <= 0 ? 0 : (Math.min(pos, last) / last) * 100}%`;
 
-      // On narrow screens the ladder scrolls sideways; keep the current rank centered
       const active = stepEls[pos];
       if (active) {
         const box = $("stepper-scroll");
@@ -855,31 +708,42 @@
       }
     }
 
-    /* =====================================================================
-       RENDER
-       ===================================================================== */
     function setEmblem(tier) {
       const wrapper = $("emblem-wrapper");
       const img = $("rank-emblem");
       wrapper.classList.remove("is-fallback");
       img.alt = `${tier} rank crest`;
-      img.onerror = () => wrapper.classList.add("is-fallback"); // keep layout intact if the crest URL changes
+      img.onerror = () => wrapper.classList.add("is-fallback");
       img.src = `${CREST_BASE}${TIERS.includes(tier) ? tier : "gold"}.png`;
     }
 
     function updateRankUI(rawData) {
       const data = normalizeRankData(rawData);
-      const metrics = { ...data, ...summarizeMatches(data.matches) };
+      const metrics = { ...data };
 
       setEmblem(data.tier);
+
+      // Handle Live Game Status Badge
+      const headerZone = document.querySelector('.header-zone');
+      let liveBadge = document.getElementById('live-badge');
+      if (data.liveGame && data.liveGame.inGame) {
+        if (!liveBadge) {
+          liveBadge = document.createElement('div');
+          liveBadge.id = 'live-badge';
+          liveBadge.style.cssText = "margin-top: 0.5rem; display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 1.2rem; background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; border-radius: 9999px; color: #fca5a5; font-weight: 900; font-size: 0.85rem; letter-spacing: 0.1em;";
+          headerZone.appendChild(liveBadge);
+        }
+        liveBadge.innerHTML = `🔴 LIVE IN GAME (${data.liveGame.gameLengthMin}m)`;
+      } else if (liveBadge) {
+        liveBadge.remove();
+      }
 
       $("current-tier").textContent = `${data.tier.toUpperCase()} ${data.division}`;
       $("current-lp").textContent = `${data.lp} LP`;
       $("current-record").innerHTML =
         `<span class="win-num">${data.wins}W</span> <span class="loss-num">${data.losses}L</span> <span>(${data.winrate} Win Rate)</span>`;
 
-      $("chance-pill").textContent = `Telemetry Score: ${calculateForecast(metrics)}%`;
-      $("macro-analysis-text").textContent = data.aiAnalysis || generateAnalysis(metrics);
+      $("macro-analysis-text").textContent = data.aiAnalysis || "Analyzing live telemetry...";
 
       updateStepper(data.tier, data.division, data.lp);
       renderMatches(data.matches);
@@ -916,9 +780,9 @@
               <span class="item-label">Build:</span>
               ${items || '<span class="empty-note">No item data</span>'}
             </div>
-<div class="match-roast">
-  ${m.aiRoast || `${analyzeGame(m)} <br><br> <strong>Build Assessment:</strong> ${analyzeBuild(m)}`}
-</div>
+            <div class="match-roast">
+              ${esc(m.aiRoast || "Analyzing performance...")}
+            </div>
           </article>`;
       }).join("");
     }
@@ -932,7 +796,7 @@
         console.warn("Live rank telemetry unavailable:", err);
         updateRankUI({
           ...DEFAULT_DATA,
-          aiAnalysis: "Live telemetry is temporarily unavailable. The dashboard is showing the last configured rank snapshot."
+          aiAnalysis: "Live telemetry is temporarily unavailable. Showing the default rank snapshot."
         });
       }
     }
@@ -940,9 +804,6 @@
     buildStepper();
     fetchLiveRank();
 
-    /* =====================================================================
-       COUNTDOWN
-       ===================================================================== */
     const now0 = new Date();
     const challengeYear = now0.getMonth() >= 10 ? now0.getFullYear() + 1 : now0.getFullYear();
     const START = new Date(challengeYear, 9, 1, 0, 0, 0).getTime();
