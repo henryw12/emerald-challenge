@@ -11,7 +11,7 @@
   <style>
     :root {
       --bg: #040907;
-      --card-bg: rgba(9, 23, 19, 0.88);
+      --card-bg: rgba(9, 23, 19, 0.9);
       --card-border: rgba(16, 185, 129, 0.28);
       --emerald: #10b981;
       --emerald-glow: #34d399;
@@ -36,15 +36,15 @@
     }
 
     .dashboard-container {
-      max-width: 1480px;
+      max-width: 1540px;
       width: 100%;
       display: grid;
-      grid-template-columns: 310px 1fr 320px;
+      grid-template-columns: 320px 1fr 340px;
       grid-template-areas:
         "header header header"
         "left   center right";
       gap: 2rem;
-      align-items: start;
+      align-items: stretch;
     }
 
     /* TOP HEADER */
@@ -59,17 +59,16 @@
       margin-bottom: 0.5rem;
     }
 
-    /* BIGGER ROAD TO EMERALD BADGE */
     .trophy-badge {
       display: inline-flex;
       align-items: center;
       gap: 0.65rem;
-      padding: 0.6rem 1.6rem;
+      padding: 0.65rem 1.75rem;
       background: rgba(16, 185, 129, 0.18);
       border: 2px solid var(--emerald);
       border-radius: 9999px;
       color: var(--emerald-glow);
-      font-size: 1.15rem;
+      font-size: 1.25rem;
       font-weight: 900;
       letter-spacing: 0.12em;
       text-transform: uppercase;
@@ -92,27 +91,11 @@
       font-size: 1.15rem;
     }
 
+    /* LEFT ZONE (COUNTDOWN) */
     .left-zone {
       grid-area: left;
       display: flex;
       flex-direction: column;
-      gap: 1.25rem;
-    }
-
-    .center-zone {
-      grid-area: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1.8rem;
-      width: 100%;
-    }
-
-    .right-zone {
-      grid-area: right;
-      display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
     }
 
     .sidebar-card {
@@ -120,16 +103,17 @@
       border: 1px solid var(--card-border);
       backdrop-filter: blur(14px);
       border-radius: 24px;
-      padding: 1.75rem 1.4rem;
+      padding: 2rem 1.5rem;
       display: flex;
       flex-direction: column;
-      gap: 1.4rem;
+      justify-content: space-between;
+      gap: 1.5rem;
+      height: 100%;
       box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
     }
 
-    /* BIGGER COUNTDOWN SIDEBAR */
     .status-banner {
-      font-size: 1.05rem;
+      font-size: 1.15rem;
       font-weight: 900;
       letter-spacing: 0.08em;
       text-transform: uppercase;
@@ -140,24 +124,27 @@
     .countdown-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 1rem;
+      gap: 1.25rem;
       width: 100%;
+      flex-grow: 1;
+      justify-content: space-evenly;
     }
 
     .timer-card {
       background: rgba(13, 31, 26, 0.95);
       border: 1px solid var(--card-border);
       backdrop-filter: blur(12px);
-      padding: 1.2rem 1rem;
-      border-radius: 16px;
+      padding: 1.4rem 1rem;
+      border-radius: 18px;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
     }
 
     .timer-card .number {
-      font-size: 2.8rem;
+      font-size: 3.2rem;
       font-weight: 900;
       color: #ffffff;
       line-height: 1;
@@ -165,25 +152,25 @@
     }
 
     .timer-card .label {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       text-transform: uppercase;
-      letter-spacing: 0.14em;
+      letter-spacing: 0.15em;
       color: var(--subtext);
-      margin-top: 0.35rem;
+      margin-top: 0.45rem;
       font-weight: 800;
     }
 
     .month-bar-wrap {
       text-align: left;
       border-top: 1px solid rgba(255, 255, 255, 0.08);
-      padding-top: 1.2rem;
+      padding-top: 1.25rem;
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      gap: 0.6rem;
     }
 
     .month-bar-label {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       font-weight: 800;
       text-transform: uppercase;
       color: #94a3b8;
@@ -191,7 +178,7 @@
 
     .horizontal-bar-box {
       width: 100%;
-      height: 12px;
+      height: 14px;
       background: rgba(255, 255, 255, 0.08);
       border-radius: 9999px;
       overflow: hidden;
@@ -202,15 +189,24 @@
       width: 0%;
       background: linear-gradient(90deg, #10b981, #34d399);
       transition: width 0.5s ease;
-      box-shadow: 0 0 10px var(--emerald);
+      box-shadow: 0 0 12px var(--emerald);
     }
 
     .month-pct-text {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: #94a3b8;
     }
 
-    /* MUCH BIGGER TROPHY PHOTO */
+    /* CENTER ZONE */
+    .center-zone {
+      grid-area: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.8rem;
+      width: 100%;
+    }
+
     .image-container {
       width: 280px;
       height: 280px;
@@ -229,7 +225,6 @@
       display: block;
     }
 
-    /* PLAYER PROFILE CARD */
     .player-card {
       width: 100%;
       background: var(--card-bg);
@@ -272,37 +267,36 @@
       background: #5383e8;
       color: #fff;
       text-decoration: none;
-      padding: 0.5rem 1.1rem;
+      padding: 0.55rem 1.15rem;
       border-radius: 10px;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       font-weight: 800;
       transition: all 0.2s;
     }
     .opgg-link:hover { opacity: 0.88; transform: translateY(-1px); }
 
-    /* TRULY MASSIVE RANK CREST DISPLAY */
+    /* RANK SHOWCASE: EMBLEM EXACTLY SCALED AND ALIGNED TO TEXT BLOCK */
     .rank-showcase {
       display: flex;
-      align-items: center;
+      align-items: stretch;
       justify-content: center;
-      gap: 3rem;
+      gap: 2.5rem;
       background: radial-gradient(circle at center, rgba(16, 185, 129, 0.2) 0%, rgba(0, 0, 0, 0.5) 100%);
-      padding: 2.5rem 2rem;
+      padding: 2rem 2.5rem;
       border-radius: 24px;
       border: 1px solid rgba(16, 185, 129, 0.4);
     }
 
     .emblem-wrapper {
-      position: relative;
-      width: 200px;
-      height: 200px;
+      width: 140px;
+      min-width: 140px;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
     }
 
-    .emblem-wrapper svg, .emblem-wrapper img {
+    .emblem-wrapper img {
       width: 100%;
       height: 100%;
       object-fit: contain;
@@ -311,15 +305,15 @@
     }
 
     @keyframes gentle-glow {
-      from { transform: scale(1); filter: drop-shadow(0 0 25px rgba(245, 158, 11, 0.5)); }
-      to { transform: scale(1.04); filter: drop-shadow(0 0 45px rgba(16, 185, 129, 0.7)); }
+      from { transform: scale(1); }
+      to { transform: scale(1.03); }
     }
 
     .rank-text-block {
-      text-align: left;
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      justify-content: space-between;
+      text-align: left;
     }
 
     .rank-tier-title {
@@ -348,7 +342,7 @@
     .win-num { color: var(--win); font-weight: 800; }
     .loss-num { color: var(--loss); font-weight: 800; }
 
-    /* MACRO OVERALL ANALYSIS (ALWAYS DYNAMIC) */
+    /* MACRO OVERALL ANALYSIS */
     .overall-analysis-card {
       background: rgba(0, 0, 0, 0.45);
       border-left: 4px solid var(--emerald-glow);
@@ -369,7 +363,7 @@
     }
 
     .analysis-label {
-      font-size: 0.88rem;
+      font-size: 0.9rem;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.09em;
@@ -379,7 +373,7 @@
     .chance-pill {
       font-size: 0.85rem;
       font-weight: 900;
-      padding: 0.25rem 0.8rem;
+      padding: 0.3rem 0.85rem;
       border-radius: 9999px;
       background: rgba(16, 185, 129, 0.25);
       color: #6ee7b7;
@@ -395,12 +389,12 @@
     /* MATCH BREAKDOWN */
     .matches-section { text-align: left; }
     .section-title {
-      font-size: 0.92rem;
+      font-size: 0.95rem;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: #94a3b8;
-      margin-bottom: 0.9rem;
+      margin-bottom: 0.95rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -440,28 +434,28 @@
     }
 
     .champ-avatar {
-      width: 50px;
-      height: 50px;
+      width: 52px;
+      height: 52px;
       border-radius: 14px;
       border: 2px solid rgba(255, 255, 255, 0.2);
     }
 
     .champ-name-role { display: flex; flex-direction: column; }
-    .champ-name { font-weight: 800; font-size: 1.1rem; color: #fff; }
-    .champ-role { font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: #94a3b8; }
+    .champ-name { font-weight: 800; font-size: 1.15rem; color: #fff; }
+    .champ-role { font-size: 0.78rem; text-transform: uppercase; font-weight: 700; color: #94a3b8; }
 
     .match-badge {
-      font-size: 0.82rem;
+      font-size: 0.85rem;
       font-weight: 900;
       text-transform: uppercase;
-      padding: 0.3rem 0.75rem;
+      padding: 0.35rem 0.85rem;
       border-radius: 6px;
     }
     .match-card.win .match-badge { background: rgba(56, 189, 248, 0.2); color: var(--win); }
     .match-card.loss .match-badge { background: rgba(244, 63, 94, 0.2); color: var(--loss); }
 
-    .match-kda-stat { font-size: 1.05rem; font-weight: 800; color: #f8fafc; }
-    .match-kda-stat span { color: #94a3b8; font-weight: 500; font-size: 0.88rem; }
+    .match-kda-stat { font-size: 1.1rem; font-weight: 800; color: #f8fafc; }
+    .match-kda-stat span { color: #94a3b8; font-weight: 500; font-size: 0.9rem; }
 
     .items-container {
       display: flex;
@@ -475,8 +469,8 @@
 
     .item-label { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: #94a3b8; margin-right: 0.4rem; }
     .item-slot {
-      width: 34px;
-      height: 34px;
+      width: 36px;
+      height: 36px;
       border-radius: 6px;
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -486,50 +480,58 @@
     .item-slot img { width: 100%; height: 100%; object-fit: cover; }
 
     .match-roast {
-      font-size: 0.9rem;
+      font-size: 0.92rem;
       line-height: 1.5;
       color: #cbd5e1;
       background: rgba(0, 0, 0, 0.25);
       border-radius: 10px;
-      padding: 0.75rem 0.95rem;
+      padding: 0.8rem 1rem;
     }
     .match-roast strong { color: var(--emerald-glow); font-weight: 700; }
 
-    /* RIGHT SIDEBAR: RANK PROGRESS (PERFECT STRAIGHT ALIGNMENT) */
+    /* RIGHT ZONE (ELONGATED RANK PROGRESS WITH SILVER) */
+    .right-zone {
+      grid-area: right;
+      display: flex;
+      flex-direction: column;
+    }
+
     .progress-header {
-      font-size: 1.05rem;
+      font-size: 1.25rem;
       font-weight: 900;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--emerald-glow);
       text-align: center;
+      margin-bottom: 0.5rem;
     }
 
     .stepper-container {
       position: relative;
       padding: 0.5rem 0;
       text-align: left;
+      flex-grow: 1;
     }
 
     /* Fixed Straight Track Line Behind Circles */
     .track-line-bg {
       position: absolute;
-      left: 17px;
-      top: 18px;
-      bottom: 18px;
+      left: 19px;
+      top: 20px;
+      bottom: 20px;
       width: 4px;
       background: rgba(255, 255, 255, 0.12);
       border-radius: 9999px;
       z-index: 1;
     }
 
-    /* Active Highlight Line: Stops Exactly at Current Rank */
+    /* Active Highlight Line */
     .track-line-active {
       position: absolute;
-      left: 17px;
-      bottom: 18px;
+      left: 19px;
+      bottom: 20px;
       width: 4px;
-      height: 30%; /* Set dynamically by JavaScript */
+      height: 0%;
       background: linear-gradient(to top, #f59e0b, #10b981);
       border-radius: 9999px;
       box-shadow: 0 0 12px var(--emerald);
@@ -541,23 +543,24 @@
       position: relative;
       display: flex;
       flex-direction: column;
-      gap: 1.35rem;
+      justify-content: space-between;
+      height: 100%;
       z-index: 3;
     }
 
     .step-item {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 1.1rem;
+      padding: 0.25rem 0;
     }
 
-    /* Perfectly Centered Straight Node */
     .step-node {
-      width: 36px;
-      height: 36px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       background: #061511;
-      border: 3px solid rgba(255, 255, 255, 0.18);
+      border: 3.5px solid rgba(255, 255, 255, 0.18);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -566,32 +569,30 @@
     }
 
     .step-label {
-      font-size: 0.88rem;
-      font-weight: 700;
+      font-size: 1.05rem;
+      font-weight: 800;
       color: #64748b;
       display: flex;
       flex-direction: column;
     }
 
     .step-label span {
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       color: #94a3b8;
       font-weight: 500;
     }
 
-    /* Completed Lower Ranks */
     .step-item.passed .step-node {
       border-color: #f59e0b;
       background: #f59e0b;
-      box-shadow: 0 0 12px rgba(245, 158, 11, 0.5);
+      box-shadow: 0 0 14px rgba(245, 158, 11, 0.5);
     }
     .step-item.passed .step-label { color: #f1f5f9; }
 
-    /* Current Active Rank */
     .step-item.active .step-node {
       border-color: var(--emerald-glow);
       background: #10b981;
-      box-shadow: 0 0 18px var(--emerald);
+      box-shadow: 0 0 20px var(--emerald);
       animation: pulse-node 1.8s infinite alternate;
     }
     @keyframes pulse-node {
@@ -601,19 +602,18 @@
     .step-item.active .step-label {
       color: var(--emerald-glow);
       font-weight: 900;
-      font-size: 0.98rem;
+      font-size: 1.15rem;
     }
 
-    /* Goal (Emerald IV) */
     .step-item.goal-step .step-node { border-color: #34d399; }
     .step-item.goal-step.active .step-node,
     .step-item.goal-step.passed .step-node {
       background: #34d399;
-      box-shadow: 0 0 22px #34d399;
+      box-shadow: 0 0 24px #34d399;
     }
-    .step-item.goal-step .step-label { color: #34d399; font-weight: 900; }
+    .step-item.goal-step .step-label { color: #34d399; font-weight: 900; font-size: 1.15rem; }
 
-    @media (max-width: 1180px) {
+    @media (max-width: 1200px) {
       .dashboard-container {
         display: flex;
         flex-direction: column;
@@ -621,14 +621,15 @@
       }
       .left-zone, .right-zone { width: 100%; }
       .countdown-grid { grid-template-columns: repeat(4, 1fr); }
+      .steps-wrapper { gap: 1rem; }
     }
 
     @media (max-width: 600px) {
-      .rank-showcase { flex-direction: column; text-align: center; gap: 1.5rem; }
+      .rank-showcase { flex-direction: column; text-align: center; gap: 1.5rem; align-items: center; }
       .rank-text-block { text-align: center; align-items: center; }
       .countdown-grid { grid-template-columns: repeat(2, 1fr); }
       .image-container { width: 220px; height: 220px; }
-      .emblem-wrapper { width: 160px; height: 160px; }
+      .emblem-wrapper { width: 120px; min-width: 120px; }
     }
   </style>
 </head>
@@ -636,7 +637,7 @@
 
   <div class="dashboard-container">
 
-    <!-- TOP HEADER -->
+    <!-- HEADER -->
     <header class="header-zone">
       <div class="trophy-badge">🏆 ROAD TO EMERALD</div>
       <h1>Sam’s Emerald Challenge</h1>
@@ -676,7 +677,7 @@
       </div>
     </aside>
 
-    <!-- CENTER ZONE: PHOTO, BIG CREST, MACRO PREDICTION & ROASTS -->
+    <!-- CENTER ZONE: PROFILE, RANK SHOWCASE, RECENT GAMES & ANALYSIS -->
     <main class="center-zone">
       <div class="image-container">
         <img src="sam.jpg" alt="Sam with Emerald Trophy" />
@@ -690,10 +691,10 @@
           </a>
         </div>
 
-        <!-- MASSIVE RANK CREST SHOWCASE -->
+        <!-- SOLID HELMET EMBLEM ALIGNED PERFECTLY WITH TEXT -->
         <div class="rank-showcase">
-          <div class="emblem-wrapper" id="emblem-box">
-            <!-- Populated with crisp vector SVG -->
+          <div class="emblem-wrapper">
+            <img id="rank-emblem" src="https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-crests/gold.png" alt="Rank Crest" />
           </div>
           <div class="rank-text-block">
             <div class="rank-tier-title" id="current-tier">GOLD II</div>
@@ -704,7 +705,7 @@
           </div>
         </div>
 
-        <!-- DYNAMIC MACRO SCOUTING & EMERALD PROBABILITY -->
+        <!-- MACRO OVERALL ANALYSIS -->
         <div class="overall-analysis-card">
           <div class="analysis-header">
             <span class="analysis-label">🔮 Macro Scouting & Emerald Probability</span>
@@ -715,7 +716,7 @@
           </p>
         </div>
 
-        <!-- RECENT SOLO/DUO MATCH BREAKDOWNS & ROASTS -->
+        <!-- RECENT SOLO/DUO MATCHES -->
         <div class="matches-section">
           <div class="section-title">
             <span>Recent Match Breakdowns & Build Roasts</span>
@@ -726,7 +727,7 @@
       </div>
     </main>
 
-    <!-- RIGHT ZONE: RANK PROGRESS (STRAIGHT ALIGNMENT & DYNAMIC LINE) -->
+    <!-- RIGHT ZONE: RANK PROGRESS (FULL SILVER TO EMERALD LADDER) -->
     <aside class="right-zone">
       <div class="sidebar-card">
         <div class="progress-header">RANK PROGRESS</div>
@@ -742,7 +743,7 @@
               <div class="step-label">Emerald IV <span>🏆 Trophy Claimed</span></div>
             </div>
 
-            <!-- Platinum -->
+            <!-- Platinum Ladder -->
             <div class="step-item" data-rank="platinum-1">
               <div class="step-node"></div>
               <div class="step-label">Platinum I <span>Gatekeeper to Emerald</span></div>
@@ -760,7 +761,7 @@
               <div class="step-label">Platinum IV <span>Escaped Gold</span></div>
             </div>
 
-            <!-- Gold -->
+            <!-- Gold Ladder -->
             <div class="step-item" data-rank="gold-1">
               <div class="step-node"></div>
               <div class="step-label">Gold I <span>Promotion Doorway</span></div>
@@ -778,10 +779,22 @@
               <div class="step-label">Gold IV <span>Passed</span></div>
             </div>
 
-            <!-- Silver Danger Zone -->
+            <!-- Full Silver Ladder -->
             <div class="step-item passed" data-rank="silver-1">
               <div class="step-node"></div>
-              <div class="step-label">Silver I <span>Demotion Danger</span></div>
+              <div class="step-label">Silver I <span>Danger Threshold</span></div>
+            </div>
+            <div class="step-item passed" data-rank="silver-2">
+              <div class="step-node"></div>
+              <div class="step-label">Silver II <span>Passed</span></div>
+            </div>
+            <div class="step-item passed" data-rank="silver-3">
+              <div class="step-node"></div>
+              <div class="step-label">Silver III <span>Passed</span></div>
+            </div>
+            <div class="step-item passed" data-rank="silver-4">
+              <div class="step-node"></div>
+              <div class="step-label">Silver IV <span>Floor</span></div>
             </div>
           </div>
         </div>
@@ -794,15 +807,17 @@
     const BASE_WORKER_URL = "https://sam-rank-tracker.hwong951.workers.dev";
     const DDRAGON_VER = "14.19.1";
 
-    // Clean vector SVGs for full standalone emblems
-    const EMBLEM_SVG_URLS = {
-      gold: "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/wings/wings_gold.png",
-      platinum: "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/wings/wings_platinum.png",
-      emerald: "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/wings/wings_emerald.png",
-      silver: "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/wings/wings_silver.png"
+    // Official Solid Helmet Crests (CommunityDragon Ranked Crests)
+    const CREST_URLS = {
+      iron: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-crests/iron.png',
+      bronze: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-crests/bronze.png',
+      silver: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-crests/silver.png',
+      gold: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-crests/gold.png',
+      platinum: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-crests/platinum.png',
+      emerald: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-crests/emerald.png',
+      diamond: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-crests/diamond.png'
     };
 
-    // Item roast analyzer
     function analyzeItemBuild(champ, items, win, kills, deaths) {
       const activeItems = (items || []).filter(id => id > 0);
       if (activeItems.length === 0) return "Did not finish any legendary components. Economy was starved.";
@@ -818,7 +833,6 @@
       }
     }
 
-    // Per-game tactical breakdown
     function analyzeGamePerformance(m) {
       const kdaRatio = m.deaths === 0 ? (m.kills + m.assists) : ((m.kills + m.assists) / m.deaths).toFixed(1);
       const csPerMin = m.durationMin > 0 ? (m.cs / m.durationMin).toFixed(1) : 0;
@@ -834,18 +848,15 @@
       }
     }
 
-    // Dynamic Macro Probability Calculator (Continually Adapts)
     function generateOverallForecast(tier, lp, winrateNum, recentMatches) {
       let probability = 50;
       let text = "";
-
       const recentWins = (recentMatches || []).filter(m => m.win).length;
 
       if (tier === 'silver') {
-        probability = 20;
+        probability = Math.max(10, Math.round(15 + (lp * 0.15)));
         text = `Demoted into Silver territory. With a ${winrateNum}% win rate, he needs a massive winning spree to climb out before the month ends.`;
       } else if (tier === 'gold') {
-        // Base probability calculation from LP and recent momentum
         probability = Math.round(35 + (lp * 0.3) + ((winrateNum - 50) * 1.5) + (recentWins * 4));
         probability = Math.min(85, Math.max(15, probability));
 
@@ -867,8 +878,11 @@
       return { probability: probability + "%", text: text };
     }
 
-    // Rank Stepper Line Alignment
+    // Complete Ladder: Silver IV to Emerald IV (13 steps)
     const ORDERED_STEPS = [
+      'silver-4',
+      'silver-3',
+      'silver-2',
       'silver-1',
       'gold-4',
       'gold-3',
@@ -885,7 +899,7 @@
       const romanMap = { 'I': '1', 'II': '2', 'III': '3', 'IV': '4' };
       const currentKey = `${tier.toLowerCase()}-${romanMap[division] || '4'}`;
       let currentIndex = ORDERED_STEPS.indexOf(currentKey);
-      if (currentIndex === -1) currentIndex = 3; // default Gold II
+      if (currentIndex === -1) currentIndex = 6; // default Gold II
 
       const stepElements = document.querySelectorAll('.step-item');
       stepElements.forEach(el => {
@@ -893,26 +907,31 @@
         const idx = ORDERED_STEPS.indexOf(stepRank);
 
         el.classList.remove('passed', 'active');
+        const span = el.querySelector('span');
+
         if (idx < currentIndex) {
           el.classList.add('passed');
+          if (span && !span.textContent.includes('🏆') && !span.textContent.includes('Gatekeeper')) {
+            span.textContent = 'Passed';
+          }
         } else if (idx === currentIndex) {
           el.classList.add('active');
-          const span = el.querySelector('span');
           if (span) span.textContent = `Current • ${lp} LP`;
+        } else {
+          if (span && span.textContent.includes('Current')) {
+            span.textContent = '';
+          }
         }
       });
 
-      // The line height connects precisely from the bottom up to the current node
-      // totalSteps = 9 intervals between 10 items
+      // Calculate line height so it terminates squarely at the center of the current node
       const totalSteps = ORDERED_STEPS.length - 1;
       const exactPercentage = (currentIndex / totalSteps) * 100;
-      
-      // Stop exactly at the current node (no spillover into Gold 1 until he is Gold 1)
       document.getElementById('active-line').style.height = `${exactPercentage}%`;
     }
 
     function updateRankUI(data) {
-      const emblemBox = document.getElementById('emblem-box');
+      const emblem = document.getElementById('rank-emblem');
       const tierEl = document.getElementById('current-tier');
       const lpEl = document.getElementById('current-lp');
       const recordEl = document.getElementById('current-record');
@@ -921,11 +940,8 @@
       const matchesContainer = document.getElementById('matches-list');
 
       const tierKey = (data.tier || 'gold').toLowerCase();
-
-      // Big high-res rank crest
-      emblemBox.innerHTML = `
-        <img class="emblem-img" src="${EMBLEM_SVG_URLS[tierKey] || EMBLEM_SVG_URLS['gold']}" alt="${tierKey} Crest" />
-      `;
+      emblem.src = CREST_URLS[tierKey] || CREST_URLS['gold'];
+      emblem.alt = `${tierKey} Crest`;
 
       const formattedTier = tierKey.toUpperCase();
       tierEl.textContent = `${formattedTier} ${data.division || 'II'}`;
@@ -936,16 +952,13 @@
       const wr = data.winrate || '50%';
       recordEl.innerHTML = `<span class="win-num">${wins}W</span> <span class="loss-num">${losses}L</span> (${wr} Win Rate)`;
 
-      // Dynamic Macro Probability
       const winrateNum = data.winrateNum || parseInt(wr) || 50;
       const forecast = generateOverallForecast(tierKey, data.lp ?? 87, winrateNum, data.matches);
       chancePill.textContent = `Probability: ${forecast.probability}`;
       macroText.textContent = forecast.text;
 
-      // Update vertical stepper with exact line height
       updateVerticalStepper(tierKey, data.division || 'II', data.lp ?? 87);
 
-      // Render Last 3 Solo/Duo Matches
       if (data.matches && data.matches.length > 0) {
         matchesContainer.innerHTML = data.matches.map(m => {
           const outcomeClass = m.win ? 'win' : 'loss';
@@ -1011,9 +1024,7 @@
 
     fetchLiveRank();
 
-    // ==========================================
-    // PERMANENT OCTOBER END-OF-MONTH COUNTDOWN
-    // ==========================================
+    // COUNTDOWN ENGINE
     const currentYear = new Date().getFullYear();
     const startDate = new Date(currentYear, 9, 1, 0, 0, 0).getTime();
     const endDate = new Date(currentYear, 9, 31, 23, 59, 59).getTime();
