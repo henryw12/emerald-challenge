@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sam's Emerald Challenge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #06110e;
+      --card-bg: rgba(13, 31, 26, 0.7);
+      --card-border: rgba(16, 185, 129, 0.25);
+      --emerald: #10b981;
+      --emerald-glow: #34d399;
+      --gold: #fbbf24;
+      --text: #f0fdf4;
+      --subtext: #86efac;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 50% 20%, #0f3427 0%, var(--bg) 80%);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      padding: 2rem 1.25rem;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 720px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .trophy-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 1rem;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid var(--emerald);
+      border-radius: 9999px;
+      color: var(--emerald-glow);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+    }
+
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2rem, 5vw, 3.25rem);
+      font-weight: 900;
+      letter-spacing: 0.03em;
+      line-height: 1.15;
+      background: linear-gradient(135deg, #a7f3d0 0%, #34d399 40%, #10b981 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      color: #94a3b8;
+      font-size: 1.05rem;
+      margin-bottom: 2rem;
+    }
+
+    .image-container {
+      position: relative;
+      width: 220px;
+      height: 220px;
+      border-radius: 24px;
+      margin-bottom: 2.25rem;
+      padding: 5px;
+      background: linear-gradient(145deg, var(--emerald-glow), #065f46, rgba(255, 255, 255, 0.1));
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 35px rgba(16, 185, 129, 0.3);
+    }
+
+    .image-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 50% 25%;
+      border-radius: 20px;
+      display: block;
+    }
+
+    .status-banner {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--emerald-glow);
+      margin-bottom: 1.25rem;
+    }
+
+    .countdown-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      width: 100%;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(12px);
+      padding: 1.5rem 0.75rem;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    }
+
+    .number {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--subtext);
+      margin-top: 0.5rem;
+      font-weight: 600;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.08);
+      height: 10px;
+      border-radius: 9999px;
+      overflow: hidden;
+      margin-bottom: 0.75rem;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #10b981, #34d399);
+      transition: width 0.5s ease;
+      box-shadow: 0 0 12px var(--emerald);
+    }
+
+    .progress-text {
+      font-size: 0.85rem;
+      color: #94a3b8;
+    }
+
+    @media (max-width: 520px) {
+      .countdown-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .image-container {
+        width: 180px;
+        height: 180px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="trophy-badge">🏆 Road to Emerald</div>
+    <h1>Sam’s Emerald Challenge</h1>
+    <p class="subtitle">October 1 – October 31</p>
+
+    <div class="image-container">
+      <img src="sam.jpg" alt="Sam with Emerald Trophy" />
+    </div>
+
+    <div class="status-banner" id="status-banner">Loading...</div>
+
+    <div class="countdown-grid" id="timer">
+      <div class="card">
+        <span class="number" id="days">00</span>
+        <span class="label">Days</span>
+      </div>
+      <div class="card">
+        <span class="number" id="hours">00</span>
+        <span class="label">Hours</span>
+      </div>
+      <div class="card">
+        <span class="number" id="minutes">00</span>
+        <span class="label">Minutes</span>
+      </div>
+      <div class="card">
+        <span class="number" id="seconds">00</span>
+        <span class="label">Seconds</span>
+      </div>
+    </div>
+
+    <div class="progress-bar-container">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+    <div class="progress-text" id="progress-text">Challenge Progress: 0%</div>
+  </div>
+
+  <script>
+    // Dates for the month of October
+    const currentYear = new Date().getFullYear();
+    const startDate = new Date(currentYear, 9, 1, 0, 0, 0).getTime();      // Oct 1, 00:00:00
+    const endDate = new Date(currentYear, 9, 31, 23, 59, 59).getTime();     // Oct 31, 23:59:59
+    const totalDuration = endDate - startDate;
+
+    const daysEl = document.getElementById('days');
+    const hoursEl = document.getElementById('hours');
+    const minutesEl = document.getElementById('minutes');
+    const secondsEl = document.getElementById('seconds');
+    const bannerEl = document.getElementById('status-banner');
+    const progressFill = document.getElementById('progress-fill');
+    const progressText = document.getElementById('progress-text');
+
+    function update() {
+      const now = Date.now();
+
+      if (now < startDate) {
+        // Before October 1: Count down until it starts
+        const distance = startDate - now;
+        bannerEl.textContent = "Time Until Challenge Begins";
+        setTime(distance);
+        progressFill.style.width = '0%';
+        progressText.textContent = "Challenge starts soon!";
+      } else if (now >= startDate && now <= endDate) {
+        // During October: Count down remaining time until end of month
+        const distance = endDate - now;
+        bannerEl.textContent = "Time Remaining in Challenge";
+        setTime(distance);
+
+        const elapsed = now - startDate;
+        const pct = Math.min(100, Math.max(0, (elapsed / totalDuration) * 100));
+        progressFill.style.width = pct.toFixed(1) + '%';
+        progressText.textContent = `Challenge Progress: ${pct.toFixed(1)}%`;
+      } else {
+        // After October 31
+        bannerEl.textContent = "Challenge Completed! 🎉";
+        daysEl.textContent = '00';
+        hoursEl.textContent = '00';
+        minutesEl.textContent = '00';
+        secondsEl.textContent = '00';
+        progressFill.style.width = '100%';
+        progressText.textContent = "October is over! Well done Sam!";
+      }
+    }
+
+    function setTime(distance) {
+      const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const s = Math.floor((distance % (1000 * 60)) / 1000);
+
+      daysEl.textContent = String(d).padStart(2, '0');
+      hoursEl.textContent = String(h).padStart(2, '0');
+      minutesEl.textContent = String(m).padStart(2, '0');
+      secondsEl.textContent = String(s).padStart(2, '0');
+    }
+
+    update();
+    setInterval(update, 1000);
+  </script>
+</body>
+</html>
