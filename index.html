@@ -227,6 +227,7 @@
 
     .player-card {
       width: 100%;
+      min-width: 0;
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       backdrop-filter: blur(14px);
@@ -275,66 +276,97 @@
     }
     .opgg-link:hover { opacity: 0.88; transform: translateY(-1px); }
 
-    /* RANK SHOWCASE: EMBLEM EXACTLY SCALED AND ALIGNED TO TEXT BLOCK */
+    /* RESPONSIVE RANK SHOWCASE
+       The emblem is sized from the text block, not from an arbitrary fixed box.
+       Grid keeps the crest and the GOLD/LP/W-L stack vertically aligned. */
     .rank-showcase {
-      display: flex;
-      align-items: stretch;
-      justify-content: center;
-      gap: 2.5rem;
-      background: radial-gradient(circle at center, rgba(16, 185, 129, 0.2) 0%, rgba(0, 0, 0, 0.5) 100%);
-      padding: 2rem 2.5rem;
+      width: 100%;
+      display: grid;
+      grid-template-columns: minmax(120px, 30%) minmax(0, 1fr);
+      align-items: center;
+      gap: clamp(1.25rem, 3vw, 2.75rem);
+      background: radial-gradient(circle at 25% 50%, rgba(16, 185, 129, 0.2) 0%, rgba(0, 0, 0, 0.5) 100%);
+      padding: clamp(1.25rem, 3vw, 2rem) clamp(1.25rem, 4vw, 2.5rem);
       border-radius: 24px;
       border: 1px solid rgba(16, 185, 129, 0.4);
+      container-type: inline-size;
     }
 
     .emblem-wrapper {
-      width: 140px;
-      min-width: 140px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
+      width: 100%;
+      aspect-ratio: 1;
+      min-width: 0;
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: visible;
     }
 
     .emblem-wrapper img {
+      display: block;
       width: 100%;
       height: 100%;
       object-fit: contain;
-      filter: drop-shadow(0 0 35px rgba(245, 158, 11, 0.65));
+      object-position: center;
+      filter: drop-shadow(0 0 24px rgba(245, 158, 11, 0.55));
       animation: gentle-glow 4s ease-in-out infinite alternate;
     }
 
+    .emblem-fallback {
+      display: none;
+      width: 72%;
+      height: 72%;
+      place-items: center;
+      border-radius: 50%;
+      border: 2px solid rgba(251, 191, 36, 0.7);
+      color: var(--gold);
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2rem, 8cqi, 4rem);
+      font-weight: 900;
+      background: radial-gradient(circle, rgba(251,191,36,.18), rgba(0,0,0,.35));
+      box-shadow: 0 0 30px rgba(251, 191, 36, .25);
+    }
+
+    .emblem-wrapper.is-fallback .emblem-fallback { display: grid; }
+    .emblem-wrapper.is-fallback img { display: none; }
+
     @keyframes gentle-glow {
       from { transform: scale(1); }
-      to { transform: scale(1.03); }
+      to { transform: scale(1.025); }
     }
 
     .rank-text-block {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+      min-width: 0;
+      display: grid;
+      grid-template-rows: auto auto auto;
+      align-content: center;
+      justify-items: start;
+      gap: 0.35rem;
       text-align: left;
     }
 
     .rank-tier-title {
       font-family: 'Cinzel', serif;
       font-weight: 900;
-      font-size: 2.8rem;
+      font-size: clamp(2rem, 6cqi, 2.8rem);
       color: #fcd34d;
       letter-spacing: 0.04em;
       line-height: 1;
+      white-space: nowrap;
     }
 
     .rank-lp-text {
-      font-size: 1.45rem;
+      font-size: clamp(1.1rem, 3.2cqi, 1.45rem);
       color: #f1f5f9;
       font-weight: 800;
     }
 
     .rank-stats-pill {
-      display: inline-flex;
-      gap: 0.65rem;
-      font-size: 1.05rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem 0.65rem;
+      align-items: baseline;
+      font-size: clamp(0.85rem, 2.5cqi, 1.05rem);
       color: #cbd5e1;
       font-weight: 700;
     }
@@ -387,7 +419,7 @@
     }
 
     /* MATCH BREAKDOWN */
-    .matches-section { text-align: left; }
+    .matches-section { text-align: left; min-width: 0; }
     .section-title {
       font-size: 0.95rem;
       font-weight: 800;
@@ -625,8 +657,10 @@
     }
 
     @media (max-width: 600px) {
-      .rank-showcase { flex-direction: column; text-align: center; gap: 1.5rem; align-items: center; }
-      .rank-text-block { text-align: center; align-items: center; }
+      .rank-showcase { grid-template-columns: 1fr; justify-items: center; gap: 1rem; }
+      .emblem-wrapper { width: min(42vw, 150px); }
+      .rank-text-block { justify-items: center; text-align: center; }
+      .rank-stats-pill { justify-content: center; }
       .countdown-grid { grid-template-columns: repeat(2, 1fr); }
       .image-container { width: 220px; height: 220px; }
       .emblem-wrapper { width: 120px; min-width: 120px; }
@@ -691,10 +725,11 @@
           </a>
         </div>
 
-        <!-- SOLID HELMET EMBLEM ALIGNED PERFECTLY WITH TEXT -->
-        <div class="rank-showcase">
-          <div class="emblem-wrapper">
-            <img id="rank-emblem" src="https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-crests/gold.png" alt="Rank Crest" />
+        <!-- RESPONSIVE RANK SHOWCASE -->
+        <div class="rank-showcase" id="rank-showcase">
+          <div class="emblem-wrapper" aria-label="Current rank emblem">
+            <img id="rank-emblem" src="" alt="" loading="eager" decoding="async" />
+            <div class="emblem-fallback" id="emblem-fallback" aria-hidden="true">?</div>
           </div>
           <div class="rank-text-block">
             <div class="rank-tier-title" id="current-tier">GOLD II</div>
@@ -807,75 +842,213 @@
     const BASE_WORKER_URL = "https://sam-rank-tracker.hwong951.workers.dev";
     const DDRAGON_VER = "14.19.1";
 
-    // Official Solid Helmet Crests (CommunityDragon Ranked Crests)
-    const CREST_URLS = {
-      iron: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-crests/iron.png',
-      bronze: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-crests/bronze.png',
-      silver: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-crests/silver.png',
-      gold: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-crests/gold.png',
-      platinum: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-crests/platinum.png',
-      emerald: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-crests/emerald.png',
-      diamond: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-crests/diamond.png'
+    // CommunityDragon's current ranked assets use tier folders/base files.
+    // The previous /images/ranked-crests/*.png path is not the current full-crest path.
+    const CREST_ASSETS = {
+      iron:     "https://raw.communitydragon.org/latest/game/assets/loadouts/regalia/crests/ranked/01_iron/01_iron_base.png",
+      bronze:   "https://raw.communitydragon.org/latest/game/assets/loadouts/regalia/crests/ranked/02_bronze/02_bronze_base.png",
+      silver:   "https://raw.communitydragon.org/latest/game/assets/loadouts/regalia/crests/ranked/03_silver/03_silver_base.png",
+      gold:     "https://raw.communitydragon.org/latest/game/assets/loadouts/regalia/crests/ranked/04_gold/04_gold_base.png",
+      platinum: "https://raw.communitydragon.org/latest/game/assets/loadouts/regalia/crests/ranked/05_platinum/05_platinum_base_new.png",
+      diamond:  "https://raw.communitydragon.org/latest/game/assets/loadouts/regalia/crests/ranked/06_diamond/06_diamond_base.png",
+      emerald:  "https://raw.communitydragon.org/latest/game/assets/loadouts/regalia/crests/ranked/emerald/emerald_base.png"
     };
+
+    const DEFAULT_DATA = {
+      tier: "gold",
+      division: "II",
+      lp: 87,
+      wins: 226,
+      losses: 228,
+      matches: []
+    };
+
+    const $ = (id) => document.getElementById(id);
+    const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+    const number = (value, fallback = 0) => Number.isFinite(Number(value)) ? Number(value) : fallback;
+
+    function normalizeRankData(raw = {}) {
+      const wins = number(raw.wins, DEFAULT_DATA.wins);
+      const losses = number(raw.losses, DEFAULT_DATA.losses);
+      const games = wins + losses;
+      const winrateNum = clamp(
+        number(raw.winrateNum, games ? (wins / games) * 100 : 50),
+        0,
+        100
+      );
+
+      return {
+        ...DEFAULT_DATA,
+        ...raw,
+        tier: String(raw.tier || DEFAULT_DATA.tier).toLowerCase(),
+        division: String(raw.division || DEFAULT_DATA.division).toUpperCase(),
+        lp: clamp(number(raw.lp, DEFAULT_DATA.lp), 0, 100),
+        wins,
+        losses,
+        winrateNum,
+        winrate: `${winrateNum.toFixed(0)}%`,
+        matches: Array.isArray(raw.matches) ? raw.matches : []
+      };
+    }
+
+    /*
+      Adaptive analysis engine:
+      Instead of a long chain of rank-specific if/else statements, each metric
+      contributes a normalized signal. The strongest signals are selected and
+      combined into an explanation. This means new match data changes the
+      analysis automatically without adding another special-case branch.
+    */
+    const ANALYSIS_RULES = [
+      {
+        key: "winrate",
+        weight: 1.2,
+        score: d => d.winrateNum - 50,
+        positive: d => `The ${d.winrateNum.toFixed(0)}% overall win rate is above an even record.`,
+        negative: d => `The ${d.winrateNum.toFixed(0)}% overall win rate is below an even record.`,
+        neutral: () => `The overall record is close to even.`
+      },
+      {
+        key: "recentForm",
+        weight: 1.5,
+        score: d => d.recentWinRate - 50,
+        positive: d => `Recent form is ${d.recentWinRate.toFixed(0)}% across the latest ${d.recentGames} Solo/Duo games.`,
+        negative: d => `Recent form is ${d.recentWinRate.toFixed(0)}% across the latest ${d.recentGames} Solo/Duo games.`,
+        neutral: d => `Recent form is roughly even across the latest ${d.recentGames} games.`
+      },
+      {
+        key: "kda",
+        weight: 1.1,
+        score: d => d.avgKda - 2,
+        positive: d => `Average recent KDA is ${d.avgKda.toFixed(1)}, supported by relatively efficient deaths.`,
+        negative: d => `Average recent KDA is ${d.avgKda.toFixed(1)}, leaving less room for repeated deaths.`,
+        neutral: d => `Average recent KDA is ${d.avgKda.toFixed(1)}.`
+      },
+      {
+        key: "cs",
+        weight: 0.9,
+        score: d => d.avgCsPerMin - 6.5,
+        positive: d => `Recent farming averages ${d.avgCsPerMin.toFixed(1)} CS/min.`,
+        negative: d => `Recent farming averages ${d.avgCsPerMin.toFixed(1)} CS/min.`,
+        neutral: d => `Recent farming averages ${d.avgCsPerMin.toFixed(1)} CS/min.`
+      },
+      {
+        key: "deaths",
+        weight: 1.0,
+        score: d => 5.5 - d.avgDeaths,
+        positive: d => `Average deaths are ${d.avgDeaths.toFixed(1)} per game.`,
+        negative: d => `Average deaths are ${d.avgDeaths.toFixed(1)} per game, which is the clearest risk signal in the sample.`,
+        neutral: d => `Average deaths are ${d.avgDeaths.toFixed(1)} per game.`
+      },
+      {
+        key: "lp",
+        weight: 0.7,
+        score: d => d.lp - 50,
+        positive: d => `${d.lp} LP leaves meaningful room before the next division.`,
+        negative: d => `${d.lp} LP means the current division still needs more progress.`,
+        neutral: d => `${d.lp} LP puts the account around the middle of the division.`
+      }
+    ];
+
+    function summarizeMatches(matches) {
+      const list = matches.slice(0, 10);
+      if (!list.length) {
+        return { recentGames: 0, recentWinRate: 50, avgKda: 0, avgCsPerMin: 0, avgDeaths: 0 };
+      }
+
+      const wins = list.filter(m => Boolean(m.win)).length;
+      const kdas = list.map(m => {
+        const deaths = number(m.deaths);
+        return deaths === 0 ? number(m.kills) + number(m.assists) : (number(m.kills) + number(m.assists)) / deaths;
+      });
+      const csRates = list.map(m => {
+        const minutes = number(m.durationMin);
+        return minutes > 0 ? number(m.cs) / minutes : 0;
+      });
+
+      return {
+        recentGames: list.length,
+        recentWinRate: (wins / list.length) * 100,
+        avgKda: kdas.reduce((a, b) => a + b, 0) / kdas.length,
+        avgCsPerMin: csRates.reduce((a, b) => a + b, 0) / csRates.length,
+        avgDeaths: list.reduce((sum, m) => sum + number(m.deaths), 0) / list.length
+      };
+    }
+
+    function generateAdaptiveAnalysis(data) {
+      const metrics = { ...data, ...summarizeMatches(data.matches) };
+
+      const signals = ANALYSIS_RULES
+        .map(rule => ({ ...rule, magnitude: Math.abs(rule.score(metrics)) * rule.weight }))
+        .sort((a, b) => b.magnitude - a.magnitude)
+        .filter(rule => rule.magnitude > 0.15);
+
+      const topSignals = signals.slice(0, 3);
+      const sentences = topSignals.map(rule => {
+        const score = rule.score(metrics);
+        return score > 1 ? rule.positive(metrics) : score < -1 ? rule.negative(metrics) : rule.neutral(metrics);
+      });
+
+      const rankProgress = `${data.tier.toUpperCase()} ${data.division} at ${data.lp} LP`;
+      const base = sentences.length
+        ? sentences.join(" ")
+        : `Telemetry is limited, so the dashboard is using ${rankProgress} as the primary signal.`;
+
+      const next = metrics.recentGames
+        ? `The engine weighs recent form, KDA, farming, deaths, overall win rate, and LP rather than relying on a single rule.`
+        : `Add recent Solo/Duo telemetry to make the analysis more specific.`;
+
+      return { text: `${rankProgress}. ${base} ${next}` };
+    }
+
+    function calculateForecast(data) {
+      const metrics = { ...data, ...summarizeMatches(data.matches) };
+      const components = [
+        clamp((data.winrateNum - 45) * 1.2, -20, 20),
+        clamp((metrics.recentWinRate - 50) * 0.7, -15, 15),
+        clamp((metrics.avgKda - 2) * 3, -10, 10),
+        clamp((6.5 - metrics.avgDeaths) * 2, -8, 8),
+        clamp((data.lp - 50) * 0.12, -6, 6)
+      ];
+      const signal = components.reduce((sum, value) => sum + value, 0);
+      return clamp(Math.round(50 + signal), 5, 95);
+    }
 
     function analyzeItemBuild(champ, items, win, kills, deaths) {
       const activeItems = (items || []).filter(id => id > 0);
-      if (activeItems.length === 0) return "Did not finish any legendary components. Economy was starved.";
+      if (!activeItems.length) return "No completed item telemetry was returned for this match.";
 
-      if (win && kills > deaths * 2) {
-        return `Itemization was lethal. Hit his core spikes on schedule and dictated teamfights.`;
-      } else if (!win && deaths > 7) {
-        return `Greedy offensive items while getting caught repeatedly. Zero defensive resists against burst.`;
-      } else if (!win) {
-        return `Components delayed by poor back timings. Missed key item spikes for neutral objectives.`;
-      } else {
-        return `Standard meta recipe. Built what Blitz or U.GG told him and let his team carry.`;
-      }
+      const kda = deaths === 0 ? kills : (kills / deaths);
+      const state = {
+        win: Boolean(win),
+        deaths: number(deaths),
+        kda,
+        itemCount: activeItems.length
+      };
+
+      const observations = [
+        state.deaths >= 8 ? "The build was paired with a high-death game; defensive or tempo choices are worth reviewing." : null,
+        state.kda >= 2 && state.win ? "The item path supported a positive combat result." : null,
+        state.itemCount < 4 ? "The match ended before a full item set was completed." : null,
+        !state.win && state.deaths < 8 ? "The loss was not explained by deaths alone, so objective timing and team-fight context matter." : null
+      ].filter(Boolean);
+
+      return observations[0] || "Build context looks ordinary from the available item IDs; compare the purchase order with the game's timing.";
     }
 
     function analyzeGamePerformance(m) {
-      const kdaRatio = m.deaths === 0 ? (m.kills + m.assists) : ((m.kills + m.assists) / m.deaths).toFixed(1);
-      const csPerMin = m.durationMin > 0 ? (m.cs / m.durationMin).toFixed(1) : 0;
+      const deaths = number(m.deaths);
+      const kda = deaths === 0
+        ? number(m.kills) + number(m.assists)
+        : (number(m.kills) + number(m.assists)) / deaths;
+      const csPerMin = number(m.durationMin) > 0 ? number(m.cs) / number(m.durationMin) : 0;
 
-      if (m.win && kdaRatio >= 3.5) {
-        return `<strong>Match Analysis:</strong> Pure carry performance on ${m.champion}. Controlled lane with ${csPerMin} CS/min and a ${kdaRatio} KDA. If this version of Sam plays in October, Emerald is locked.`;
-      } else if (m.win) {
-        return `<strong>Match Analysis:</strong> Low-stress victory. Played weakside, soaked pressure, and didn't throw his team's momentum.`;
-      } else if (m.deaths >= 8) {
-        return `<strong>Match Analysis:</strong> Tilt-fueled disaster on ${m.champion} (${m.deaths} deaths). Kept taking losing 1v1s while behind in tempo.`;
-      } else {
-        return `<strong>Match Analysis:</strong> Evenly contested ${m.durationMin}-minute game on ${m.champion}. Decent ${kdaRatio} KDA, but team couldn't close out Elder/Baron.`;
-      }
-    }
+      const metrics = [
+        { score: (m.win ? 2 : -1) + (kda - 2) * 0.4, text: `The ${m.champion} game finished ${m.win ? "as a victory" : "as a defeat"} with a ${kda.toFixed(1)} KDA.` },
+        { score: csPerMin - 6.5, text: `Farming was ${csPerMin.toFixed(1)} CS/min over ${m.durationMin} minutes.` },
+        { score: 5 - deaths, text: `Deaths were ${deaths}, which is ${deaths <= 5 ? "relatively controlled" : "the main efficiency issue"} in this sample.` }
+      ].sort((a, b) => Math.abs(b.score) - Math.abs(a.score));
 
-    function generateOverallForecast(tier, lp, winrateNum, recentMatches) {
-      let probability = 50;
-      let text = "";
-      const recentWins = (recentMatches || []).filter(m => m.win).length;
-
-      if (tier === 'silver') {
-        probability = Math.max(10, Math.round(15 + (lp * 0.15)));
-        text = `Demoted into Silver territory. With a ${winrateNum}% win rate, he needs a massive winning spree to climb out before the month ends.`;
-      } else if (tier === 'gold') {
-        probability = Math.round(35 + (lp * 0.3) + ((winrateNum - 50) * 1.5) + (recentWins * 4));
-        probability = Math.min(85, Math.max(15, probability));
-
-        if (recentWins === 3) {
-          text = `Currently riding a 3-game win streak at ${lp} LP in Gold II (${winrateNum}% overall). His momentum is peaking at the right time. Hitting Gold I promos will ignite his October push toward Platinum and Emerald.`;
-        } else if (recentWins === 0 && (recentMatches || []).length > 0) {
-          text = `Stuck in a 3-game slump at ${lp} LP in Gold II. With a flat ${winrateNum}% win rate, MMR decay and tilt risk are high. He cannot afford to bleed LP into Gold III.`;
-        } else {
-          text = `Holding ${lp} LP in Gold II with a ${winrateNum}% Solo/Duo win rate. Escaping into Platinum and Emerald requires crossing ~213 LP. With roughly 1 win per 1 loss, game volume and streak discipline will decide the outcome.`;
-        }
-      } else if (tier === 'platinum') {
-        probability = Math.round(70 + (lp * 0.2));
-        text = `Conquered Gold and is currently in Platinum! Emerald is within direct striking distance—just needs to avoid losing streaks on the final border.`;
-      } else if (tier === 'emerald') {
-        probability = 100;
-        text = `The trophy is secured! Sam has achieved Emerald rank. Mission completed.`;
-      }
-
-      return { probability: probability + "%", text: text };
+      return `<strong>Match Analysis:</strong> ${metrics.slice(0, 2).map(x => x.text).join(" ")}`;
     }
 
     // Complete Ladder: Silver IV to Emerald IV (13 steps)
@@ -930,94 +1103,107 @@
       document.getElementById('active-line').style.height = `${exactPercentage}%`;
     }
 
-    function updateRankUI(data) {
-      const emblem = document.getElementById('rank-emblem');
-      const tierEl = document.getElementById('current-tier');
-      const lpEl = document.getElementById('current-lp');
-      const recordEl = document.getElementById('current-record');
-      const chancePill = document.getElementById('chance-pill');
-      const macroText = document.getElementById('macro-analysis-text');
-      const matchesContainer = document.getElementById('matches-list');
+    function setEmblem(tier) {
+      const wrapper = $("rank-emblem").closest(".emblem-wrapper");
+      const img = $("rank-emblem");
+      const url = CREST_ASSETS[tier] || CREST_ASSETS.gold;
 
-      const tierKey = (data.tier || 'gold').toLowerCase();
-      emblem.src = CREST_URLS[tierKey] || CREST_URLS['gold'];
-      emblem.alt = `${tierKey} Crest`;
+      wrapper.classList.remove("is-fallback");
+      img.alt = `${tier} rank crest`;
+      img.src = url;
 
-      const formattedTier = tierKey.toUpperCase();
-      tierEl.textContent = `${formattedTier} ${data.division || 'II'}`;
-      lpEl.textContent = `${data.lp ?? 87} LP`;
-      
-      const wins = data.wins ?? 226;
-      const losses = data.losses ?? 228;
-      const wr = data.winrate || '50%';
-      recordEl.innerHTML = `<span class="win-num">${wins}W</span> <span class="loss-num">${losses}L</span> (${wr} Win Rate)`;
+      img.onerror = () => {
+        // If the remote crest ever changes, keep the layout intact instead of
+        // showing a broken-image icon. The UI falls back to a simple badge.
+        wrapper.classList.add("is-fallback");
+      };
+    }
 
-      const winrateNum = data.winrateNum || parseInt(wr) || 50;
-      const forecast = generateOverallForecast(tierKey, data.lp ?? 87, winrateNum, data.matches);
-      chancePill.textContent = `Probability: ${forecast.probability}`;
-      macroText.textContent = forecast.text;
+    function updateRankUI(rawData) {
+      const data = normalizeRankData(rawData);
+      const forecast = calculateForecast(data);
+      const analysis = generateAdaptiveAnalysis(data);
 
-      updateVerticalStepper(tierKey, data.division || 'II', data.lp ?? 87);
+      setEmblem(data.tier);
 
-      if (data.matches && data.matches.length > 0) {
-        matchesContainer.innerHTML = data.matches.map(m => {
-          const outcomeClass = m.win ? 'win' : 'loss';
-          const outcomeText = m.win ? 'Victory' : 'Defeat';
-          const champImg = `https://ddragon.leagueoflegends.com/cdn/${DDRAGON_VER}/img/champion/${m.champion}.png`;
+      $("current-tier").textContent = `${data.tier.toUpperCase()} ${data.division}`;
+      $("current-lp").textContent = `${data.lp} LP`;
+      $("current-record").innerHTML =
+        `<span class="win-num">${data.wins}W</span>` +
+        `<span class="loss-num">${data.losses}L</span>` +
+        ` <span>(${data.winrate} Win Rate)</span>`;
 
-          const itemsHtml = (m.items || []).map(itemId => {
-            if (itemId && itemId > 0) {
-              return `<div class="item-slot"><img src="https://ddragon.leagueoflegends.com/cdn/${DDRAGON_VER}/img/item/${itemId}.png" alt="Item ${itemId}" onerror="this.style.display='none'"></div>`;
-            } else {
-              return `<div class="item-slot"></div>`;
-            }
-          }).join('');
+      $("chance-pill").textContent = `Telemetry Score: ${forecast}%`;
+      $("macro-analysis-text").textContent = data.aiAnalysis || analysis.text;
 
-          return `
-            <div class="match-card ${outcomeClass}">
-              <div class="match-top-row">
-                <div class="champ-identity">
-                  <img class="champ-avatar" src="${champImg}" alt="${m.champion}" onerror="this.src='https://ddragon.leagueoflegends.com/cdn/${DDRAGON_VER}/img/profileicon/29.png'">
-                  <div class="champ-name-role">
-                    <span class="champ-name">${m.champion}</span>
-                    <span class="champ-role">${m.lane} • ${m.durationMin}m (Solo/Duo)</span>
-                  </div>
-                </div>
-                <div class="match-kda-stat">${m.kills} / ${m.deaths} / ${m.assists} <span>(${m.cs} CS)</span></div>
-                <span class="match-badge">${outcomeText}</span>
-              </div>
-              <div class="items-container">
-                <span class="item-label">Build:</span>
-                ${itemsHtml}
-              </div>
-              <div class="match-roast">
-                ${analyzeGamePerformance(m)}
-                <br><br>
-                <strong>Build Assessment:</strong> ${analyzeItemBuild(m.champion, m.items, m.win, m.kills, m.deaths)}
-              </div>
-            </div>
-          `;
-        }).join('');
-      } else {
-        matchesContainer.innerHTML = '<div style="color: #94a3b8; font-size: 0.9rem;">No recent Solo/Duo ranked games recorded yet.</div>';
+      updateVerticalStepper(data.tier, data.division, data.lp);
+      renderMatches(data.matches);
+    }
+
+    function renderMatches(matches) {
+      const container = $("matches-list");
+
+      if (!matches.length) {
+        container.innerHTML = '<div style="color:#94a3b8;font-size:.9rem;">No recent Solo/Duo ranked games were returned by the data source.</div>';
+        return;
       }
+
+      container.innerHTML = matches.map(m => {
+        const outcomeClass = m.win ? "win" : "loss";
+        const outcomeText = m.win ? "Victory" : "Defeat";
+        const champImg = `https://ddragon.leagueoflegends.com/cdn/${DDRAGON_VER}/img/champion/${encodeURIComponent(m.champion)}.png`;
+
+        const itemsHtml = (m.items || []).map(itemId =>
+          itemId > 0
+            ? `<div class="item-slot"><img src="https://ddragon.leagueoflegends.com/cdn/${DDRAGON_VER}/img/item/${itemId}.png" alt="Item ${itemId}" loading="lazy" onerror="this.closest('.item-slot').remove()"></div>`
+            : ""
+        ).join("");
+
+        return `
+          <article class="match-card ${outcomeClass}">
+            <div class="match-top-row">
+              <div class="champ-identity">
+                <img class="champ-avatar" src="${champImg}" alt="${m.champion}" loading="lazy"
+                     onerror="this.src='https://ddragon.leagueoflegends.com/cdn/${DDRAGON_VER}/img/profileicon/29.png'">
+                <div class="champ-name-role">
+                  <span class="champ-name">${m.champion}</span>
+                  <span class="champ-role">${m.lane || "—"} • ${m.durationMin || "?"}m (Solo/Duo)</span>
+                </div>
+              </div>
+              <div class="match-kda-stat">${number(m.kills)} / ${number(m.deaths)} / ${number(m.assists)} <span>(${number(m.cs)} CS)</span></div>
+              <span class="match-badge">${outcomeText}</span>
+            </div>
+            <div class="items-container">
+              <span class="item-label">Build:</span>
+              ${itemsHtml || '<span style="color:#64748b;font-size:.8rem;">No item data</span>'}
+            </div>
+            <div class="match-roast">
+              ${analyzeGamePerformance(m)}
+              <br><br>
+              <strong>Build Assessment:</strong> ${analyzeItemBuild(
+                m.champion, m.items, m.win, number(m.kills), number(m.deaths)
+              )}
+            </div>
+          </article>
+        `;
+      }).join("");
     }
 
     async function fetchLiveRank() {
       try {
-        const res = await fetch(BASE_WORKER_URL);
-        if (!res.ok) throw new Error("Worker error");
+        const res = await fetch(BASE_WORKER_URL, {
+          headers: { "Accept": "application/json" },
+          cache: "no-store"
+        });
+        if (!res.ok) throw new Error(`Worker returned ${res.status}`);
+
         const data = await res.json();
-        if (data.tier) updateRankUI(data);
+        updateRankUI(data);
       } catch (err) {
-        console.warn("Using fallback live metrics:", err);
+        console.warn("Live rank telemetry unavailable:", err);
         updateRankUI({
-          tier: 'gold', division: 'II', lp: 87, wins: 226, losses: 228, winrate: '50%', winrateNum: 50,
-          matches: [
-            { champion: 'Aatrox', lane: 'TOP', durationMin: 32, win: true, kills: 8, deaths: 3, assists: 7, cs: 215, items: [3153, 3071, 3053, 3111, 3065, 0, 3340] },
-            { champion: 'Mordekaiser', lane: 'TOP', durationMin: 28, win: false, kills: 3, deaths: 7, assists: 4, cs: 165, items: [3116, 3157, 3047, 1054, 0, 0, 3340] },
-            { champion: 'Garen', lane: 'TOP', durationMin: 25, win: true, kills: 6, deaths: 2, assists: 5, cs: 198, items: [3078, 3006, 3742, 3068, 0, 0, 3363] }
-          ]
+          ...DEFAULT_DATA,
+          aiAnalysis: "Live telemetry is temporarily unavailable. The dashboard is showing the last configured rank snapshot."
         });
       }
     }
@@ -1025,9 +1211,10 @@
     fetchLiveRank();
 
     // COUNTDOWN ENGINE
-    const currentYear = new Date().getFullYear();
-    const startDate = new Date(currentYear, 9, 1, 0, 0, 0).getTime();
-    const endDate = new Date(currentYear, 9, 31, 23, 59, 59).getTime();
+    const nowDate = new Date();
+    const challengeYear = nowDate.getMonth() >= 10 ? nowDate.getFullYear() + 1 : nowDate.getFullYear();
+    const startDate = new Date(challengeYear, 9, 1, 0, 0, 0).getTime();
+    const endDate = new Date(challengeYear, 9, 31, 23, 59, 59).getTime();
     const totalDuration = endDate - startDate;
 
     const daysEl = document.getElementById('days');
