@@ -142,6 +142,17 @@
       background: #7f1d1d;
     }
 
+    /* Neutral Loading State */
+    .live-status-banner.checking {
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      color: var(--muted);
+    }
+    .live-status-banner.checking .status-dot {
+      background: var(--muted);
+      animation: pulse 1s infinite;
+    }
+
     h1 {
       font-family: 'Cinzel', serif;
       font-size: clamp(2.4rem, 5.5vw, 3.8rem);
@@ -578,7 +589,6 @@
       padding: 0.8rem 1rem;
     }
 
-    /* Enhanced Mobile Responsive Queries */
     @media (max-width: 768px) {
       body { padding: 1.25rem 0.75rem; }
       .dashboard { gap: 1.25rem; }
@@ -636,8 +646,9 @@
       <div class="image-container">
         <img src="sam.jpg" alt="Sam with Emerald Trophy" />
       </div>
-      <div id="live-status-banner" class="live-status-banner not-live">
-        <span class="status-dot"></span> NOT LIVE
+      <!-- Starts with a neutral checking state to avoid false "Not Live" flicker -->
+      <div id="live-status-banner" class="live-status-banner checking">
+        <span class="status-dot"></span> CHECKING STATUS...
       </div>
     </div>
 
