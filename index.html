@@ -93,7 +93,7 @@
       box-shadow: 0 0 30px rgba(16, 185, 129, 0.35);
     }
 
-    /* Supersized Live Status Badge */
+    /* Supersized Live Status Badge with Red Circle */
     .live-status-banner {
       margin-top: 0.5rem;
       padding: 0.75rem 2rem;
@@ -103,18 +103,37 @@
       letter-spacing: 0.12em;
       text-transform: uppercase;
       box-shadow: 0 0 25px rgba(0,0,0,0.5);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
       transition: all 0.3s ease;
     }
+    
+    .status-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
     .live-status-banner.is-live {
       background: rgba(239, 68, 68, 0.25);
       border: 2px solid #ef4444;
       color: #fca5a5;
       animation: pulse 1.5s infinite;
     }
+    .live-status-banner.is-live .status-dot {
+      background: #ef4444;
+      box-shadow: 0 0 10px #ef4444;
+    }
+
     .live-status-banner.not-live {
-      background: rgba(16, 185, 129, 0.12);
-      border: 2px solid rgba(16, 185, 129, 0.4);
-      color: #6ee7b7;
+      background: rgba(239, 68, 68, 0.05);
+      border: 2px solid rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      opacity: 0.65;
+    }
+    .live-status-banner.not-live .status-dot {
+      background: #7f1d1d;
     }
 
     h1 {
@@ -184,7 +203,6 @@
       font-weight: 800;
     }
 
-    /* Challenge Stats Grid (Games Today, Total Games, Total Hours) */
     .stats-tracker-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -514,7 +532,6 @@
 
     .match-top-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; }
     .champ-identity { display: flex; align-items: center; gap: 0.85rem; }
-    .champ-avatar { width: 52px; height: 52px; border-radius: 14px; border: 2px solid rgba(255, 255, 255, 0.2); }
     .champ-name-role { display: flex; flex-direction: column; }
     .champ-name { font-weight: 800; font-size: 1.15rem; color: #fff; }
     .champ-role { font-size: 0.78rem; text-transform: uppercase; font-weight: 700; color: var(--muted); }
@@ -555,8 +572,10 @@
       <div class="trophy-badge">🏆 ROAD TO EMERALD</div>
       <h1>Sam’s Emerald Challenge</h1>
       <p class="subtitle">October 1 – October 31</p>
-      <!-- Supersized Live Status -->
-      <div id="live-status-banner" class="live-status-banner not-live">🟢 NOT LIVE</div>
+      <!-- Supersized Live Status with Dimmed Red Dot -->
+      <div id="live-status-banner" class="live-status-banner not-live">
+        <span class="status-dot"></span> NOT LIVE
+      </div>
     </header>
 
     <div class="image-container">
@@ -649,7 +668,7 @@
   <script>
     const WORKER_URL = "https://sam-rank-tracker.hwong951.workers.dev";
     const DDRAGON_VER = "14.19.1";
-    const DDRAGON = `https://cdn.jsdelivr.net/gh/CommunityDragon/CDTB@latest/game/assets/`; // fallback or ddragon
+    const DDRAGON = `https://cdn.jsdelivr.net/gh/CommunityDragon/CDTB@latest/game/assets/`;
     const CREST_BASE = "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-";
 
     const DEFAULT_DATA = { tier: "gold", division: "II", lp: 87, wins: 226, losses: 228, matches: [] };
@@ -746,14 +765,14 @@
 
       setEmblem(data.tier);
 
-      // Supersized Live Status Update
+      // Live Status Update with Red Circle / Dimmed Dot
       const liveBanner = $("live-status-banner");
       if (data.liveGame && data.liveGame.inGame) {
         liveBanner.className = "live-status-banner is-live";
-        liveBanner.textContent = `🔴 LIVE IN GAME (${data.liveGame.gameLengthMin}m)`;
+        liveBanner.innerHTML = `<span class="status-dot"></span> LIVE IN GAME (${data.liveGame.gameLengthMin}m)`;
       } else {
         liveBanner.className = "live-status-banner not-live";
-        liveBanner.textContent = "🟢 NOT LIVE";
+        liveBanner.innerHTML = `<span class="status-dot"></span> NOT LIVE`;
       }
 
       // Update Challenge Stats Tracker
