@@ -369,14 +369,15 @@
     }
 
     /* Static: no animation, fixed scale */
-    .emblem-wrapper img {
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      transform: scale(var(--emblem-scale));
-      filter: drop-shadow(0 0 24px rgba(245, 158, 11, 0.55));
-    }
+.emblem-wrapper img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform: translateZ(0) scale(var(--emblem-scale)); 
+  filter: drop-shadow(0 0 24px rgba(245, 158, 11, 0.55));
+  will-change: filter, transform;
+}
 
     .emblem-fallback {
       display: none;
