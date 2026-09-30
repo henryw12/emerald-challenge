@@ -915,11 +915,9 @@
               <span class="item-label">Build:</span>
               ${items || '<span class="empty-note">No item data</span>'}
             </div>
-            <div class="match-roast">
-              ${analyzeGame(m)}
-              <br><br>
-              <strong>Build Assessment:</strong> ${analyzeBuild(m)}
-            </div>
+<div class="match-roast">
+  ${m.aiRoast || `${analyzeGame(m)} <br><br> <strong>Build Assessment:</strong> ${analyzeBuild(m)}`}
+</div>
           </article>`;
       }).join("");
     }
