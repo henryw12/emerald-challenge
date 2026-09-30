@@ -93,7 +93,6 @@
       box-shadow: 0 0 30px rgba(16, 185, 129, 0.35);
     }
 
-    /* Live status positioned directly under sam's photo */
     .profile-live-wrapper {
       display: flex;
       flex-direction: column;
@@ -551,6 +550,27 @@
     .match-kda-stat { font-size: 1.1rem; font-weight: 800; color: #f8fafc; }
     .match-kda-stat span { color: var(--muted); font-weight: 500; font-size: 0.9rem; }
 
+    /* Item Builds Container */
+    .items-container {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 0.55rem 0.8rem;
+      border-radius: 10px;
+    }
+    .item-label { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--muted); margin-right: 0.4rem; }
+    .item-slot {
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+    }
+    .item-slot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
     .match-roast {
       font-size: 0.92rem;
       line-height: 1.5;
@@ -582,7 +602,6 @@
       <p class="subtitle">October 1 – October 31</p>
     </header>
 
-    <!-- Sam's Photo + Live Status Banner Directly Below -->
     <div class="profile-live-wrapper">
       <div class="image-container">
         <img src="sam.jpg" alt="Sam with Emerald Trophy" />
@@ -665,7 +684,7 @@
 
       <div class="matches-section">
         <div class="section-title">
-          <span>Recent Match Breakdowns</span>
+          <span>Recent Match Breakdowns & Build Roasts</span>
           <small>Solo/Duo Matches Only (Last 5)</small>
         </div>
         <div class="matches-list" id="matches-list"></div>
@@ -677,7 +696,8 @@
   <script>
     const WORKER_URL = "https://sam-rank-tracker.hwong951.workers.dev";
     const DDRAGON_VER = "14.19.1";
-    const DDRAGON = `https://ddragon.leagueoflegends.com/cdn/${DDRAGON_VER}/img/champion`;
+    const CHAMP_IMG = `https://ddragon.leagueoflegends.com/cdn/${DDRAGON_VER}/img/champion`;
+    const ITEM_IMG = `https://ddragon.leagueoflegends.com/cdn/${DDRAGON_VER}/img/item`;
     const CREST_BASE = "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-";
 
     const DEFAULT_DATA = { tier: "gold", division: "II", lp: 87, wins: 226, losses: 228, matches: [] };
@@ -809,23 +829,33 @@
         return;
       }
 
-      container.innerHTML = matches.map(m => `
-        <article class="match-card ${m.win ? "win" : "loss"}">
-          <div class="match-top-row">
-            <div class="champ-identity">
-              <img class="champ-avatar" src="${DDRAGON}/${encodeURIComponent(m.champion)}.png" alt="${esc(m.champion)}" loading="lazy" onerror="this.src='https://ddragon.leagueoflegends.com/cdn/14.19.1/img/profileicon/29.png'">
-              <div class="champ-name-role">
-                <span class="champ-name">${esc(formatChampName(m.champion))}</span>
-                <span class="champ-role">${esc(m.lane || "—")} • ${esc(m.durationMin || "?")}m (Solo/Duo)</span>
+      container.innerHTML = matches.map(m => {
+        const itemsHtml = (m.items || []).filter(id => id > 0).map(id =>
+          `<div class="item-slot"><img src="${ITEM_IMG}/${id}.png" alt="Item ${id}" loading="lazy" onerror="this.closest('.item-slot').remove()"></div>`
+        ).join("");
+
+        return `
+          <article class="match-card ${m.win ? "win" : "loss"}">
+            <div class="match-top-row">
+              <div class="champ-identity">
+                <img class="champ-avatar" src="${CHAMP_IMG}/${encodeURIComponent(m.champion)}.png" alt="${esc(m.champion)}" loading="lazy" onerror="this.src='https://ddragon.leagueoflegends.com/cdn/${DDRAGON_VER}/img/profileicon/29.png'">
+                <div class="champ-name-role">
+                  <span class="champ-name">${esc(formatChampName(m.champion))}</span>
+                  <span class="champ-role">${esc(m.lane || "—")} • ${esc(m.durationMin || "?")}m (Solo/Duo)</span>
+                </div>
               </div>
+              <div class="match-kda-stat">${number(m.kills)} / ${number(m.deaths)} / ${number(m.assists)} <span>(${number(m.cs)} CS)</span></div>
+              <span class="match-badge">${m.win ? "Victory" : "Defeat"}</span>
             </div>
-            <div class="match-kda-stat">${number(m.kills)} / ${number(m.deaths)} / ${number(m.assists)} <span>(${number(m.cs)} CS)</span></div>
-            <span class="match-badge">${m.win ? "Victory" : "Defeat"}</span>
-          </div>
-          <div class="match-roast">
-            ${esc(m.aiRoast || "Analyzing performance...")}
-          </div>
-        </article>`).join("");
+            <div class="items-container">
+              <span class="item-label">Build:</span>
+              ${itemsHtml || '<span class="empty-note">No items</span>'}
+            </div>
+            <div class="match-roast">
+              ${esc(m.aiRoast || "Analyzing performance...")}
+            </div>
+          </article>`;
+      }).join("");
     }
 
     async function fetchLiveRank() {
