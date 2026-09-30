@@ -411,7 +411,6 @@
       padding: clamp(1rem, 2.5vw, 1.5rem) clamp(1.25rem, 4vw, 2.5rem);
       border-radius: 24px;
       border: 1px solid rgba(16, 185, 129, 0.4);
-      container-type: inline-size;
     }
 
     .emblem-wrapper {
@@ -550,7 +549,6 @@
     .match-kda-stat { font-size: 1.1rem; font-weight: 800; color: #f8fafc; }
     .match-kda-stat span { color: var(--muted); font-weight: 500; font-size: 0.9rem; }
 
-    /* Item Builds Container */
     .items-container {
       display: flex;
       align-items: center;
@@ -580,15 +578,47 @@
       padding: 0.8rem 1rem;
     }
 
-    @media (max-width: 600px) {
-      body { padding: 1.5rem 1rem; }
-      .card { padding: 1.25rem; }
+    /* Enhanced Mobile Responsive Queries */
+    @media (max-width: 768px) {
+      body { padding: 1.25rem 0.75rem; }
+      .dashboard { gap: 1.25rem; }
+      .card { padding: 1.25rem; border-radius: 20px; }
       .player-card { padding: 1.25rem; }
-      .countdown-grid { grid-template-columns: repeat(2, 1fr); }
-      .stats-tracker-grid { grid-template-columns: 1fr; }
+      
+      .countdown-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+      .stats-tracker-grid { grid-template-columns: 1fr; gap: 0.75rem; }
+      
       .image-container { width: 220px; height: 220px; }
-      .rank-showcase { grid-template-columns: 1fr; justify-items: center; gap: 1rem; }
-      .emblem-wrapper { width: min(78vw, 320px); height: 280px; }
+      
+      .rank-showcase {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        text-align: center;
+        gap: 1rem;
+        padding: 1.25rem 1rem;
+      }
+      .emblem-wrapper { width: 100%; height: 240px; }
+      .rank-text-block { justify-items: center; text-align: center; }
+      .rank-tier-title { font-size: 2.2rem; }
+      .rank-stats-pill { justify-content: center; }
+
+      .match-top-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.6rem;
+      }
+      .match-kda-stat {
+        align-self: flex-start;
+      }
+      .match-badge {
+        position: absolute;
+        top: 1.25rem;
+        right: 1.4rem;
+      }
+      .match-card {
+        position: relative;
+        padding-top: 2.8rem;
+      }
     }
   </style>
 </head>
