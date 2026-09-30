@@ -93,6 +93,30 @@
       box-shadow: 0 0 30px rgba(16, 185, 129, 0.35);
     }
 
+    /* Supersized Live Status Badge */
+    .live-status-banner {
+      margin-top: 0.5rem;
+      padding: 0.75rem 2rem;
+      border-radius: 9999px;
+      font-weight: 900;
+      font-size: 1.1rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      box-shadow: 0 0 25px rgba(0,0,0,0.5);
+      transition: all 0.3s ease;
+    }
+    .live-status-banner.is-live {
+      background: rgba(239, 68, 68, 0.25);
+      border: 2px solid #ef4444;
+      color: #fca5a5;
+      animation: pulse 1.5s infinite;
+    }
+    .live-status-banner.not-live {
+      background: rgba(16, 185, 129, 0.12);
+      border: 2px solid rgba(16, 185, 129, 0.4);
+      color: #6ee7b7;
+    }
+
     h1 {
       font-family: 'Cinzel', serif;
       font-size: clamp(2.4rem, 5.5vw, 3.8rem);
@@ -157,6 +181,37 @@
       letter-spacing: 0.15em;
       color: var(--subtext);
       margin-top: 0.45rem;
+      font-weight: 800;
+    }
+
+    /* Challenge Stats Grid (Games Today, Total Games, Total Hours) */
+    .stats-tracker-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .stat-box {
+      background: rgba(13, 31, 26, 0.8);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .stat-box .stat-val {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--emerald-glow);
+    }
+
+    .stat-box .stat-lbl {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-top: 0.25rem;
       font-weight: 800;
     }
 
@@ -268,20 +323,7 @@
       box-shadow: 0 0 20px var(--emerald);
     }
 
-    .step.active .node::after {
-      content: "";
-      position: absolute;
-      inset: -3px;
-      border-radius: 50%;
-      box-shadow: 0 0 24px var(--emerald-glow);
-      opacity: 0.25;
-      animation: pulse-node 1.8s ease-in-out infinite alternate;
-    }
-    @keyframes pulse-node { to { opacity: 1; } }
-
     .step.goal .node { border-color: var(--emerald-glow); font-size: 1rem; }
-    .step.goal.passed .node,
-    .step.goal.active .node { background: var(--emerald-glow); box-shadow: 0 0 24px var(--emerald-glow); }
 
     .tier-groups {
       display: grid;
@@ -364,7 +406,6 @@
       object-fit: contain;
       transform: translateZ(0) scale(var(--emblem-scale)); 
       filter: drop-shadow(0 0 24px rgba(245, 158, 11, 0.55));
-      will-change: filter, transform;
     }
 
     .emblem-fallback {
@@ -379,7 +420,6 @@
       font-size: clamp(2rem, 8cqi, 4rem);
       font-weight: 900;
       background: radial-gradient(circle, rgba(251, 191, 36, 0.18), rgba(0, 0, 0, 0.35));
-      box-shadow: 0 0 30px rgba(251, 191, 36, 0.25);
     }
     .emblem-wrapper.is-fallback .emblem-fallback { display: grid; }
     .emblem-wrapper.is-fallback img { display: none; }
@@ -453,7 +493,7 @@
       gap: 0.5rem;
       flex-wrap: wrap;
     }
-    .section-title small { font-size: 0.75rem; color: #64748b; text-transform: none; letter-spacing: 0; }
+    .section-title small { font-size: 0.75rem; color: #64748b; text-transform: none; }
 
     .empty-note { color: var(--muted); font-size: 0.9rem; }
 
@@ -486,27 +526,6 @@
     .match-kda-stat { font-size: 1.1rem; font-weight: 800; color: #f8fafc; }
     .match-kda-stat span { color: var(--muted); font-weight: 500; font-size: 0.9rem; }
 
-    .items-container {
-      display: flex;
-      align-items: center;
-      gap: 0.45rem;
-      flex-wrap: wrap;
-      background: rgba(0, 0, 0, 0.3);
-      padding: 0.55rem 0.8rem;
-      border-radius: 10px;
-    }
-
-    .item-label { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--muted); margin-right: 0.4rem; }
-    .item-slot {
-      width: 36px;
-      height: 36px;
-      border-radius: 6px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      overflow: hidden;
-    }
-    .item-slot img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
     .match-roast {
       font-size: 0.92rem;
       line-height: 1.5;
@@ -515,22 +534,16 @@
       border-radius: 10px;
       padding: 0.8rem 1rem;
     }
-    .match-roast strong { color: var(--emerald-glow); font-weight: 700; }
 
     @media (max-width: 600px) {
       body { padding: 1.5rem 1rem; }
       .card { padding: 1.25rem; }
       .player-card { padding: 1.25rem; }
       .countdown-grid { grid-template-columns: repeat(2, 1fr); }
+      .stats-tracker-grid { grid-template-columns: 1fr; }
       .image-container { width: 220px; height: 220px; }
       .rank-showcase { grid-template-columns: 1fr; justify-items: center; gap: 1rem; }
       .emblem-wrapper { width: min(78vw, 320px); height: 280px; }
-      .rank-text-block { justify-items: center; text-align: center; }
-      .rank-stats-pill { justify-content: center; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { animation: none !important; transition: none !important; }
     }
   </style>
 </head>
@@ -542,13 +555,15 @@
       <div class="trophy-badge">🏆 ROAD TO EMERALD</div>
       <h1>Sam’s Emerald Challenge</h1>
       <p class="subtitle">October 1 – October 31</p>
+      <!-- Supersized Live Status -->
+      <div id="live-status-banner" class="live-status-banner not-live">🟢 NOT LIVE</div>
     </header>
 
     <div class="image-container">
       <img src="sam.jpg" alt="Sam with Emerald Trophy" />
     </div>
 
-    <!-- COUNTDOWN -->
+    <!-- COUNTDOWN & STATS TRACKER -->
     <section class="card countdown-card" aria-label="Challenge countdown">
       <div class="card-title" id="status-banner">Time Remaining in Challenge</div>
       <div class="countdown-grid">
@@ -557,6 +572,23 @@
         <div class="timer-card"><span class="number" id="minutes">00</span><span class="label">Minutes</span></div>
         <div class="timer-card"><span class="number" id="seconds">00</span><span class="label">Seconds</span></div>
       </div>
+
+      <!-- Challenge Performance Totals -->
+      <div class="stats-tracker-grid">
+        <div class="stat-box">
+          <div class="stat-val" id="stat-today">0</div>
+          <div class="stat-lbl">Games Today</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="stat-oct">0</div>
+          <div class="stat-lbl">Games Since Oct 1</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="stat-hours">0h</div>
+          <div class="stat-lbl">Total Time Invested</div>
+        </div>
+      </div>
+
       <div class="month-bar-wrap">
         <span class="month-bar-label">Month Elapsed</span>
         <div class="horizontal-bar-box"><div class="horizontal-bar-fill" id="month-fill"></div></div>
@@ -596,17 +628,16 @@
         </div>
       </div>
 
-      <!-- MACRO SCOUTING & PROBABILITY (Telemetry Score Removed) -->
       <div class="overall-analysis-card">
         <div class="analysis-header">
           <span class="analysis-label">🔮 Macro Scouting & Emerald Probability</span>
         </div>
-        <p class="analysis-content" id="macro-analysis-text">Analyzing live Solo/Duo telemetry...</p>
+        <p class="analysis-content" id="macro-analysis-text">Analyzing live telemetry...</p>
       </div>
 
       <div class="matches-section">
         <div class="section-title">
-          <span>Recent Match Breakdowns & Build Roasts</span>
+          <span>Recent Match Breakdowns</span>
           <small>Solo/Duo Matches Only</small>
         </div>
         <div class="matches-list" id="matches-list"></div>
@@ -618,7 +649,7 @@
   <script>
     const WORKER_URL = "https://sam-rank-tracker.hwong951.workers.dev";
     const DDRAGON_VER = "14.19.1";
-    const DDRAGON = `https://ddragon.leagueoflegends.com/cdn/${DDRAGON_VER}/img`;
+    const DDRAGON = `https://cdn.jsdelivr.net/gh/CommunityDragon/CDTB@latest/game/assets/`; // fallback or ddragon
     const CREST_BASE = "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-";
 
     const DEFAULT_DATA = { tier: "gold", division: "II", lp: 87, wins: 226, losses: 228, matches: [] };
@@ -626,7 +657,6 @@
     const $ = id => document.getElementById(id);
     const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
     const number = (v, fallback = 0) => Number.isFinite(Number(v)) ? Number(v) : fallback;
-    const avg = arr => arr.reduce((a, b) => a + b, 0) / arr.length;
     const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
     const cap = s => s[0].toUpperCase() + s.slice(1);
 
@@ -700,12 +730,6 @@
       tierEls.forEach(el => el.classList.toggle("current", el.dataset.tier === tier));
 
       $("active-line").style.width = `${pos <= 0 ? 0 : (Math.min(pos, last) / last) * 100}%`;
-
-      const active = stepEls[pos];
-      if (active) {
-        const box = $("stepper-scroll");
-        box.scrollLeft = active.offsetLeft - (box.clientWidth - active.offsetWidth) / 2;
-      }
     }
 
     function setEmblem(tier) {
@@ -719,23 +743,24 @@
 
     function updateRankUI(rawData) {
       const data = normalizeRankData(rawData);
-      const metrics = { ...data };
 
       setEmblem(data.tier);
 
-      // Handle Live Game Status Badge
-      const headerZone = document.querySelector('.header-zone');
-      let liveBadge = document.getElementById('live-badge');
+      // Supersized Live Status Update
+      const liveBanner = $("live-status-banner");
       if (data.liveGame && data.liveGame.inGame) {
-        if (!liveBadge) {
-          liveBadge = document.createElement('div');
-          liveBadge.id = 'live-badge';
-          liveBadge.style.cssText = "margin-top: 0.5rem; display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 1.2rem; background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; border-radius: 9999px; color: #fca5a5; font-weight: 900; font-size: 0.85rem; letter-spacing: 0.1em;";
-          headerZone.appendChild(liveBadge);
-        }
-        liveBadge.innerHTML = `🔴 LIVE IN GAME (${data.liveGame.gameLengthMin}m)`;
-      } else if (liveBadge) {
-        liveBadge.remove();
+        liveBanner.className = "live-status-banner is-live";
+        liveBanner.textContent = `🔴 LIVE IN GAME (${data.liveGame.gameLengthMin}m)`;
+      } else {
+        liveBanner.className = "live-status-banner not-live";
+        liveBanner.textContent = "🟢 NOT LIVE";
+      }
+
+      // Update Challenge Stats Tracker
+      if (data.statsTracker) {
+        $("stat-today").textContent = data.statsTracker.gamesToday;
+        $("stat-oct").textContent = data.statsTracker.gamesSinceOct1;
+        $("stat-hours").textContent = `${data.statsTracker.totalHoursPlayed}h`;
       }
 
       $("current-tier").textContent = `${data.tier.toUpperCase()} ${data.division}`;
@@ -753,38 +778,26 @@
       const container = $("matches-list");
 
       if (!matches.length) {
-        container.innerHTML = '<div class="empty-note">No recent Solo/Duo ranked games were returned by the data source.</div>';
+        container.innerHTML = '<div class="empty-note">No recent Solo/Duo ranked games found.</div>';
         return;
       }
 
-      container.innerHTML = matches.map(m => {
-        const items = (m.items || []).filter(id => id > 0).map(id =>
-          `<div class="item-slot"><img src="${DDRAGON}/item/${id}.png" alt="Item ${id}" loading="lazy" onerror="this.closest('.item-slot').remove()"></div>`
-        ).join("");
-
-        return `
-          <article class="match-card ${m.win ? "win" : "loss"}">
-            <div class="match-top-row">
-              <div class="champ-identity">
-                <img class="champ-avatar" src="${DDRAGON}/champion/${encodeURIComponent(m.champion)}.png" alt="${esc(m.champion)}" loading="lazy"
-                     onerror="this.src='${DDRAGON}/profileicon/29.png'">
-                <div class="champ-name-role">
-                  <span class="champ-name">${esc(m.champion)}</span>
-                  <span class="champ-role">${esc(m.lane || "—")} • ${esc(m.durationMin || "?")}m (Solo/Duo)</span>
-                </div>
+      container.innerHTML = matches.map(m => `
+        <article class="match-card ${m.win ? "win" : "loss"}">
+          <div class="match-top-row">
+            <div class="champ-identity">
+              <div class="champ-name-role">
+                <span class="champ-name">${esc(m.champion)}</span>
+                <span class="champ-role">${esc(m.lane || "—")} • ${esc(m.durationMin || "?")}m (Solo/Duo)</span>
               </div>
-              <div class="match-kda-stat">${number(m.kills)} / ${number(m.deaths)} / ${number(m.assists)} <span>(${number(m.cs)} CS)</span></div>
-              <span class="match-badge">${m.win ? "Victory" : "Defeat"}</span>
             </div>
-            <div class="items-container">
-              <span class="item-label">Build:</span>
-              ${items || '<span class="empty-note">No item data</span>'}
-            </div>
-            <div class="match-roast">
-              ${esc(m.aiRoast || "Analyzing performance...")}
-            </div>
-          </article>`;
-      }).join("");
+            <div class="match-kda-stat">${number(m.kills)} / ${number(m.deaths)} / ${number(m.assists)} <span>(${number(m.cs)} CS)</span></div>
+            <span class="match-badge">${m.win ? "Victory" : "Defeat"}</span>
+          </div>
+          <div class="match-roast">
+            ${esc(m.aiRoast || "Analyzing performance...")}
+          </div>
+        </article>`).join("");
     }
 
     async function fetchLiveRank() {
@@ -794,10 +807,7 @@
         updateRankUI(await res.json());
       } catch (err) {
         console.warn("Live rank telemetry unavailable:", err);
-        updateRankUI({
-          ...DEFAULT_DATA,
-          aiAnalysis: "Live telemetry is temporarily unavailable. Showing the default rank snapshot."
-        });
+        updateRankUI(DEFAULT_DATA);
       }
     }
 
@@ -831,7 +841,6 @@
 
     function updateCountdown() {
       const now = Date.now();
-
       if (now < START) {
         bannerEl.textContent = "Challenge Begins In";
         setTime(START - now);
@@ -843,7 +852,7 @@
       } else {
         bannerEl.textContent = "Challenge Completed! 🎉";
         setTime(0);
-        setMonthProgress(100, "October is over! Well done Sam!");
+        setMonthProgress(100, "October is over!");
       }
     }
 
