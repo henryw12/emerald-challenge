@@ -142,7 +142,6 @@
       background: #7f1d1d;
     }
 
-    /* Neutral Loading State */
     .live-status-banner.checking {
       background: rgba(255, 255, 255, 0.05);
       border: 2px solid rgba(255, 255, 255, 0.15);
@@ -639,14 +638,13 @@
     <header class="header-zone">
       <div class="trophy-badge">🏆 ROAD TO EMERALD</div>
       <h1>Sam’s Emerald Challenge</h1>
-      <p class="subtitle">October 1 – October 31</p>
+      <p class="subtitle">September 30 – October 31</p>
     </header>
 
     <div class="profile-live-wrapper">
       <div class="image-container">
         <img src="sam.jpg" alt="Sam with Emerald Trophy" />
       </div>
-      <!-- Starts with a neutral checking state to avoid false "Not Live" flicker -->
       <div id="live-status-banner" class="live-status-banner checking">
         <span class="status-dot"></span> CHECKING STATUS...
       </div>
@@ -668,8 +666,9 @@
           <div class="stat-lbl">Games Today</div>
         </div>
         <div class="stat-box">
+          <!-- Re-titled from Games Since Oct 1 to Total Games -->
           <div class="stat-val" id="stat-oct">0</div>
-          <div class="stat-lbl">Games Since Oct 1</div>
+          <div class="stat-lbl">Total Games</div>
         </div>
         <div class="stat-box">
           <div class="stat-val" id="stat-hours">0h</div>
@@ -678,7 +677,7 @@
       </div>
 
       <div class="month-bar-wrap">
-        <span class="month-bar-label">Month Elapsed</span>
+        <span class="month-bar-label">Challenge Elapsed</span>
         <div class="horizontal-bar-box"><div class="horizontal-bar-fill" id="month-fill"></div></div>
         <span class="month-pct-text" id="month-text">0.0% Complete</span>
       </div>
@@ -913,10 +912,9 @@
     buildStepper();
     fetchLiveRank();
 
-    const now0 = new Date();
-    const challengeYear = now0.getMonth() >= 10 ? now0.getFullYear() + 1 : now0.getFullYear();
-    const START = new Date(challengeYear, 9, 1, 0, 0, 0).getTime();
-    const END = new Date(challengeYear, 9, 31, 23, 59, 59).getTime();
+    // CHALLENGE START EPOCH: Set to Sept 30, 2026
+    const START = new Date(2026, 8, 30, 0, 0, 0).getTime();
+    const END = new Date(2026, 9, 31, 23, 59, 59).getTime();
 
     const UNIT_MS = [86400000, 3600000, 60000, 1000];
     const timeEls = ["days", "hours", "minutes", "seconds"].map($);
@@ -951,7 +949,7 @@
       } else {
         bannerEl.textContent = "Challenge Completed! 🎉";
         setTime(0);
-        setMonthProgress(100, "October is over!");
+        setMonthProgress(100, "Challenge is over!");
       }
     }
 
