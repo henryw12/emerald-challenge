@@ -601,10 +601,14 @@
         }
       }
 
-      $("current-tier").textContent = `${data.tier.toUpperCase()} ${data.division}`;
+$("current-tier").textContent = `${data.tier.toUpperCase()} ${data.division}`;
       $("current-lp").textContent = `${data.lp} LP`;
+
+      const totalGames = data.wins + data.losses;
+      const winratePct = totalGames > 0 ? Math.round((data.wins / totalGames) * 100) : 50;
+
       $("current-record").innerHTML =
-        `<span class="win-num">${data.wins}W</span> <span class="loss-num">${data.losses}L</span> <span>(${data.winrate} Win Rate)</span>`;
+        `<span class="win-num">${data.wins}W</span> <span class="loss-num">${data.losses}L</span> <span>(${winratePct}% Win Rate)</span>`;
 
       $("macro-analysis-text").textContent = data.aiAnalysis || "Analyzing telemetry...";
 
