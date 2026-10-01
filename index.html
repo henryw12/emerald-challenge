@@ -230,7 +230,6 @@
 
     .player-card { padding: 2.2rem; display: flex; flex-direction: column; gap: 1.8rem; position: relative; }
     
-    /* Loading overlay while syncing with Riot */
     .sync-overlay {
       position: absolute; inset: 0; background: rgba(4, 9, 7, 0.85); backdrop-filter: blur(4px);
       z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem;
@@ -379,7 +378,7 @@
       </div>
     </section>
 
-    <!-- RANK PROGRESS -->
+    <!-- RANK PROGRESS STEPPER -->
     <section class="card" aria-label="Rank progress">
       <div class="card-title">Rank Progress</div>
       <div class="stepper-scroll" id="stepper-scroll">
@@ -601,7 +600,7 @@
         }
       }
 
-$("current-tier").textContent = `${data.tier.toUpperCase()} ${data.division}`;
+      $("current-tier").textContent = `${data.tier.toUpperCase()} ${data.division}`;
       $("current-lp").textContent = `${data.lp} LP`;
 
       const totalGames = data.wins + data.losses;
@@ -615,7 +614,6 @@ $("current-tier").textContent = `${data.tier.toUpperCase()} ${data.division}`;
       updateStepper(data.tier, data.division, data.lp);
       renderMatches(data.matches);
 
-      // Hide the loading sync overlay once data is rendered
       $("sync-overlay").classList.add("hidden");
     }
 
