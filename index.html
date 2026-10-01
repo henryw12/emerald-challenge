@@ -249,8 +249,22 @@
     .analytics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
     .analytics-box { background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 1.2rem; display: flex; flex-direction: column; gap: 0.8rem; }
     .analytics-box-title { font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--emerald-glow); }
-    .champ-row, .daily-row { display: flex; align-items: center; justify-content: space-between; font-size: 0.9rem; font-weight: 700; color: #f1f5f9; }
+    .champ-row { display: flex; align-items: center; justify-content: space-between; font-size: 0.9rem; font-weight: 700; color: #f1f5f9; }
     .champ-row img { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 1px solid var(--emerald); }
+
+    /* Center-aligned & larger Daily LP styling */
+    .daily-row-centered {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      text-align: center;
+      padding: 1rem 0;
+      width: 100%;
+    }
+    .daily-date { font-size: 0.85rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+    .daily-stats { font-size: 1.25rem; font-weight: 900; color: #fff; display: flex; align-items: center; gap: 0.75rem; }
 
     .overall-analysis-card { background: rgba(0, 0, 0, 0.45); border-left: 4px solid var(--emerald-glow); padding: 1.4rem 1.6rem; border-radius: 14px; display: flex; flex-direction: column; gap: 0.5rem; }
     .analysis-header { display: flex; justify-content: space-between; align-items: center; }
@@ -259,7 +273,7 @@
 
     .section-title { font-size: 0.95rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.95rem; display: flex; justify-content: space-between; align-items: center; }
     .section-title small { font-size: 0.75rem; color: #64748b; text-transform: none; }
-    .empty-note { color: var(--muted); font-size: 0.9rem; }
+    .empty-note { color: var(--muted); font-size: 0.9rem; text-align: center; padding: 1rem 0; width: 100%; display: block; }
 
     .matches-list { display: flex; flex-direction: column; gap: 1.15rem; }
     .match-card { background: rgba(255, 255, 255, 0.025); border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 18px; padding: 1.25rem 1.4rem; display: flex; flex-direction: column; gap: 0.9rem; }
@@ -384,7 +398,7 @@
         </div>
       </div>
 
-      <!-- ANALYTICS CARDS (Top Champs, Pace, & Daily LP Breakdown) -->
+      <!-- ANALYTICS CARDS -->
       <div class="analytics-grid">
         <div class="analytics-box">
           <div class="analytics-box-title">🔥 Top Challenge Champions</div>
@@ -394,7 +408,7 @@
         </div>
         <div class="analytics-box">
           <div class="analytics-box-title">📅 Daily LP Log</div>
-          <div id="daily-lp-list" style="display:flex; flex-direction:column; gap:0.5rem; max-height:160px; overflow-y:auto;">
+          <div id="daily-lp-list" style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%;">
             <span class="empty-note">No daily logs yet.</span>
           </div>
         </div>
@@ -575,20 +589,23 @@
         }
       }
 
-      // Daily LP Log
+      // Center-aligned, larger Daily LP Log
       if (data.analytics && data.analytics.dailyBreakdown) {
         const dailyContainer = $("daily-lp-list");
         if (data.analytics.dailyBreakdown.length === 0) {
-          dailyContainer.innerHTML = '<span class="empty-note">No daily logs yet.</span>';
+          dailyContainer.innerHTML = '<span class="empty-note">No matches completed today yet — climb to log LP!</span>';
         } else {
-          dailyContainer.innerHTML = data.analytics.dailyBreakdown.map(d => `
-            <div class="daily-row">
-              <span style="color:var(--muted);">${d.date}</span>
-              <div style="display:flex; gap:0.8rem; font-size:0.85rem;">
-                <span style="color:var(--subtext);">${d.wins}W - ${d.losses}L</span>
-                <span class="${d.netLp >= 0 ? 'win-num' : 'loss-num'}">${d.netLp >= 0 ? '+' : ''}${d.netLp} LP</span>
+          const todayLog = data.analytics.dailyBreakdown[0]; // Most recent day
+          const netLpVal = todayLog.netLp || 0;
+          const lpColorClass = netLpVal >= 0 ? 'win-num' : 'loss-num';
+          dailyContainer.innerHTML = `
+            <div class="daily-row-centered">
+              <span class="daily-date">${todayLog.date}</span>
+              <div class="daily-stats">
+                <span style="color:var(--subtext);">${todayLog.wins}W - ${todayLog.losses}L</span>
+                <span class="${lpColorClass}">${netLpVal >= 0 ? '+' : ''}${netLpVal} LP</span>
               </div>
-            </div>`).join("");
+            </div>`;
         }
       }
 
