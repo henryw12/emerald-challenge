@@ -252,7 +252,6 @@
     .champ-row { display: flex; align-items: center; justify-content: space-between; font-size: 0.9rem; font-weight: 700; color: #f1f5f9; }
     .champ-row img { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 1px solid var(--emerald); }
 
-    /* Center-aligned & larger Daily LP styling */
     .daily-row-centered {
       display: flex;
       flex-direction: column;
@@ -355,7 +354,7 @@
         </div>
         <div class="stat-box">
           <div class="stat-val" id="stat-lp">0 LP</div>
-          <div class="stat-lbl">Net LP Change</div>
+          <div class="stat-lbl">LP Gained Today</div>
         </div>
       </div>
 
@@ -564,7 +563,7 @@
         $("stat-oct").textContent = data.statsTracker.gamesSinceOct1;
         $("stat-hours").textContent = `${data.statsTracker.totalHoursPlayed}h`;
         
-        const lpChange = data.statsTracker.totalLpChange;
+        const lpChange = data.statsTracker.todayLpChange;
         const lpEl = $("stat-lp");
         lpEl.textContent = `${lpChange >= 0 ? '+' : ''}${lpChange} LP`;
         lpEl.style.color = lpChange >= 0 ? 'var(--win)' : 'var(--loss)';
@@ -589,13 +588,12 @@
         }
       }
 
-      // Center-aligned, larger Daily LP Log
       if (data.analytics && data.analytics.dailyBreakdown) {
         const dailyContainer = $("daily-lp-list");
         if (data.analytics.dailyBreakdown.length === 0) {
           dailyContainer.innerHTML = '<span class="empty-note">No matches completed today yet — climb to log LP!</span>';
         } else {
-          const todayLog = data.analytics.dailyBreakdown[0]; // Most recent day
+          const todayLog = data.analytics.dailyBreakdown[0];
           const netLpVal = todayLog.netLp || 0;
           const lpColorClass = netLpVal >= 0 ? 'win-num' : 'loss-num';
           dailyContainer.innerHTML = `
