@@ -122,7 +122,6 @@
     .live-status-banner.not-live .status-dot { background: #7f1d1d; }
     .live-status-banner.checking { background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.15); color: var(--muted); }
 
-    /* Streak Banner styles */
     .streak-banner.hot-streak { background: rgba(56, 189, 248, 0.18); border: 2px solid var(--win); color: var(--win); }
     .streak-banner.tilt-detector { background: rgba(244, 63, 94, 0.18); border: 2px solid var(--loss); color: var(--loss); }
     .streak-banner.neutral-streak { background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.15); color: var(--muted); }
@@ -182,7 +181,7 @@
 
     .stats-tracker-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 1rem;
       margin-top: 1.5rem;
     }
@@ -195,8 +194,8 @@
       text-align: center;
     }
 
-    .stat-box .stat-val { font-size: 1.8rem; font-weight: 900; color: var(--emerald-glow); }
-    .stat-box .stat-lbl { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-top: 0.25rem; font-weight: 800; }
+    .stat-box .stat-val { font-size: 1.6rem; font-weight: 900; color: var(--emerald-glow); }
+    .stat-box .stat-lbl { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-top: 0.25rem; font-weight: 800; }
 
     .month-bar-wrap {
       border-top: 1px solid rgba(255, 255, 255, 0.08);
@@ -247,11 +246,10 @@
     .win-num { color: var(--win); font-weight: 800; }
     .loss-num { color: var(--loss); font-weight: 800; }
 
-    /* New Analytics Cards */
     .analytics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
     .analytics-box { background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 1.2rem; display: flex; flex-direction: column; gap: 0.8rem; }
     .analytics-box-title { font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--emerald-glow); }
-    .champ-row { display: flex; align-items: center; justify-content: space-between; font-size: 0.9rem; font-weight: 700; color: #f1f5f9; }
+    .champ-row, .daily-row { display: flex; align-items: center; justify-content: space-between; font-size: 0.9rem; font-weight: 700; color: #f1f5f9; }
     .champ-row img { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 1px solid var(--emerald); }
 
     .overall-analysis-card { background: rgba(0, 0, 0, 0.45); border-left: 4px solid var(--emerald-glow); padding: 1.4rem 1.6rem; border-radius: 14px; display: flex; flex-direction: column; gap: 0.5rem; }
@@ -289,7 +287,7 @@
       body { padding: 1.25rem 0.75rem; }
       .analytics-grid { grid-template-columns: 1fr; }
       .countdown-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
-      .stats-tracker-grid { grid-template-columns: 1fr; gap: 0.75rem; }
+      .stats-tracker-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
       .rank-showcase { grid-template-columns: 1fr; justify-items: center; text-align: center; }
       .emblem-wrapper { width: 100%; height: 240px; }
       .rank-text-block { justify-items: center; text-align: center; }
@@ -313,7 +311,6 @@
       <div id="live-status-banner" class="live-status-banner checking">
         <span class="status-dot"></span> CHECKING STATUS...
       </div>
-      <!-- Dynamic Streak Banner -->
       <div id="streak-banner" class="streak-banner neutral-streak">
         ⚡ FETCHING STREAK...
       </div>
@@ -340,7 +337,11 @@
         </div>
         <div class="stat-box">
           <div class="stat-val" id="stat-hours">0h</div>
-          <div class="stat-lbl">Total Time Invested</div>
+          <div class="stat-lbl">Time Invested</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="stat-lp">0 LP</div>
+          <div class="stat-lbl">Net LP Change</div>
         </div>
       </div>
 
@@ -383,7 +384,7 @@
         </div>
       </div>
 
-      <!-- ANALYTICS CARDS (Top Champs & LP Pace) -->
+      <!-- ANALYTICS CARDS (Top Champs, Pace, & Daily LP Breakdown) -->
       <div class="analytics-grid">
         <div class="analytics-box">
           <div class="analytics-box-title">🔥 Top Challenge Champions</div>
@@ -392,10 +393,9 @@
           </div>
         </div>
         <div class="analytics-box">
-          <div class="analytics-box-title">🎯 Emerald Target Pace</div>
-          <div id="pace-display" style="display:flex; flex-direction:column; gap:0.5rem; justify-content:center; height:100%;">
-            <span class="stat-val" id="pace-lp" style="font-size:1.5rem;">— LP/day</span>
-            <span style="font-size:0.8rem; color:var(--muted); font-weight:700;">Required daily climb rate to reach Emerald IV by Oct 31.</span>
+          <div class="analytics-box-title">📅 Daily LP Log</div>
+          <div id="daily-lp-list" style="display:flex; flex-direction:column; gap:0.5rem; max-height:160px; overflow-y:auto;">
+            <span class="empty-note">No daily logs yet.</span>
           </div>
         </div>
       </div>
@@ -518,7 +518,6 @@
 
       setEmblem(data.tier);
 
-      // Live Status
       const liveBanner = $("live-status-banner");
       if (data.liveGame && data.liveGame.inGame) {
         liveBanner.className = "live-status-banner is-live";
@@ -528,7 +527,6 @@
         liveBanner.innerHTML = `<span class="status-dot"></span> NOT LIVE`;
       }
 
-      // Streak Banner
       const streakBanner = $("streak-banner");
       if (data.statsTracker && data.statsTracker.streak) {
         const { type, count } = data.statsTracker.streak;
@@ -551,10 +549,13 @@
         $("stat-today").textContent = data.statsTracker.gamesToday;
         $("stat-oct").textContent = data.statsTracker.gamesSinceOct1;
         $("stat-hours").textContent = `${data.statsTracker.totalHoursPlayed}h`;
-        $("pace-lp").textContent = `+${data.statsTracker.pace.requiredLpPerDay} LP / day`;
+        
+        const lpChange = data.statsTracker.totalLpChange;
+        const lpEl = $("stat-lp");
+        lpEl.textContent = `${lpChange >= 0 ? '+' : ''}${lpChange} LP`;
+        lpEl.style.color = lpChange >= 0 ? 'var(--win)' : 'var(--loss)';
       }
 
-      // Top Champions Analytics
       if (data.analytics && data.analytics.topChampions) {
         const champContainer = $("top-champs-list");
         if (data.analytics.topChampions.length === 0) {
@@ -569,6 +570,23 @@
               <div style="display:flex; gap:1rem; font-size:0.85rem;">
                 <span style="color:var(--subtext);">${c.games} games</span>
                 <span class="${c.winrate >= 50 ? 'win-num' : 'loss-num'}">${c.winrate}%</span>
+              </div>
+            </div>`).join("");
+        }
+      }
+
+      // Daily LP Log
+      if (data.analytics && data.analytics.dailyBreakdown) {
+        const dailyContainer = $("daily-lp-list");
+        if (data.analytics.dailyBreakdown.length === 0) {
+          dailyContainer.innerHTML = '<span class="empty-note">No daily logs yet.</span>';
+        } else {
+          dailyContainer.innerHTML = data.analytics.dailyBreakdown.map(d => `
+            <div class="daily-row">
+              <span style="color:var(--muted);">${d.date}</span>
+              <div style="display:flex; gap:0.8rem; font-size:0.85rem;">
+                <span style="color:var(--subtext);">${d.wins}W - ${d.losses}L</span>
+                <span class="${d.netLp >= 0 ? 'win-num' : 'loss-num'}">${d.netLp >= 0 ? '+' : ''}${d.netLp} LP</span>
               </div>
             </div>`).join("");
         }
