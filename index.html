@@ -120,7 +120,9 @@
     .live-status-banner.is-live .status-dot { background: #ef4444; box-shadow: 0 0 10px #ef4444; }
     .live-status-banner.not-live { background: rgba(239, 68, 68, 0.05); border: 2px solid rgba(239, 68, 68, 0.2); color: #f87171; opacity: 0.65; }
     .live-status-banner.not-live .status-dot { background: #7f1d1d; }
-    .live-status-banner.checking { background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.15); color: var(--muted); }
+    .live-status-banner.checking { background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.15); color: var(--muted); animation: pulse 1.5s infinite; }
+
+    @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
 
     .streak-banner.hot-streak { background: rgba(56, 189, 248, 0.18); border: 2px solid var(--win); color: var(--win); }
     .streak-banner.tilt-detector { background: rgba(244, 63, 94, 0.18); border: 2px solid var(--loss); color: var(--loss); }
@@ -226,7 +228,19 @@
     .tier-groups span { margin-inline: 4px; padding-top: 0.4rem; border-top: 2px solid var(--line); text-align: center; font-size: 0.8rem; font-weight: 800; color: #64748b; }
     .tier-groups span.current { color: var(--emerald-glow); border-top-color: var(--emerald-glow); }
 
-    .player-card { padding: 2.2rem; display: flex; flex-direction: column; gap: 1.8rem; }
+    .player-card { padding: 2.2rem; display: flex; flex-direction: column; gap: 1.8rem; position: relative; }
+    
+    /* Loading overlay while syncing with Riot */
+    .sync-overlay {
+      position: absolute; inset: 0; background: rgba(4, 9, 7, 0.85); backdrop-filter: blur(4px);
+      z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem;
+      border-radius: 24px; transition: opacity 0.3s ease;
+    }
+    .sync-overlay.hidden { opacity: 0; pointer-events: none; }
+    .spinner { width: 40px; height: 40px; border: 4px solid rgba(16, 185, 129, 0.2); border-top-color: var(--emerald); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .sync-text { font-weight: 900; letter-spacing: 0.1em; color: var(--emerald-glow); font-size: 0.95rem; text-transform: uppercase; }
+
     .player-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 1rem; }
     .player-id { font-weight: 900; font-size: 1.45rem; color: #fff; }
     .player-id span { color: var(--muted); font-weight: 600; font-size: 1.1rem; }
@@ -322,7 +336,7 @@
         <img src="sam.jpg" alt="Sam with Emerald Trophy" />
       </div>
       <div id="live-status-banner" class="live-status-banner checking">
-        <span class="status-dot"></span> CHECKING STATUS...
+        <span class="status-dot"></span> SYNCING WITH RIOT API...
       </div>
       <div id="streak-banner" class="streak-banner neutral-streak">
         ⚡ FETCHING STREAK...
@@ -341,19 +355,19 @@
 
       <div class="stats-tracker-grid">
         <div class="stat-box">
-          <div class="stat-val" id="stat-today">0</div>
+          <div class="stat-val" id="stat-today">—</div>
           <div class="stat-lbl">Games Today</div>
         </div>
         <div class="stat-box">
-          <div class="stat-val" id="stat-oct">0</div>
+          <div class="stat-val" id="stat-oct">—</div>
           <div class="stat-lbl">Total Games</div>
         </div>
         <div class="stat-box">
-          <div class="stat-val" id="stat-hours">0h</div>
+          <div class="stat-val" id="stat-hours">—</div>
           <div class="stat-lbl">Time Invested</div>
         </div>
         <div class="stat-box">
-          <div class="stat-val" id="stat-lp">0 LP</div>
+          <div class="stat-val" id="stat-lp">—</div>
           <div class="stat-lbl">LP Gained Today</div>
         </div>
       </div>
@@ -378,6 +392,11 @@
     </section>
 
     <main class="card player-card">
+      <div class="sync-overlay" id="sync-overlay">
+        <div class="spinner"></div>
+        <span class="sync-text">Syncing Live Telemetry & AI Coach...</span>
+      </div>
+
       <div class="player-header">
         <div class="player-id">BRODOODOOFART<span>#1738</span> (NA)</div>
         <a class="opgg-link" href="https://op.gg/lol/summoners/na/BRODOODOOFART-1738" target="_blank" rel="noopener">View OP.GG ↗</a>
@@ -389,10 +408,10 @@
           <div class="emblem-fallback" aria-hidden="true">?</div>
         </div>
         <div class="rank-text-block">
-          <div class="rank-tier-title" id="current-tier">GOLD II</div>
-          <div class="rank-lp-text" id="current-lp">87 LP</div>
+          <div class="rank-tier-title" id="current-tier">—</div>
+          <div class="rank-lp-text" id="current-lp">— LP</div>
           <div class="rank-stats-pill" id="current-record">
-            <span class="win-num">226W</span> <span class="loss-num">228L</span> (50% Win Rate)
+            <span class="win-num">—W</span> <span class="loss-num">—L</span> (— Win Rate)
           </div>
         </div>
       </div>
@@ -402,13 +421,13 @@
         <div class="analytics-box">
           <div class="analytics-box-title">🔥 Top Challenge Champions</div>
           <div id="top-champs-list" style="display:flex; flex-direction:column; gap:0.6rem;">
-            <span class="empty-note">Analyzing matches...</span>
+            <span class="empty-note">Syncing matches...</span>
           </div>
         </div>
         <div class="analytics-box">
           <div class="analytics-box-title">📅 Daily LP Log</div>
           <div id="daily-lp-list" style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%;">
-            <span class="empty-note">No daily logs yet.</span>
+            <span class="empty-note">Syncing daily logs...</span>
           </div>
         </div>
       </div>
@@ -417,7 +436,7 @@
         <div class="analysis-header">
           <span class="analysis-label">🔮 Macro Scouting & Emerald Probability</span>
         </div>
-        <p class="analysis-content" id="macro-analysis-text">Analyzing live telemetry...</p>
+        <p class="analysis-content" id="macro-analysis-text">Consulting AI coach...</p>
       </div>
 
       <div class="matches-section">
@@ -425,7 +444,9 @@
           <span>Recent Match Breakdowns & Build Roasts</span>
           <small>Solo/Duo Matches Only (Last 5)</small>
         </div>
-        <div class="matches-list" id="matches-list"></div>
+        <div class="matches-list" id="matches-list">
+          <span class="empty-note">Loading match history...</span>
+        </div>
       </div>
     </main>
 
@@ -437,8 +458,6 @@
     const CHAMP_IMG = `https://ddragon.leagueoflegends.com/cdn/${DDRAGON_VER}/img/champion`;
     const ITEM_IMG = `https://ddragon.leagueoflegends.com/cdn/${DDRAGON_VER}/img/item`;
     const CREST_BASE = "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-";
-
-    const DEFAULT_DATA = { tier: "gold", division: "II", lp: 87, wins: 226, losses: 228, matches: [] };
 
     const $ = id => document.getElementById(id);
     const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
@@ -464,29 +483,6 @@
     const rankValue = (tier, division) => TIERS.indexOf(tier) * 4 + Math.max(0, DIVISIONS.indexOf(division));
     const LADDER_START = rankValue(LADDER[0].tier, LADDER[0].div);
 
-    function normalizeRankData(raw = {}) {
-      const wins = number(raw.wins, DEFAULT_DATA.wins);
-      const losses = number(raw.losses, DEFAULT_DATA.losses);
-      const games = wins + losses;
-      const winrateNum = clamp(number(raw.winrateNum, games ? (wins / games) * 100 : 50), 0, 100);
-
-      return {
-        ...DEFAULT_DATA,
-        ...raw,
-        tier: String(raw.tier || DEFAULT_DATA.tier).toLowerCase(),
-        division: String(raw.division || DEFAULT_DATA.division).toUpperCase(),
-        lp: Math.max(0, number(raw.lp, DEFAULT_DATA.lp)),
-        wins,
-        losses,
-        winrateNum,
-        winrate: `${winrateNum.toFixed(0)}%`,
-        matches: Array.isArray(raw.matches) ? raw.matches : []
-      };
-    }
-
-    const stepEls = [];
-    const tierEls = [];
-
     function buildStepper() {
       $("stepper").style.setProperty("--n", LADDER.length);
       $("steps").innerHTML = LADDER.map(s => `
@@ -498,22 +494,22 @@
       $("tier-groups").innerHTML = LADDER_TIERS
         .map(([tier, count]) => `<span data-tier="${tier}" style="grid-column: span ${count}">${cap(tier)}</span>`)
         .join("");
-
-      stepEls.push(...$("steps").children);
-      tierEls.push(...$("tier-groups").children);
     }
 
     function updateStepper(tier, division, lp) {
       const last = LADDER.length - 1;
       const pos = rankValue(tier, division) - LADDER_START;
 
-      stepEls.forEach((el, i) => {
+      const steps = $("steps").children;
+      const tiers = $("tier-groups").children;
+
+      Array.from(steps).forEach((el, i) => {
         el.classList.toggle("passed", i < pos);
         el.classList.toggle("active", i === pos);
         el.toggleAttribute("aria-current", i === pos);
         el.querySelector(".step-sub").textContent = i === pos ? `${lp} LP` : "";
       });
-      tierEls.forEach(el => el.classList.toggle("current", el.dataset.tier === tier));
+      Array.from(tiers).forEach(el => el.classList.toggle("current", el.dataset.tier === tier));
       $("active-line").style.width = `${pos <= 0 ? 0 : (Math.min(pos, last) / last) * 100}%`;
     }
 
@@ -526,9 +522,7 @@
       img.src = `${CREST_BASE}${TIERS.includes(tier) ? tier : "gold"}.png`;
     }
 
-    function updateRankUI(rawData) {
-      const data = normalizeRankData(rawData);
-
+    function updateRankUI(data) {
       setEmblem(data.tier);
 
       const liveBanner = $("live-status-banner");
@@ -612,10 +606,13 @@
       $("current-record").innerHTML =
         `<span class="win-num">${data.wins}W</span> <span class="loss-num">${data.losses}L</span> <span>(${data.winrate} Win Rate)</span>`;
 
-      $("macro-analysis-text").textContent = data.aiAnalysis || "Analyzing live telemetry...";
+      $("macro-analysis-text").textContent = data.aiAnalysis || "Analyzing telemetry...";
 
       updateStepper(data.tier, data.division, data.lp);
       renderMatches(data.matches);
+
+      // Hide the loading sync overlay once data is rendered
+      $("sync-overlay").classList.add("hidden");
     }
 
     function renderMatches(matches) {
@@ -626,7 +623,7 @@
       }
 
       container.innerHTML = matches.map(m => {
-        const itemsHtml = (m.items || []).filter(id => id > 0).map(id =>
+        const itemsHtml = (m.items || []).map(id =>
           `<div class="item-slot"><img src="${ITEM_IMG}/${id}.png" alt="Item ${id}" loading="lazy" onerror="this.closest('.item-slot').remove()"></div>`
         ).join("");
 
@@ -658,10 +655,11 @@
       try {
         const res = await fetch(WORKER_URL, { headers: { Accept: "application/json" }, cache: "no-store" });
         if (!res.ok) throw new Error(`Worker returned ${res.status}`);
-        updateRankUI(await res.json());
+        const data = await res.json();
+        updateRankUI(data);
       } catch (err) {
         console.warn("Live rank telemetry unavailable:", err);
-        updateRankUI(DEFAULT_DATA);
+        $("sync-overlay").classList.add("hidden");
       }
     }
 
