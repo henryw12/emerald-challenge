@@ -482,9 +482,10 @@
     const rankValue = (tier, division) => {
       const tIdx = TIERS.indexOf(String(tier || "").toLowerCase());
       const dIdx = DIVISIONS.indexOf(String(division || "").toUpperCase());
-      return (tIdx * 4) + (3 - Math.max(0, dIdx));
+      const baseTierOffset = TIERS.indexOf("silver");
+      return ((tIdx - baseTierOffset) * 4) + dIdx;
     };
-    const LADDER_START = rankValue(LADDER[0].tier, LADDER[0].div);
+    const LADDER_START = 0;
 
     function buildStepper() {
       $("stepper").style.setProperty("--n", LADDER.length);
