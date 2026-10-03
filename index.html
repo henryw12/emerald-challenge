@@ -1,6 +1,286 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <style>
+  /* Sam: larger visible emblem beside aligned rank details */
+  .rank-showcase {
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    min-height: 310px;
+    padding: 24px 0;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .emblem-wrapper {
+    width: 280px;
+    height: 280px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+
+  #rank-emblem {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transform: scale(6);
+    transform-origin: center;
+  }
+
+  .rank-showcase > div:last-child {
+    min-width: 0;
+    text-align: left;
+  }
+
+  .rank-tier-title {
+    font-size: clamp(26px, 4vw, 38px);
+    line-height: 1.15;
+    font-weight: 800;
+  }
+
+  .rank-lp-text {
+    margin-top: 10px;
+    font-size: 28px;
+    line-height: 1.2;
+  }
+
+  .rank-record {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    width: fit-content;
+    max-width: 100%;
+    margin-top: 16px;
+    padding: 11px 15px;
+    border-radius: 14px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  /* Leaderboard: emblem spans both name and rank rows */
+  .player-row-card {
+    display: grid;
+    grid-template-columns: 34px 160px minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    align-items: center;
+    column-gap: 20px;
+    row-gap: 7px;
+    min-height: 190px;
+    padding: 20px 24px;
+  }
+
+  .player-info-group {
+    display: contents;
+  }
+
+  .placement {
+    grid-column: 1;
+    grid-row: 1 / 3;
+    align-self: center;
+    font-size: 19px;
+  }
+
+  .rank-badge-wrap {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    display: grid;
+    place-items: center;
+    width: 160px;
+    height: 160px;
+    overflow: hidden;
+  }
+
+  .rank-badge {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transform: scale(10);
+    transform-origin: center;
+  }
+
+  .player-info-group > div:last-child {
+    grid-column: 3;
+    grid-row: 1;
+    min-width: 0;
+    align-self: end;
+  }
+
+  .player-alias {
+    font-size: 21px;
+    line-height: 1.25;
+  }
+
+  .player-riot-id {
+    margin-top: 5px;
+    font-size: 12px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+
+  .player-rank-stats {
+    grid-column: 3;
+    grid-row: 2;
+    width: auto;
+    min-width: 0;
+    align-self: start;
+    text-align: left;
+    padding: 0;
+  }
+
+  .tier-label {
+    font-size: 19px;
+    line-height: 1.3;
+  }
+
+  .lp-sub {
+    margin-top: 6px;
+    font-size: 13px;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+  }
+
+  /* Mobile: keep emblem and details together */
+  @media (max-width: 650px) {
+    body {
+      padding: 16px 10px;
+    }
+
+    .card {
+      padding: 17px;
+      border-radius: 18px;
+    }
+
+    .rank-showcase {
+      grid-template-columns: 150px minmax(0, 1fr);
+      gap: 12px;
+      min-height: 200px;
+      padding: 18px 0;
+    }
+
+    .emblem-wrapper {
+      width: 150px;
+      height: 180px;
+    }
+
+    #rank-emblem {
+      transform: scale(6);
+    }
+
+    .rank-tier-title {
+      font-size: 25px;
+    }
+
+    .rank-lp-text {
+      font-size: 24px;
+      margin-top: 8px;
+    }
+
+    .rank-record {
+      gap: 6px;
+      margin-top: 12px;
+      padding: 8px 10px;
+      font-size: 11px;
+    }
+
+    .player-row-card {
+      grid-template-columns: 24px 100px minmax(0, 1fr);
+      column-gap: 10px;
+      row-gap: 6px;
+      min-height: 150px;
+      padding: 15px 12px;
+    }
+
+    .rank-badge-wrap {
+      width: 100px;
+      height: 120px;
+    }
+
+    .rank-badge {
+      width: 100%;
+      height: 100%;
+      transform: scale(10);
+    }
+
+    .placement {
+      font-size: 15px;
+    }
+
+    .player-alias {
+      font-size: 17px;
+    }
+
+    .player-riot-id {
+      font-size: 10px;
+    }
+
+    .tier-label {
+      font-size: 15px;
+    }
+
+    .lp-sub {
+      font-size: 11px;
+      line-height: 1.8;
+    }
+
+    .analytics-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .stats-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .countdown-grid {
+      gap: 6px;
+    }
+
+    .timer-card {
+      padding: 13px 5px;
+    }
+
+    .timer-number {
+      font-size: 27px;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .rank-showcase {
+      grid-template-columns: 120px minmax(0, 1fr);
+      gap: 8px;
+    }
+
+    .emblem-wrapper {
+      width: 120px;
+      height: 160px;
+    }
+
+    .rank-tier-title {
+      font-size: 21px;
+    }
+
+    .player-row-card {
+      grid-template-columns: 20px 80px minmax(0, 1fr);
+      column-gap: 8px;
+      padding: 12px 9px;
+    }
+
+    .rank-badge-wrap {
+      width: 80px;
+      height: 110px;
+    }
+
+    .player-alias {
+      font-size: 15px;
+    }
+  }
+</style>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Sam's Emerald Challenge</title>
