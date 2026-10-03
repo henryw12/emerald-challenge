@@ -1,654 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<style>
-  /* Leaderboard: vertically center every column */
-  .player-row-card {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: nowrap;
-    gap: 24px;
-    min-height: 170px;
-    padding: 22px 26px;
-  }
-
-  .player-info-group {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    flex: 1;
-    min-width: 0;
-  }
-
-  .player-info-group > * {
-    grid-column: auto;
-    grid-row: auto;
-    align-self: center;
-  }
-
-  .placement {
-    width: 34px;
-    flex-shrink: 0;
-    text-align: center;
-  }
-
-  .rank-badge-wrap {
-    display: grid;
-    place-items: center;
-    width: 150px;
-    height: 140px;
-    flex-shrink: 0;
-    overflow: hidden;
-  }
-
-  .rank-badge-wrap .rank-badge {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    transform: scale(10);
-  }
-
-  /* Supports the earlier HTML's emblem class too */
-  .player-info-group > .rank-badge-lg,
-  .player-info-group > .rank-badge {
-    width: 140px;
-    height: 140px;
-    flex-shrink: 0;
-    object-fit: contain;
-    transform: scale(6);
-    margin: 0 10px;
-  }
-
-  .player-info-group > div:last-child {
-    min-width: 0;
-    align-self: center;
-  }
-
-  .player-alias,
-  .player-name-alias {
-    margin: 0;
-    font-size: 21px;
-    line-height: 1.3;
-    font-weight: 800;
-  }
-
-  .player-riot-id {
-    margin-top: 6px;
-    font-size: 12px;
-    line-height: 1.5;
-    overflow-wrap: anywhere;
-  }
-
-  .player-rank-stats {
-    grid-column: auto;
-    grid-row: auto;
-    align-self: center;
-    flex-shrink: 0;
-    width: auto;
-    min-width: 190px;
-    padding: 0;
-    text-align: right;
-  }
-
-  .tier-label {
-    margin: 0;
-    font-size: 20px;
-    line-height: 1.3;
-  }
-
-  .lp-sub {
-    margin-top: 8px;
-    font-size: 13px;
-    line-height: 1.8;
-  }
-
-  /* Sam: center emblem and text as one group */
-  .rank-showcase {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 30px;
-    min-height: 310px;
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 24px 0;
-  }
-
-  .emblem-wrapper {
-    display: grid;
-    place-items: center;
-    width: 280px;
-    height: 280px;
-    flex-shrink: 0;
-    overflow: hidden;
-  }
-
-  #rank-emblem {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    transform: scale(6);
-    transform-origin: center;
-  }
-
-  .rank-showcase > div:last-child,
-  .rank-text-block {
-    min-width: 0;
-    text-align: left;
-    align-self: center;
-  }
-
-  .rank-tier-title {
-    font-size: 36px;
-    line-height: 1.2;
-  }
-
-  .rank-lp-text {
-    margin-top: 10px;
-    font-size: 28px;
-    line-height: 1.2;
-  }
-
-  .rank-record,
-  .rank-stats-pill {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 8px;
-    width: fit-content;
-    max-width: 100%;
-    margin-top: 16px;
-    padding: 10px 14px;
-    font-size: 13px;
-    line-height: 1.5;
-  }
-
-  /* Mobile leaderboard: rank directly beneath the name */
-  @media (max-width: 700px) {
-    .player-row-card {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 8px;
-      min-height: auto;
-      padding: 16px 12px;
-    }
-
-    .player-info-group {
-      display: grid;
-      grid-template-columns: 26px 100px minmax(0, 1fr);
-      align-items: center;
-      gap: 10px;
-      width: 100%;
-    }
-
-    .placement {
-      width: 26px;
-      font-size: 15px;
-    }
-
-    .rank-badge-wrap {
-      width: 100px;
-      height: 110px;
-    }
-
-    .player-info-group > .rank-badge-lg,
-    .player-info-group > .rank-badge {
-      width: 100px;
-      height: 100px;
-      margin: 0;
-      transform: scale(6);
-    }
-
-    .player-alias,
-    .player-name-alias {
-      font-size: 18px;
-    }
-
-    .player-riot-id {
-      font-size: 10px;
-    }
-
-    .player-rank-stats {
-      align-self: stretch;
-      width: 100%;
-      min-width: 0;
-      padding-left: 146px;
-      text-align: left;
-    }
-
-    .tier-label {
-      font-size: 16px;
-    }
-
-    .lp-sub {
-      margin-top: 5px;
-      font-size: 11px;
-    }
-
-    /* Mobile Sam: centered emblem above rank details */
-    .rank-showcase {
-      flex-direction: column;
-      gap: 8px;
-      min-height: auto;
-      padding: 18px 0 24px;
-    }
-
-    .emblem-wrapper {
-      width: 240px;
-      height: 240px;
-      max-width: 100%;
-    }
-
-    .rank-showcase > div:last-child,
-    .rank-text-block {
-      width: 100%;
-      text-align: center;
-    }
-
-    .rank-tier-title {
-      font-size: 30px;
-    }
-
-    .rank-lp-text {
-      font-size: 26px;
-    }
-
-    .rank-record,
-    .rank-stats-pill {
-      justify-content: center;
-      margin: 14px auto 0;
-    }
-  }
-
-  @media (max-width: 380px) {
-    .player-info-group {
-      grid-template-columns: 22px 80px minmax(0, 1fr);
-      gap: 8px;
-    }
-
-    .rank-badge-wrap {
-      width: 80px;
-      height: 100px;
-    }
-
-    .player-info-group > .rank-badge-lg,
-    .player-info-group > .rank-badge {
-      width: 80px;
-      height: 100px;
-    }
-
-    .player-rank-stats {
-      padding-left: 118px;
-    }
-
-    .player-alias,
-    .player-name-alias {
-      font-size: 16px;
-    }
-  }
-</style>
 <head>
-  <style>
-  /* First place — gold */
-  .leaderboard-list > .player-row-card:nth-child(1) {
-    border: 2px solid #fbbf24;
-    background: linear-gradient(
-      120deg,
-      rgba(251, 191, 36, 0.16),
-      rgba(9, 23, 19, 0.96) 75%
-    );
-    box-shadow: 0 0 24px rgba(251, 191, 36, 0.15);
-  }
-
-  .leaderboard-list > .player-row-card:nth-child(1) .placement,
-  .leaderboard-list > .player-row-card:nth-child(1) .player-alias {
-    color: #fbbf24;
-  }
-
-  /* Second place — silver */
-  .leaderboard-list > .player-row-card:nth-child(2) {
-    border: 2px solid #cbd5e1;
-    background: linear-gradient(
-      120deg,
-      rgba(203, 213, 225, 0.12),
-      rgba(9, 23, 19, 0.96) 75%
-    );
-    box-shadow: 0 0 18px rgba(203, 213, 225, 0.08);
-  }
-
-  .leaderboard-list > .player-row-card:nth-child(2) .placement,
-  .leaderboard-list > .player-row-card:nth-child(2) .player-alias {
-    color: #e2e8f0;
-  }
-
-  /* Third place — bronze */
-  .leaderboard-list > .player-row-card:nth-child(3) {
-    border: 2px solid #cd9058;
-    background: linear-gradient(
-      120deg,
-      rgba(205, 144, 88, 0.14),
-      rgba(9, 23, 19, 0.96) 75%
-    );
-    box-shadow: 0 0 18px rgba(205, 144, 88, 0.08);
-  }
-
-  .leaderboard-list > .player-row-card:nth-child(3) .placement,
-  .leaderboard-list > .player-row-card:nth-child(3) .player-alias {
-    color: #e4ad7e;
-  }
-
-  /* Placement badges for the top three */
-  .leaderboard-list > .player-row-card:nth-child(-n+3) .placement {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 7px;
-    font-weight: 800;
-  }
-
-  .leaderboard-list > .player-row-card:nth-child(1) .placement::before {
-    content: "🥇";
-    font-size: 25px;
-  }
-
-  .leaderboard-list > .player-row-card:nth-child(2) .placement::before {
-    content: "🥈";
-    font-size: 25px;
-  }
-
-  .leaderboard-list > .player-row-card:nth-child(3) .placement::before {
-    content: "🥉";
-    font-size: 25px;
-  }
-
-  @media (max-width: 650px) {
-    .leaderboard-list > .player-row-card:nth-child(-n+3) .placement::before {
-      font-size: 20px;
-    }
-  }
-</style>
-  <style>
-  /* Sam: larger visible emblem beside aligned rank details */
-  .rank-showcase {
-    display: grid;
-    grid-template-columns: 280px minmax(0, 1fr);
-    align-items: center;
-    justify-content: center;
-    gap: 28px;
-    min-height: 310px;
-    padding: 24px 0;
-    max-width: 720px;
-    margin: 0 auto;
-  }
-
-  .emblem-wrapper {
-    width: 280px;
-    height: 280px;
-    display: grid;
-    place-items: center;
-    overflow: hidden;
-  }
-
-  #rank-emblem {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    transform: scale(6);
-    transform-origin: center;
-  }
-
-  .rank-showcase > div:last-child {
-    min-width: 0;
-    text-align: left;
-  }
-
-  .rank-tier-title {
-    font-size: clamp(26px, 4vw, 38px);
-    line-height: 1.15;
-    font-weight: 800;
-  }
-
-  .rank-lp-text {
-    margin-top: 10px;
-    font-size: 28px;
-    line-height: 1.2;
-  }
-
-  .rank-record {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 8px;
-    width: fit-content;
-    max-width: 100%;
-    margin-top: 16px;
-    padding: 11px 15px;
-    border-radius: 14px;
-    font-size: 13px;
-    line-height: 1.5;
-  }
-
-  /* Leaderboard: emblem spans both name and rank rows */
-  .player-row-card {
-    display: grid;
-    grid-template-columns: 34px 160px minmax(0, 1fr);
-    grid-template-rows: auto auto;
-    align-items: center;
-    column-gap: 20px;
-    row-gap: 7px;
-    min-height: 190px;
-    padding: 20px 24px;
-  }
-
-  .player-info-group {
-    display: contents;
-  }
-
-  .placement {
-    grid-column: 1;
-    grid-row: 1 / 3;
-    align-self: center;
-    font-size: 19px;
-  }
-
-  .rank-badge-wrap {
-    grid-column: 2;
-    grid-row: 1 / 3;
-    display: grid;
-    place-items: center;
-    width: 160px;
-    height: 160px;
-    overflow: hidden;
-  }
-
-  .rank-badge {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    transform: scale(10);
-    transform-origin: center;
-  }
-
-  .player-info-group > div:last-child {
-    grid-column: 3;
-    grid-row: 1;
-    min-width: 0;
-    align-self: end;
-  }
-
-  .player-alias {
-    font-size: 21px;
-    line-height: 1.25;
-  }
-
-  .player-riot-id {
-    margin-top: 5px;
-    font-size: 12px;
-    line-height: 1.5;
-    overflow-wrap: anywhere;
-  }
-
-  .player-rank-stats {
-    grid-column: 3;
-    grid-row: 2;
-    width: auto;
-    min-width: 0;
-    align-self: start;
-    text-align: left;
-    padding: 0;
-  }
-
-  .tier-label {
-    font-size: 19px;
-    line-height: 1.3;
-  }
-
-  .lp-sub {
-    margin-top: 6px;
-    font-size: 13px;
-    line-height: 1.8;
-    overflow-wrap: anywhere;
-  }
-
-  /* Mobile: keep emblem and details together */
-  @media (max-width: 650px) {
-    body {
-      padding: 16px 10px;
-    }
-
-    .card {
-      padding: 17px;
-      border-radius: 18px;
-    }
-
-    .rank-showcase {
-      grid-template-columns: 150px minmax(0, 1fr);
-      gap: 12px;
-      min-height: 200px;
-      padding: 18px 0;
-    }
-
-    .emblem-wrapper {
-      width: 150px;
-      height: 180px;
-    }
-
-    #rank-emblem {
-      transform: scale(6);
-    }
-
-    .rank-tier-title {
-      font-size: 25px;
-    }
-
-    .rank-lp-text {
-      font-size: 24px;
-      margin-top: 8px;
-    }
-
-    .rank-record {
-      gap: 6px;
-      margin-top: 12px;
-      padding: 8px 10px;
-      font-size: 11px;
-    }
-
-    .player-row-card {
-      grid-template-columns: 24px 100px minmax(0, 1fr);
-      column-gap: 10px;
-      row-gap: 6px;
-      min-height: 150px;
-      padding: 15px 12px;
-    }
-
-    .rank-badge-wrap {
-      width: 100px;
-      height: 120px;
-    }
-
-    .rank-badge {
-      width: 100%;
-      height: 100%;
-      transform: scale(10);
-    }
-
-    .placement {
-      font-size: 15px;
-    }
-
-    .player-alias {
-      font-size: 17px;
-    }
-
-    .player-riot-id {
-      font-size: 10px;
-    }
-
-    .tier-label {
-      font-size: 15px;
-    }
-
-    .lp-sub {
-      font-size: 11px;
-      line-height: 1.8;
-    }
-
-    .analytics-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .stats-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .countdown-grid {
-      gap: 6px;
-    }
-
-    .timer-card {
-      padding: 13px 5px;
-    }
-
-    .timer-number {
-      font-size: 27px;
-    }
-  }
-
-  @media (max-width: 380px) {
-    .rank-showcase {
-      grid-template-columns: 120px minmax(0, 1fr);
-      gap: 8px;
-    }
-
-    .emblem-wrapper {
-      width: 120px;
-      height: 160px;
-    }
-
-    .rank-tier-title {
-      font-size: 21px;
-    }
-
-    .player-row-card {
-      grid-template-columns: 20px 80px minmax(0, 1fr);
-      column-gap: 8px;
-      padding: 12px 9px;
-    }
-
-    .rank-badge-wrap {
-      width: 80px;
-      height: 110px;
-    }
-
-    .player-alias {
-      font-size: 15px;
-    }
-  }
-</style>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Sam's Emerald Challenge</title>
@@ -660,8 +12,8 @@
   <style>
     :root {
       --bg: #040907;
-      --card: rgba(9, 23, 19, 0.94);
-      --border: rgba(16, 185, 129, 0.28);
+      --card: rgba(9, 23, 19, .94);
+      --border: rgba(16, 185, 129, .28);
       --emerald: #10b981;
       --glow: #34d399;
       --text: #f0fdf4;
@@ -670,35 +22,19 @@
       --loss: #f43f5e;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       min-height: 100vh;
       padding: 32px 18px;
       color: var(--text);
-      background:
-        radial-gradient(circle at 50% 0%, #0e3729, var(--bg) 75%);
+      background: radial-gradient(circle at 50% 0%, #0e3729, var(--bg) 75%);
       font-family: "Plus Jakarta Sans", system-ui, sans-serif;
     }
 
-    button, a {
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    button {
-      font: inherit;
-      cursor: pointer;
-    }
-
-    .dashboard {
-      width: 100%;
-      max-width: 980px;
-      margin: auto;
-    }
+    button { font: inherit; cursor: pointer; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    .dashboard { width: 100%; max-width: 980px; margin: auto; }
 
     .tab-bar {
       display: flex;
@@ -720,7 +56,7 @@
       color: var(--muted);
       font-size: 13px;
       font-weight: 800;
-      letter-spacing: 0.05em;
+      letter-spacing: .05em;
       text-transform: uppercase;
     }
 
@@ -730,20 +66,9 @@
       box-shadow: 0 0 24px #10b98140;
     }
 
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
-
-    .header-zone {
-      text-align: center;
-      padding: 6px 0;
-    }
+    .tab-content { display: none; }
+    .tab-content.active { display: flex; flex-direction: column; gap: 24px; }
+    .header-zone { text-align: center; padding: 6px 0; }
 
     .trophy-badge {
       display: inline-block;
@@ -754,15 +79,11 @@
       color: var(--glow);
       font-size: 19px;
       font-weight: 800;
-      letter-spacing: 0.08em;
+      letter-spacing: .08em;
       box-shadow: 0 0 30px #10b98130;
     }
 
-    .subtitle {
-      margin-top: 12px;
-      font-size: 14px;
-      color: var(--muted);
-    }
+    .subtitle { margin-top: 12px; font-size: 14px; color: var(--muted); }
 
     .card {
       width: 100%;
@@ -780,7 +101,7 @@
       color: var(--glow);
       font-size: 16px;
       font-weight: 800;
-      letter-spacing: 0.07em;
+      letter-spacing: .07em;
       text-transform: uppercase;
     }
 
@@ -792,9 +113,8 @@
       overflow-wrap: anywhere;
     }
 
-    .notice:empty {
-      display: none;
-    }
+    .notice:empty { display: none; }
+    #leaderboard-notice:not(:empty) { margin-bottom: 18px; }
 
     .banners {
       display: flex;
@@ -814,8 +134,7 @@
       text-align: center;
     }
 
-    .status-banner.live,
-    .status-banner.loss {
+    .status-banner.live, .status-banner.loss {
       color: #fca5a5;
       border-color: #ef444460;
       background: #ef444415;
@@ -827,15 +146,13 @@
       background: #38bdf815;
     }
 
-    .countdown-grid,
-    .stats-grid {
+    .countdown-grid, .stats-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 12px;
     }
 
-    .timer-card,
-    .stat-box {
+    .timer-card, .stat-box {
       padding: 18px 10px;
       border: 1px solid #ffffff12;
       border-radius: 16px;
@@ -851,30 +168,19 @@
       font-variant-numeric: tabular-nums;
     }
 
-    .label,
-    .stat-lbl {
+    .label, .stat-lbl {
       display: block;
       margin-top: 6px;
       color: var(--muted);
       font-size: 10px;
       font-weight: 700;
-      letter-spacing: 0.06em;
+      letter-spacing: .06em;
       text-transform: uppercase;
     }
 
-    .stats-grid {
-      margin-top: 18px;
-    }
-
-    .stat-val {
-      font-size: 24px;
-      font-weight: 800;
-      overflow-wrap: anywhere;
-    }
-
-    .month-wrap {
-      margin-top: 24px;
-    }
+    .stats-grid { margin-top: 18px; }
+    .stat-val { font-size: 24px; font-weight: 800; overflow-wrap: anywhere; }
+    .month-wrap { margin-top: 24px; }
 
     .month-meta {
       display: flex;
@@ -899,24 +205,10 @@
       background: linear-gradient(90deg, #059669, #34d399);
     }
 
-    .stepper-scroll {
-      overflow-x: auto;
-      padding: 5px 0 12px;
-    }
-
-    .stepper {
-      min-width: 700px;
-    }
-
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(13, 1fr);
-      list-style: none;
-    }
-
-    .step {
-      text-align: center;
-    }
+    .stepper-scroll { overflow-x: auto; padding: 5px 0 12px; }
+    .stepper { min-width: 700px; }
+    .steps { display: grid; grid-template-columns: repeat(13, 1fr); list-style: none; }
+    .step { text-align: center; }
 
     .node {
       display: grid;
@@ -932,22 +224,14 @@
       font-weight: 800;
     }
 
-    .step.passed .node {
-      color: var(--glow);
-      border-color: #059669;
-    }
-
+    .step.passed .node { color: var(--glow); border-color: #059669; }
     .step.active .node {
       color: #03110c;
       border-color: var(--glow);
       background: var(--glow);
       box-shadow: 0 0 20px #34d39960;
     }
-
-    .step.goal .node {
-      border-color: #fbbf24;
-    }
-
+    .step.goal .node { border-color: #fbbf24; }
     .step-sub {
       display: block;
       min-height: 20px;
@@ -965,10 +249,7 @@
       font-size: 12px;
       font-weight: 800;
     }
-
-    .tier-groups .current {
-      color: var(--glow);
-    }
+    .tier-groups .current { color: var(--glow); }
 
     .player-header {
       display: flex;
@@ -978,102 +259,72 @@
       gap: 12px;
     }
 
-    .player-id {
-      font-size: 17px;
-      font-weight: 800;
-      overflow-wrap: anywhere;
-    }
+    .player-id { font-size: 19px; font-weight: 800; overflow-wrap: anywhere; }
+    .player-id span { color: var(--muted); }
+    .opgg-link { color: var(--glow); font-size: 13px; text-decoration: none; }
 
-    .player-id span {
-      color: var(--muted);
-    }
-
-    .opgg-link {
-      color: var(--glow);
-      font-size: 13px;
-      text-decoration: none;
-    }
-
-    /* Larger Sam challenge emblem */
+    /* Sam: moderate emblem, larger aligned rank details */
     .rank-showcase {
-      display: flex;
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr);
       align-items: center;
-      justify-content: center;
       gap: 35px;
-      min-height: 390px;
-      padding: 30px 0;
+      max-width: 700px;
+      min-height: 290px;
+      margin: 0 auto;
+      padding: 25px 0;
     }
 
     .emblem-wrapper {
       display: grid;
-      flex-shrink: 0;
-      width: 340px;
-      height: 340px;
       place-items: center;
+      width: 250px;
+      height: 250px;
       overflow: hidden;
     }
 
     #rank-emblem {
+      display: block;
       width: 100%;
       height: 100%;
       object-fit: contain;
-      transform: scale(2.8);
-      filter: drop-shadow(0 0 25px #10b98145);
+      transform: scale(3.5);
+      transform-origin: center;
+      filter: drop-shadow(0 0 20px #10b98135);
     }
 
-    .emblem-fallback {
-      display: none;
-      color: var(--muted);
-      font-size: 70px;
-    }
-
-    .is-fallback #rank-emblem {
-      display: none;
-    }
-
-    .is-fallback .emblem-fallback {
-      display: block;
-    }
-
-    .rank-tier-title {
-      font-size: clamp(22px, 4vw, 34px);
-      font-weight: 800;
-    }
-
-    .rank-lp-text {
-      margin-top: 8px;
-      color: var(--glow);
-      font-size: 24px;
-      font-weight: 800;
-    }
+    .emblem-fallback { display: none; color: var(--muted); font-size: 60px; }
+    .is-fallback #rank-emblem { display: none; }
+    .is-fallback .emblem-fallback { display: block; }
+    .rank-details { min-width: 0; text-align: left; }
+    .rank-tier-title { font-size: 40px; font-weight: 800; line-height: 1.2; }
+    .rank-lp-text { margin-top: 12px; color: var(--glow); font-size: 32px; font-weight: 800; }
 
     .rank-record {
-      margin-top: 15px;
-      padding: 10px 15px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      width: fit-content;
+      max-width: 100%;
+      margin-top: 18px;
+      padding: 12px 16px;
       border: 1px solid #ffffff15;
-      border-radius: 999px;
-      font-size: 13px;
+      border-radius: 14px;
+      font-size: 16px;
+      line-height: 1.5;
     }
 
-    .win-num {
-      color: var(--win);
-    }
-
-    .loss-num {
-      color: var(--loss);
-    }
-
-    .analytics-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-    }
+    .win-num { color: var(--win); }
+    .loss-num { color: var(--loss); }
+    .analytics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
 
     .analytics-box {
       padding: 20px;
       border: 1px solid #ffffff12;
       border-radius: 16px;
       background: #0002;
+      min-width: 0;
     }
 
     .analytics-title {
@@ -1084,8 +335,7 @@
       text-transform: uppercase;
     }
 
-    .champ-row,
-    .daily-row {
+    .champ-row, .daily-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -1094,17 +344,8 @@
       font-size: 12px;
     }
 
-    .champ-identity {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .champ-row img {
-      width: 30px;
-      height: 30px;
-      border-radius: 7px;
-    }
+    .champ-identity { display: flex; align-items: center; gap: 12px; }
+    .champ-row img { width: 30px; height: 30px; border-radius: 7px; }
 
     .analysis-card {
       margin-top: 22px;
@@ -1122,15 +363,8 @@
       text-transform: uppercase;
     }
 
-    .analysis-content {
-      color: #d1fae5;
-      font-size: 14px;
-      line-height: 1.7;
-    }
-
-    .matches-section {
-      margin-top: 26px;
-    }
+    .analysis-content { color: #d1fae5; font-size: 14px; line-height: 1.7; }
+    .matches-section { margin-top: 26px; }
 
     .section-title {
       display: flex;
@@ -1142,17 +376,8 @@
       font-weight: 800;
     }
 
-    .section-title small {
-      color: var(--muted);
-      font-size: 11px;
-      font-weight: 500;
-    }
-
-    .matches-list {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
+    .section-title small { color: var(--muted); font-size: 11px; font-weight: 500; }
+    .matches-list { display: flex; flex-direction: column; gap: 14px; }
 
     .match-card {
       padding: 18px;
@@ -1162,10 +387,7 @@
       background: #0002;
     }
 
-    .match-card.win {
-      border-left-color: var(--win);
-    }
-
+    .match-card.win { border-left-color: var(--win); }
     .match-top-row {
       display: flex;
       flex-wrap: wrap;
@@ -1174,37 +396,11 @@
       gap: 15px;
     }
 
-    .champ-avatar {
-      width: 46px;
-      height: 46px;
-      border-radius: 10px;
-    }
-
-    .champ-name {
-      display: block;
-      font-size: 14px;
-      font-weight: 800;
-    }
-
-    .champ-role {
-      display: block;
-      margin-top: 4px;
-      color: var(--muted);
-      font-size: 11px;
-    }
-
-    .match-kda {
-      font-size: 15px;
-      font-weight: 800;
-    }
-
-    .match-kda small {
-      display: block;
-      margin-top: 4px;
-      color: var(--muted);
-      font-size: 11px;
-      font-weight: 500;
-    }
+    .champ-avatar { width: 46px; height: 46px; border-radius: 10px; }
+    .champ-name { display: block; font-size: 14px; font-weight: 800; }
+    .champ-role { display: block; margin-top: 4px; color: var(--muted); font-size: 11px; }
+    .match-kda { font-size: 15px; font-weight: 800; }
+    .match-kda small { display: block; margin-top: 4px; color: var(--muted); font-size: 11px; font-weight: 500; }
 
     .match-badge {
       padding: 6px 10px;
@@ -1216,32 +412,10 @@
       text-transform: uppercase;
     }
 
-    .match-card.win .match-badge {
-      background: #38bdf818;
-      color: var(--win);
-    }
-
-    .items-container {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 6px;
-      margin-top: 15px;
-    }
-
-    .item-label {
-      margin-right: 5px;
-      color: var(--muted);
-      font-size: 11px;
-    }
-
-    .item-slot img {
-      display: block;
-      width: 30px;
-      height: 30px;
-      border: 1px solid #ffffff20;
-      border-radius: 5px;
-    }
+    .match-card.win .match-badge { background: #38bdf818; color: var(--win); }
+    .items-container { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 15px; }
+    .item-label { margin-right: 5px; color: var(--muted); font-size: 11px; }
+    .item-slot img { display: block; width: 30px; height: 30px; border: 1px solid #ffffff20; border-radius: 5px; }
 
     .match-roast {
       margin-top: 15px;
@@ -1252,95 +426,105 @@
       line-height: 1.7;
     }
 
-    .empty-note {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.6;
-    }
+    .empty-note { color: var(--muted); font-size: 13px; line-height: 1.6; }
 
-    .leaderboard-list {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
+    /* Leaderboard: four aligned columns */
+    .leaderboard-list { display: flex; flex-direction: column; gap: 16px; }
 
     .player-row-card {
-      display: flex;
+      display: grid;
+      grid-template-columns: 40px 132px minmax(0, 1fr) 240px;
       align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-      padding: 24px;
+      gap: 20px;
+      min-height: 160px;
+      padding: 20px 24px;
       border: 1px solid #ffffff12;
       border-radius: 16px;
       background: #0002;
     }
 
-    .player-info-group {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      min-width: 0;
-    }
-
     .placement {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
       color: var(--muted);
       font-size: 20px;
       font-weight: 800;
-      flex-shrink: 0;
+      text-align: center;
     }
 
-    /* Larger leaderboard emblems, with reserved layout space */
     .rank-badge-wrap {
       display: grid;
-      width: 160px;
-      height: 150px;
-      flex-shrink: 0;
       place-items: center;
+      width: 132px;
+      height: 132px;
       overflow: hidden;
     }
 
     .rank-badge {
       display: block;
-      width: 130px;
-      height: 130px;
+      width: 100%;
+      height: 100%;
       object-fit: contain;
-      transform: scale(1.6);
+      transform: scale(4);
+      transform-origin: center;
       filter: drop-shadow(0 0 12px #10b98125);
     }
 
-    .player-alias {
-      font-size: 19px;
-      font-weight: 800;
-    }
-
-    .player-riot-id {
-      margin-top: 5px;
-      color: var(--muted);
-      font-size: 12px;
-      overflow-wrap: anywhere;
-    }
-
-    .player-rank-stats {
-      text-align: right;
-      flex-shrink: 0;
-    }
-
-    .tier-label {
-      font-size: 17px;
-      font-weight: 800;
-    }
+    .player-identity { min-width: 0; }
+    .player-alias { font-size: 28px; font-weight: 800; line-height: 1.25; }
+    .player-riot-id { margin-top: 7px; color: var(--muted); font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
+    .player-rank-stats { min-width: 0; text-align: right; }
+    .tier-label { font-size: 24px; font-weight: 800; line-height: 1.3; }
 
     .lp-sub {
-      margin-top: 8px;
+      display: flex;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 6px 10px;
+      margin-top: 9px;
       color: var(--muted);
-      font-size: 12px;
+      font-size: 16px;
+      line-height: 1.7;
     }
 
-    .refresh-wrap {
-      margin-top: 24px;
-      text-align: center;
+    .lp-sub > span { white-space: nowrap; }
+
+    /* Podium styles */
+    .player-row-card:nth-child(1) {
+      border: 2px solid #fbbf24;
+      background: linear-gradient(120deg, #fbbf2429, #091713f5 75%);
+      box-shadow: 0 0 24px #fbbf2426;
     }
 
+    .player-row-card:nth-child(1) .placement,
+    .player-row-card:nth-child(1) .player-alias { color: #fbbf24; }
+
+    .player-row-card:nth-child(2) {
+      border: 2px solid #cbd5e1;
+      background: linear-gradient(120deg, #cbd5e11f, #091713f5 75%);
+      box-shadow: 0 0 18px #cbd5e114;
+    }
+
+    .player-row-card:nth-child(2) .placement,
+    .player-row-card:nth-child(2) .player-alias { color: #e2e8f0; }
+
+    .player-row-card:nth-child(3) {
+      border: 2px solid #cd9058;
+      background: linear-gradient(120deg, #cd905824, #091713f5 75%);
+      box-shadow: 0 0 18px #cd905814;
+    }
+
+    .player-row-card:nth-child(3) .placement,
+    .player-row-card:nth-child(3) .player-alias { color: #e4ad7e; }
+
+    .player-row-card:nth-child(1) .placement::before { content: "🥇"; font-size: 25px; }
+    .player-row-card:nth-child(2) .placement::before { content: "🥈"; font-size: 25px; }
+    .player-row-card:nth-child(3) .placement::before { content: "🥉"; font-size: 25px; }
+
+    .refresh-wrap { margin-top: 24px; text-align: center; }
     .refresh-btn {
       padding: 10px 18px;
       border: 1px solid var(--border);
@@ -1350,94 +534,74 @@
       font-size: 12px;
       font-weight: 700;
     }
+    .refresh-btn:disabled { cursor: wait; opacity: .5; }
 
-    .refresh-btn:disabled {
-      cursor: wait;
-      opacity: 0.5;
-    }
-
-    @media (max-width: 800px) {
+    @media (max-width: 850px) {
       .player-row-card {
-        flex-wrap: wrap;
+        grid-template-columns: 32px 110px minmax(0, 1fr) 200px;
+        gap: 14px;
+        padding: 18px;
       }
-
-      .player-rank-stats {
-        width: 100%;
-        text-align: left;
-      }
+      .rank-badge-wrap { width: 110px; height: 120px; }
+      .player-alias { font-size: 25px; }
+      .tier-label { font-size: 21px; }
+      .lp-sub { font-size: 14px; }
     }
 
-    @media (max-width: 650px) {
-      body {
-        padding: 20px 12px;
-      }
-
-      .card {
-        padding: 19px;
-      }
-
-      .tab-btn {
-        padding: 12px 15px;
-        font-size: 11px;
-      }
-
-      .trophy-badge {
-        font-size: 15px;
-      }
-
-      .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
+    @media (max-width: 700px) {
+      body { padding: 20px 12px; }
+      .card { padding: 18px; border-radius: 18px; }
+      .tab-btn { padding: 12px 15px; font-size: 11px; }
+      .trophy-badge { font-size: 15px; }
+      .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .countdown-grid { gap: 7px; }
+      .timer-card { padding: 14px 5px; }
+      .analytics-grid { grid-template-columns: 1fr; }
 
       .rank-showcase {
-        flex-direction: column;
-        gap: 10px;
-        text-align: center;
-        min-height: auto;
-      }
-
-      .emblem-wrapper {
-        width: min(280px, 100%);
-        height: 280px;
-        flex-shrink: 1;
-      }
-
-      .analytics-grid {
         grid-template-columns: 1fr;
+        gap: 8px;
+        min-height: auto;
+        padding: 20px 0 28px;
       }
+      .emblem-wrapper { width: 220px; height: 220px; margin: auto; }
+      .rank-details { text-align: center; }
+      .rank-tier-title { font-size: 34px; }
+      .rank-lp-text { font-size: 28px; }
+      .rank-record { justify-content: center; margin: 16px auto 0; font-size: 15px; }
 
       .player-row-card {
-        padding: 18px;
-        gap: 14px;
+        grid-template-columns: 28px 100px minmax(0, 1fr);
+        grid-template-rows: auto auto;
+        column-gap: 12px;
+        row-gap: 6px;
+        min-height: 150px;
+        padding: 18px 12px;
       }
+      .placement { grid-column: 1; grid-row: 1 / 3; font-size: 16px; }
+      .rank-badge-wrap { grid-column: 2; grid-row: 1 / 3; width: 100px; height: 120px; }
+      .player-identity { grid-column: 3; grid-row: 1; align-self: end; }
+      .player-rank-stats { grid-column: 3; grid-row: 2; align-self: start; text-align: left; }
+      .player-alias { font-size: 23px; }
+      .player-riot-id { font-size: 11px; margin-top: 4px; }
+      .tier-label { font-size: 19px; }
+      .lp-sub { justify-content: flex-start; font-size: 13px; margin-top: 5px; gap: 3px 8px; }
+      .player-row-card:nth-child(-n+3) .placement::before { font-size: 20px; }
+    }
 
-      .player-info-group {
-        width: 100%;
-        gap: 12px;
+    @media (max-width: 380px) {
+      body { padding: 16px 8px; }
+      .card { padding: 14px; }
+      .player-row-card {
+        grid-template-columns: 24px 76px minmax(0, 1fr);
+        column-gap: 8px;
+        padding: 15px 9px;
       }
-
-      .rank-badge-wrap {
-        width: 110px;
-        height: 120px;
-      }
-
-      .rank-badge {
-        width: 100px;
-        height: 100px;
-        transform: scale(1.6);
-      }
-
-      .placement {
-        font-size: 16px;
-      }
-
-      .player-alias {
-        font-size: 17px;
-      }
-
-      .player-riot-id {
-        font-size: 10px;
-      }
+      .rank-badge-wrap { width: 76px; height: 100px; }
+      .player-alias { font-size: 21px; }
+      .tier-label { font-size: 17px; }
+      .lp-sub { font-size: 12px; }
+      .player-id { font-size: 16px; }
     }
   </style>
 </head>
@@ -1445,12 +609,8 @@
 <body>
   <div class="dashboard">
     <nav class="tab-bar" aria-label="Dashboard tabs">
-      <button class="tab-btn active" onclick="switchTab('sam')">
-        Sam's Challenge
-      </button>
-      <button class="tab-btn" onclick="switchTab('leaderboard')">
-        Leaderboard
-      </button>
+      <button class="tab-btn active" onclick="switchTab('sam')">Sam's Challenge</button>
+      <button class="tab-btn" onclick="switchTab('leaderboard')">Leaderboard</button>
     </nav>
 
     <div id="tab-sam" class="tab-content active">
@@ -1462,63 +622,30 @@
       <p id="sam-notice" class="notice" role="status"></p>
 
       <div class="banners">
-        <div id="live-status-banner" class="status-banner">
-          Checking live status…
-        </div>
-        <div id="streak-banner" class="status-banner">
-          Checking streak…
-        </div>
+        <div id="live-status-banner" class="status-banner">Checking live status…</div>
+        <div id="streak-banner" class="status-banner">Checking streak…</div>
       </div>
 
       <section class="card">
         <h2 class="card-title">Time Remaining in Challenge</h2>
 
         <div class="countdown-grid">
-          <div class="timer-card">
-            <span id="days" class="timer-number">00</span>
-            <span class="label">Days</span>
-          </div>
-          <div class="timer-card">
-            <span id="hours" class="timer-number">00</span>
-            <span class="label">Hours</span>
-          </div>
-          <div class="timer-card">
-            <span id="minutes" class="timer-number">00</span>
-            <span class="label">Minutes</span>
-          </div>
-          <div class="timer-card">
-            <span id="seconds" class="timer-number">00</span>
-            <span class="label">Seconds</span>
-          </div>
+          <div class="timer-card"><span id="days" class="timer-number">00</span><span class="label">Days</span></div>
+          <div class="timer-card"><span id="hours" class="timer-number">00</span><span class="label">Hours</span></div>
+          <div class="timer-card"><span id="minutes" class="timer-number">00</span><span class="label">Minutes</span></div>
+          <div class="timer-card"><span id="seconds" class="timer-number">00</span><span class="label">Seconds</span></div>
         </div>
 
         <div class="stats-grid">
-          <div class="stat-box">
-            <div id="stat-today" class="stat-val">—</div>
-            <div class="stat-lbl">Games Today</div>
-          </div>
-          <div class="stat-box">
-            <div id="stat-oct" class="stat-val">—</div>
-            <div class="stat-lbl">Total Games</div>
-          </div>
-          <div class="stat-box">
-            <div id="stat-hours" class="stat-val">—</div>
-            <div class="stat-lbl">Time Invested</div>
-          </div>
-          <div class="stat-box">
-            <div id="stat-lp" class="stat-val">—</div>
-            <div class="stat-lbl">Estimated LP · Recent 5</div>
-          </div>
+          <div class="stat-box"><div id="stat-today" class="stat-val">—</div><div class="stat-lbl">Games Today</div></div>
+          <div class="stat-box"><div id="stat-oct" class="stat-val">—</div><div class="stat-lbl">Total Games</div></div>
+          <div class="stat-box"><div id="stat-hours" class="stat-val">—</div><div class="stat-lbl">Time Invested</div></div>
+          <div class="stat-box"><div id="stat-lp" class="stat-val">—</div><div class="stat-lbl">Estimated LP · Recent 5</div></div>
         </div>
 
         <div class="month-wrap">
-          <div class="month-meta">
-            <span>Challenge Elapsed</span>
-            <span id="month-text">0.0% Complete</span>
-          </div>
-          <div class="month-track">
-            <div id="month-fill"></div>
-          </div>
+          <div class="month-meta"><span>Challenge Elapsed</span><span id="month-text">0.0% Complete</span></div>
+          <div class="month-track"><div id="month-fill"></div></div>
         </div>
       </section>
 
@@ -1534,17 +661,8 @@
 
       <main class="card">
         <div class="player-header">
-          <div class="player-id">
-            BRODOODOOFART<span>#1738</span>
-          </div>
-          <a
-            class="opgg-link"
-            href="https://op.gg/lol/summoners/na/BRODOODOOFART-1738"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            View OP.GG ↗
-          </a>
+          <div class="player-id">BRODOODOOFART<span>#1738</span></div>
+          <a class="opgg-link" href="https://op.gg/lol/summoners/na/BRODOODOOFART-1738" target="_blank" rel="noopener noreferrer">View OP.GG ↗</a>
         </div>
 
         <div class="rank-showcase">
@@ -1553,51 +671,32 @@
             <div class="emblem-fallback">?</div>
           </div>
 
-          <div>
+          <div class="rank-details">
             <div id="current-tier" class="rank-tier-title">—</div>
             <div id="current-lp" class="rank-lp-text">— LP</div>
-            <div id="current-record" class="rank-record">
-              Loading record…
-            </div>
+            <div id="current-record" class="rank-record">Loading record…</div>
           </div>
         </div>
 
         <div class="analytics-grid">
           <div class="analytics-box">
-            <div class="analytics-title">
-              🔥 Top Champions · Recent 5
-            </div>
-            <div id="top-champs-list">
-              <span class="empty-note">Loading champions…</span>
-            </div>
+            <div class="analytics-title">🔥 Top Champions · Recent 5</div>
+            <div id="top-champs-list"><span class="empty-note">Loading champions…</span></div>
           </div>
-
           <div class="analytics-box">
-            <div class="analytics-title">
-              📅 Estimated LP · Recent 5
-            </div>
-            <div id="daily-lp-list">
-              <span class="empty-note">Loading match log…</span>
-            </div>
+            <div class="analytics-title">📅 Estimated LP · Recent 5</div>
+            <div id="daily-lp-list"><span class="empty-note">Loading match log…</span></div>
           </div>
         </div>
 
         <div class="analysis-card">
           <div class="analysis-label">🔮 Emerald Scouting Report</div>
-          <p id="macro-analysis-text" class="analysis-content">
-            Waiting for rank data…
-          </p>
+          <p id="macro-analysis-text" class="analysis-content">Waiting for rank data…</p>
         </div>
 
         <div class="matches-section">
-          <div class="section-title">
-            <span>Recent Match Breakdowns</span>
-            <small>Latest 5 · Ranked Solo/Duo</small>
-          </div>
-
-          <div id="matches-list" class="matches-list">
-            <span class="empty-note">Loading recent matches…</span>
-          </div>
+          <div class="section-title"><span>Recent Match Breakdowns</span><small>Latest 5 · Ranked Solo/Duo</small></div>
+          <div id="matches-list" class="matches-list"><span class="empty-note">Loading recent matches…</span></div>
         </div>
       </main>
     </div>
@@ -1605,79 +704,35 @@
     <div id="tab-leaderboard" class="tab-content">
       <section class="card">
         <h2 class="card-title">Squad Leaderboard</h2>
-
         <p id="leaderboard-notice" class="notice" role="status"></p>
-
-        <div id="leaderboard-container" class="leaderboard-list">
-          <span class="empty-note">Loading ranks…</span>
-        </div>
+        <div id="leaderboard-container" class="leaderboard-list"><span class="empty-note">Loading ranks…</span></div>
       </section>
     </div>
 
     <div class="refresh-wrap">
-      <button
-        id="refresh-btn"
-        class="refresh-btn"
-        onclick="loadAllData()"
-      >
-        Refresh Data
-      </button>
+      <button id="refresh-btn" class="refresh-btn" onclick="loadAllData()">Refresh Data</button>
     </div>
   </div>
 
   <script>
-    const WORKER_URL =
-      "https://sam-rank-tracker.hwong951.workers.dev";
-
+    const WORKER_URL = "https://sam-rank-tracker.hwong951.workers.dev";
     const DDRAGON_VER = "14.19.1";
-
-    const CHAMP_IMG =
-      `https://ddragon.leagueoflegends.com/cdn/${DDRAGON_VER}/img/champion`;
-
-    const ITEM_IMG =
-      `https://ddragon.leagueoflegends.com/cdn/${DDRAGON_VER}/img/item`;
-
-    const CREST_BASE =
-      "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-";
+    const CHAMP_IMG = `https://ddragon.leagueoflegends.com/cdn/${DDRAGON_VER}/img/champion`;
+    const ITEM_IMG = `https://ddragon.leagueoflegends.com/cdn/${DDRAGON_VER}/img/item`;
+    const CREST_BASE = "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-";
 
     const $ = id => document.getElementById(id);
+    const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+    const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+    const esc = value => String(value ?? "").replace(/[&<>"']/g, c => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[c]));
 
-    const sleep = ms =>
-      new Promise(resolve => setTimeout(resolve, ms));
-
-    const clamp = (value, min, max) =>
-      Math.min(max, Math.max(min, value));
-
-    const esc = value => String(value ?? "").replace(
-      /[&<>"']/g,
-      character => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;"
-      }[character])
-    );
-
-    const TIERS = [
-      "iron", "bronze", "silver", "gold", "platinum",
-      "emerald", "diamond", "master", "grandmaster", "challenger"
-    ];
-
+    const TIERS = ["iron", "bronze", "silver", "gold", "platinum", "emerald", "diamond", "master", "grandmaster", "challenger"];
     const DIVISIONS = ["IV", "III", "II", "I"];
-
-    const LADDER_TIERS = [
-      ["silver", 4],
-      ["gold", 4],
-      ["platinum", 4],
-      ["emerald", 1]
-    ];
-
+    const LADDER_TIERS = [["silver", 4], ["gold", 4], ["platinum", 4], ["emerald", 1]];
     const LADDER = LADDER_TIERS.flatMap(([tier, count]) =>
-      DIVISIONS.slice(0, count).map(division => ({
-        tier,
-        division
-      }))
+      DIVISIONS.slice(0, count).map(division => ({ tier, division }))
     );
 
     let loading = false;
@@ -1686,75 +741,51 @@
 
     function switchTab(name) {
       document.querySelectorAll(".tab-btn").forEach((button, index) => {
-        button.classList.toggle(
-          "active",
-          index === (name === "sam" ? 0 : 1)
-        );
+        button.classList.toggle("active", index === (name === "sam" ? 0 : 1));
       });
-
       $("tab-sam").classList.toggle("active", name === "sam");
-
-      $("tab-leaderboard").classList.toggle(
-        "active",
-        name === "leaderboard"
-      );
+      $("tab-leaderboard").classList.toggle("active", name === "leaderboard");
     }
 
     function notice(view, message) {
-      $(view === "sam" ? "sam-notice" : "leaderboard-notice")
-        .textContent = message;
+      $(view === "sam" ? "sam-notice" : "leaderboard-notice").textContent = message;
     }
 
     function buildStepper() {
       $("steps").innerHTML = LADDER.map((step, index) => `
         <li class="step${index === LADDER.length - 1 ? " goal" : ""}">
-          <span class="node">
-            ${index === LADDER.length - 1 ? "🏆" : step.division}
-          </span>
+          <span class="node">${index === LADDER.length - 1 ? "🏆" : step.division}</span>
           <span class="step-sub"></span>
         </li>
       `).join("");
 
-      $("tier-groups").innerHTML =
-        LADDER_TIERS.map(([tier, count]) => `
-          <span
-            data-tier="${tier}"
-            style="grid-column:span ${count}"
-          >
-            ${tier.charAt(0).toUpperCase() + tier.slice(1)}
-          </span>
-        `).join("");
+      $("tier-groups").innerHTML = LADDER_TIERS.map(([tier, count]) => `
+        <span data-tier="${tier}" style="grid-column:span ${count}">
+          ${tier.charAt(0).toUpperCase() + tier.slice(1)}
+        </span>
+      `).join("");
     }
 
     function updateStepper(tier, division, lp) {
       const tierIndex = TIERS.indexOf(tier);
       const divisionIndex = DIVISIONS.indexOf(division);
-
-      const position = tierIndex < 0
-        ? -1
-        : (tierIndex - TIERS.indexOf("silver")) * 4 +
-          Math.max(0, divisionIndex);
+      const position = tierIndex < 0 ? -1 :
+        (tierIndex - TIERS.indexOf("silver")) * 4 + Math.max(0, divisionIndex);
 
       [...$("steps").children].forEach((step, index) => {
         step.classList.toggle("passed", index < position);
         step.classList.toggle("active", index === position);
-
-        step.querySelector(".step-sub").textContent =
-          index === position ? `${lp} LP` : "";
+        step.querySelector(".step-sub").textContent = index === position ? `${lp} LP` : "";
       });
 
       [...$("tier-groups").children].forEach(group => {
-        group.classList.toggle(
-          "current",
-          group.dataset.tier === tier
-        );
+        group.classList.toggle("current", group.dataset.tier === tier);
       });
     }
 
     function setEmblem(tier) {
       const wrapper = $("emblem-wrapper");
       const image = $("rank-emblem");
-
       wrapper.classList.remove("is-fallback");
 
       if (!TIERS.includes(tier)) {
@@ -1772,10 +803,7 @@
     async function api(view, params = {}, onWait = () => {}) {
       const url = new URL(WORKER_URL);
       url.searchParams.set("view", view);
-
-      Object.entries(params).forEach(([key, value]) => {
-        url.searchParams.set(key, value);
-      });
+      Object.entries(params).forEach(([key, value]) => url.searchParams.set(key, value));
 
       for (let attempt = 0; attempt < 3; attempt++) {
         const response = await fetch(url, {
@@ -1785,192 +813,119 @@
         });
 
         if (response.status === 429 && attempt < 2) {
-          const raw = Number(
-            response.headers.get("Retry-After")
-          );
-
-          const seconds = Number.isFinite(raw) && raw > 0
-            ? Math.ceil(raw)
-            : 120;
-
+          const raw = Number(response.headers.get("Retry-After"));
+          const seconds = Number.isFinite(raw) && raw > 0 ? Math.ceil(raw) : 120;
           await response.text();
-
           onWait(`Riot cooldown: retrying in ${seconds}s…`);
-
           await sleep((seconds + 1) * 1000);
           continue;
         }
 
         const data = await response.json();
-
         if (!response.ok || data.error) {
-          throw new Error(
-            data.message || `Worker returned ${response.status}`
-          );
+          throw new Error(data.message || `Worker returned ${response.status}`);
         }
-
         return data;
       }
     }
 
     function updateLeaderboard(list) {
       if (!list.length) {
-        $("leaderboard-container").innerHTML =
-          '<span class="empty-note">No ranks available.</span>';
+        $("leaderboard-container").innerHTML = '<span class="empty-note">No ranks available.</span>';
         return;
       }
 
-      $("leaderboard-container").innerHTML =
-        list.map((player, index) => {
-          const tier = String(player.tier).toLowerCase();
-          const wins = Number(player.wins) || 0;
-          const losses = Number(player.losses) || 0;
-          const total = wins + losses;
+      $("leaderboard-container").innerHTML = list.map((player, index) => {
+        const tier = String(player.tier).toLowerCase();
+        const wins = Number(player.wins) || 0;
+        const losses = Number(player.losses) || 0;
+        const total = wins + losses;
+        const winrate = total ? Math.round(wins / total * 100) : 0;
 
-          const winrate = total
-            ? Math.round(wins / total * 100)
-            : 0;
+        const emblem = TIERS.includes(tier)
+          ? `<img class="rank-badge" src="${CREST_BASE}${tier}.png"
+               alt="${esc(player.tier)}" onerror="this.style.visibility='hidden'">`
+          : "—";
 
-          const badge = TIERS.includes(tier)
-            ? `
-              <div class="rank-badge-wrap">
-                <img
-                  class="rank-badge"
-                  src="${CREST_BASE}${tier}.png"
-                  alt="${esc(player.tier)}"
-                  onerror="this.style.visibility='hidden'"
-                >
-              </div>
-            `
-            : '<div class="rank-badge-wrap">—</div>';
+        return `
+          <div class="player-row-card">
+            <div class="placement">#${index + 1}</div>
+            <div class="rank-badge-wrap">${emblem}</div>
 
-          return `
-            <div class="player-row-card">
-              <div class="player-info-group">
-                <span class="placement">#${index + 1}</span>
+            <div class="player-identity">
+              <div class="player-alias">${esc(player.alias)}</div>
+              <div class="player-riot-id">${esc(player.gameName)}#${esc(player.tagLine)}</div>
+            </div>
 
-                ${badge}
-
-                <div>
-                  <div class="player-alias">
-                    ${esc(player.alias)}
-                  </div>
-                  <div class="player-riot-id">
-                    ${esc(player.gameName)}#${esc(player.tagLine)}
-                  </div>
-                </div>
-              </div>
-
-              <div class="player-rank-stats">
-                <div class="tier-label">
-                  ${esc(player.tier)} ${esc(player.division)}
-                </div>
-                <div class="lp-sub">
-                  ${Number(player.lp) || 0} LP |
-                  <span class="win-num">${wins}W</span>
-                  <span class="loss-num">${losses}L</span>
-                  (${winrate}%)
-                </div>
+            <div class="player-rank-stats">
+              <div class="tier-label">${esc(player.tier)} ${esc(player.division)}</div>
+              <div class="lp-sub">
+                <span>${Number(player.lp) || 0} LP</span>
+                <span class="win-num">${wins}W</span>
+                <span class="loss-num">${losses}L</span>
+                <span>${winrate}% WR</span>
               </div>
             </div>
-          `;
-        }).join("");
+          </div>
+        `;
+      }).join("");
     }
 
     function updateSamUI(sam) {
       const tier = String(sam.tier).toLowerCase();
-
       setEmblem(tier);
       updateStepper(tier, sam.division, sam.lp);
 
-      $("current-tier").textContent =
-        `${sam.tier} ${sam.division}`;
-
+      $("current-tier").textContent = `${sam.tier} ${sam.division}`;
       $("current-lp").textContent = `${sam.lp} LP`;
-
       $("current-record").innerHTML = `
         <span class="win-num">${Number(sam.wins)}W</span>
         <span class="loss-num">${Number(sam.losses)}L</span>
-        (${Number(sam.winrate)}% Win Rate)
+        <span>${Number(sam.winrate)}% Win Rate</span>
       `;
 
       const live = sam.liveGame;
-      const liveBanner = $("live-status-banner");
-
-      liveBanner.className =
-        `status-banner${live?.inGame ? " live" : ""}`;
-
-      liveBanner.textContent = live?.inGame
+      $("live-status-banner").className = `status-banner${live?.inGame ? " live" : ""}`;
+      $("live-status-banner").textContent = live?.inGame
         ? `🔴 LIVE IN GAME (${Number(live.gameLengthMin)}m)`
-        : live?.checked
-          ? "NOT LIVE"
-          : "LIVE STATUS UNAVAILABLE";
+        : live?.checked ? "NOT LIVE" : "LIVE STATUS UNAVAILABLE";
 
-      const streak = sam.statsTracker?.streak || {
-        count: 0,
-        type: "none"
-      };
+      const streak = sam.statsTracker?.streak || { count: 0, type: "none" };
+      $("streak-banner").className = "status-banner" +
+        (streak.count ? streak.type === "win" ? " win" : " loss" : "");
 
-      const streakBanner = $("streak-banner");
-
-      streakBanner.className = "status-banner" +
-        (streak.count
-          ? streak.type === "win" ? " win" : " loss"
-          : "");
-
-      streakBanner.textContent = streak.count
-        ? `${streak.type === "win" ? "🔥" : "❄️"} ${streak.count} ${
-            streak.type === "win" ? "WIN" : "LOSS"
-          } STREAK`
+      $("streak-banner").textContent = streak.count
+        ? `${streak.type === "win" ? "🔥" : "❄️"} ${streak.count} ${streak.type === "win" ? "WIN" : "LOSS"} STREAK`
         : "NO RECENT STREAK";
 
-      const estimatedLp =
-        Number(sam.statsTracker?.todayLpChange) || 0;
-
-      $("stat-lp").textContent =
-        `${estimatedLp >= 0 ? "+" : ""}${estimatedLp} LP`;
-
-      $("stat-lp").style.color =
-        estimatedLp >= 0 ? "var(--win)" : "var(--loss)";
-
-      $("stat-lp").title =
-        "Today's estimate within the latest five matches: +18 per win, -16 per loss";
+      const estimatedLp = Number(sam.statsTracker?.todayLpChange) || 0;
+      $("stat-lp").textContent = `${estimatedLp >= 0 ? "+" : ""}${estimatedLp} LP`;
+      $("stat-lp").style.color = estimatedLp >= 0 ? "var(--win)" : "var(--loss)";
+      $("stat-lp").title = "Today's estimate within the latest five matches: +18 per win, -16 per loss";
 
       const champions = sam.analytics?.topChampions || [];
-
       $("top-champs-list").innerHTML = champions.length
         ? champions.map(champion => `
             <div class="champ-row">
               <div class="champ-identity">
-                <img
-                  src="${CHAMP_IMG}/${encodeURIComponent(champion.name)}.png"
-                  alt="${esc(champion.name)}"
-                  onerror="this.style.visibility='hidden'"
-                >
+                <img src="${CHAMP_IMG}/${encodeURIComponent(champion.name)}.png"
+                  alt="${esc(champion.name)}" onerror="this.style.visibility='hidden'">
                 <span>${esc(champion.name)}</span>
               </div>
-
               <div>
                 ${Number(champion.games)} games ·
-                <span class="${
-                  champion.winrate >= 50 ? "win-num" : "loss-num"
-                }">
-                  ${Number(champion.winrate)}%
-                </span>
+                <span class="${champion.winrate >= 50 ? "win-num" : "loss-num"}">${Number(champion.winrate)}%</span>
               </div>
             </div>
           `).join("")
         : '<span class="empty-note">No challenge games in the recent five.</span>';
 
       const days = sam.analytics?.dailyBreakdown || [];
-
       $("daily-lp-list").innerHTML = days.length
         ? days.map(day => `
             <div class="daily-row">
               <span>${esc(day.date)}</span>
-              <span>
-                ${Number(day.wins)}W - ${Number(day.losses)}L
-              </span>
+              <span>${Number(day.wins)}W - ${Number(day.losses)}L</span>
               <span class="${day.netLp >= 0 ? "win-num" : "loss-num"}">
                 ${day.netLp >= 0 ? "+" : ""}${Number(day.netLp)}
               </span>
@@ -1978,63 +933,40 @@
           `).join("")
         : '<span class="empty-note">No recent challenge matches.</span>';
 
-      $("macro-analysis-text").textContent =
-        "Loading AI commentary…";
+      $("macro-analysis-text").textContent = "Loading AI commentary…";
 
       const matches = sam.matches || [];
-
       $("matches-list").innerHTML = matches.length
         ? matches.map((match, index) => `
             <article class="match-card ${match.win ? "win" : "loss"}">
               <div class="match-top-row">
                 <div class="champ-identity">
-                  <img
-                    class="champ-avatar"
+                  <img class="champ-avatar"
                     src="${CHAMP_IMG}/${encodeURIComponent(match.champion)}.png"
-                    alt="${esc(match.champion)}"
-                    onerror="this.style.visibility='hidden'"
-                  >
-
+                    alt="${esc(match.champion)}" onerror="this.style.visibility='hidden'">
                   <div>
-                    <span class="champ-name">
-                      ${esc(match.champion)}
-                    </span>
-                    <span class="champ-role">
-                      ${esc(match.lane)} · ${Number(match.durationMin)}m
-                    </span>
+                    <span class="champ-name">${esc(match.champion)}</span>
+                    <span class="champ-role">${esc(match.lane)} · ${Number(match.durationMin)}m</span>
                   </div>
                 </div>
-
                 <div class="match-kda">
-                  ${Number(match.kills)} /
-                  ${Number(match.deaths)} /
-                  ${Number(match.assists)}
+                  ${Number(match.kills)} / ${Number(match.deaths)} / ${Number(match.assists)}
                   <small>${Number(match.cs)} CS</small>
                 </div>
-
-                <span class="match-badge">
-                  ${match.win ? "Victory" : "Defeat"}
-                </span>
+                <span class="match-badge">${match.win ? "Victory" : "Defeat"}</span>
               </div>
 
               <div class="items-container">
                 <span class="item-label">Build:</span>
-
                 ${(match.items || []).map(id => `
                   <div class="item-slot">
-                    <img
-                      src="${ITEM_IMG}/${Number(id)}.png"
-                      alt="Item ${Number(id)}"
-                      loading="lazy"
-                      onerror="this.closest('.item-slot').remove()"
-                    >
+                    <img src="${ITEM_IMG}/${Number(id)}.png" alt="Item ${Number(id)}"
+                      loading="lazy" onerror="this.closest('.item-slot').remove()">
                   </div>
                 `).join("") || '<span class="empty-note">No items</span>'}
               </div>
 
-              <div id="roast-${index}" class="match-roast">
-                Loading AI commentary…
-              </div>
+              <div id="roast-${index}" class="match-roast">Loading AI commentary…</div>
             </article>
           `).join("")
         : '<span class="empty-note">No recent Solo/Duo matches.</span>';
@@ -2045,24 +977,16 @@
         const data = await api("coach");
         $("macro-analysis-text").textContent = data.text;
       } catch (error) {
-        $("macro-analysis-text").textContent =
-          `AI commentary unavailable: ${error.message}`;
+        $("macro-analysis-text").textContent = `AI commentary unavailable: ${error.message}`;
       }
 
       for (let index = 0; index < matches.length; index++) {
         try {
-          const data = await api("coach", {
-            match: matches[index].matchId
-          });
-
-          const element = $(`roast-${index}`);
-          if (element) element.textContent = data.text;
+          const data = await api("coach", { match: matches[index].matchId });
+          if ($(`roast-${index}`)) $(`roast-${index}`).textContent = data.text;
         } catch (error) {
-          const element = $(`roast-${index}`);
-
-          if (element) {
-            element.textContent =
-              `AI commentary unavailable: ${error.message}`;
+          if ($(`roast-${index}`)) {
+            $(`roast-${index}`).textContent = `AI commentary unavailable: ${error.message}`;
           }
         }
       }
@@ -2071,7 +995,6 @@
     async function loadHistoryTotals() {
       if (historyRunning) return;
       historyRunning = true;
-
       $("stat-oct").textContent = "Counting…";
       $("stat-hours").textContent = "Counting…";
       $("stat-today").textContent = "Counting…";
@@ -2082,71 +1005,36 @@
 
       try {
         while (true) {
-          const data = await api(
-            "history",
-            { start, endTime },
-            message => {
-              $("stat-oct").textContent = "Waiting…";
-              $("stat-hours").textContent = "Waiting…";
-              notice("sam", message);
-            }
-          );
+          const data = await api("history", { start, endTime }, message => {
+            $("stat-oct").textContent = "Waiting…";
+            $("stat-hours").textContent = "Waiting…";
+            notice("sam", message);
+          });
 
-          for (const game of data.games) {
-            games.set(game.id, game);
-          }
-
+          for (const game of data.games) games.set(game.id, game);
           if (data.done) break;
-
-          if (data.nextStart <= start) {
-            throw new Error("History pagination stalled.");
-          }
+          if (data.nextStart <= start) throw new Error("History pagination stalled.");
 
           start = data.nextStart;
-
-          notice(
-            "sam",
-            `Counting history: ${games.size} games collected…`
-          );
-
+          notice("sam", `Counting history: ${games.size} games collected…`);
           await sleep(1000);
         }
 
         const values = [...games.values()];
-
-        const totalSeconds = values.reduce(
-          (total, game) => total + Number(game.seconds),
-          0
-        );
-
-        const today = new Date().toLocaleDateString("en-CA", {
-          timeZone: "America/New_York"
-        });
+        const totalSeconds = values.reduce((total, game) => total + Number(game.seconds), 0);
+        const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
 
         $("stat-oct").textContent = games.size;
-
-        $("stat-hours").textContent =
-          `${(totalSeconds / 3600).toFixed(1)}h`;
-
-        $("stat-today").textContent =
-          values.filter(game => game.date === today).length;
-
-        $("stat-oct").title =
-          "Total ranked Solo/Duo games";
-
-        $("stat-hours").title =
-          "Total match time; excludes queue time";
-
+        $("stat-hours").textContent = `${(totalSeconds / 3600).toFixed(1)}h`;
+        $("stat-today").textContent = values.filter(game => game.date === today).length;
+        $("stat-oct").title = "Total ranked Solo/Duo games";
+        $("stat-hours").title = "Total match time; excludes queue time";
         notice("sam", "Game count and match time updated.");
       } catch (error) {
         $("stat-oct").textContent = "Retry";
         $("stat-hours").textContent = "Retry";
         $("stat-today").textContent = "—";
-
-        notice(
-          "sam",
-          `History failed: ${error.message}. Click Retry.`
-        );
+        notice("sam", `History failed: ${error.message}. Click Retry.`);
       } finally {
         historyRunning = false;
       }
@@ -2154,66 +1042,32 @@
 
     async function loadAllData() {
       if (loading || historyRunning) return;
-
       loading = true;
       $("refresh-btn").disabled = true;
 
       try {
         await coachingTask;
-
         notice("leaderboard", "Loading ranks…");
 
         try {
-          const data = await api(
-            "leaderboard",
-            {},
-            message => notice("leaderboard", message)
-          );
-
+          const data = await api("leaderboard", {}, message => notice("leaderboard", message));
           updateLeaderboard(data.leaderboard || []);
-
-          notice(
-            "leaderboard",
-            (data.warnings || []).join(" • ")
-          );
+          notice("leaderboard", (data.warnings || []).join(" • "));
         } catch (error) {
-          notice(
-            "leaderboard",
-            `Unable to load ranks: ${error.message}`
-          );
+          notice("leaderboard", `Unable to load ranks: ${error.message}`);
         }
 
         notice("sam", "Loading rank and recent matches…");
 
         try {
-          const data = await api(
-            "sam",
-            {},
-            message => notice("sam", message)
-          );
-
-          if (!data.samView) {
-            throw new Error("Sam's data is unavailable.");
-          }
-
+          const data = await api("sam", {}, message => notice("sam", message));
+          if (!data.samView) throw new Error("Sam's data is unavailable.");
           updateSamUI(data.samView);
-
-          notice(
-            "sam",
-            (data.warnings || []).join(" • ")
-          );
-
-          coachingTask = loadCoaching(
-            data.samView.matches || []
-          );
+          notice("sam", (data.warnings || []).join(" • "));
+          coachingTask = loadCoaching(data.samView.matches || []);
         } catch (error) {
-          notice(
-            "sam",
-            `Unable to load Sam: ${error.message}`
-          );
-
-          $("macro-analysis-text").textContent =
-            "Sam's data is unavailable.";
+          notice("sam", `Unable to load Sam: ${error.message}`);
+          $("macro-analysis-text").textContent = "Sam's data is unavailable.";
         }
 
         await loadHistoryTotals();
@@ -2223,26 +1077,12 @@
       }
     }
 
-    $("stat-oct").onclick = () => {
-      if (!loading) loadHistoryTotals();
-    };
+    $("stat-oct").onclick = () => { if (!loading) loadHistoryTotals(); };
+    $("stat-hours").onclick = () => { if (!loading) loadHistoryTotals(); };
 
-    $("stat-hours").onclick = () => {
-      if (!loading) loadHistoryTotals();
-    };
-
-    const START =
-      Date.parse("2026-09-30T00:00:00-04:00");
-
-    const END =
-      Date.parse("2026-10-31T23:59:59-04:00");
-
-    const UNITS = [
-      86400000,
-      3600000,
-      60000,
-      1000
-    ];
+    const START = Date.parse("2026-09-30T00:00:00-04:00");
+    const END = Date.parse("2026-10-31T23:59:59-04:00");
+    const UNITS = [86400000, 3600000, 60000, 1000];
 
     function updateCountdown() {
       const now = Date.now();
@@ -2254,17 +1094,9 @@
         $(id).textContent = String(value).padStart(2, "0");
       });
 
-      const percent = clamp(
-        (now - START) / (END - START) * 100,
-        0,
-        100
-      );
-
-      $("month-fill").style.width =
-        `${percent.toFixed(1)}%`;
-
-      $("month-text").textContent =
-        `${percent.toFixed(1)}% Complete`;
+      const percent = clamp((now - START) / (END - START) * 100, 0, 100);
+      $("month-fill").style.width = `${percent.toFixed(1)}%`;
+      $("month-text").textContent = `${percent.toFixed(1)}% Complete`;
     }
 
     buildStepper();
