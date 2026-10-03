@@ -1,5 +1,294 @@
 <!DOCTYPE html>
 <html lang="en">
+<style>
+  /* Leaderboard: vertically center every column */
+  .player-row-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    gap: 24px;
+    min-height: 170px;
+    padding: 22px 26px;
+  }
+
+  .player-info-group {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .player-info-group > * {
+    grid-column: auto;
+    grid-row: auto;
+    align-self: center;
+  }
+
+  .placement {
+    width: 34px;
+    flex-shrink: 0;
+    text-align: center;
+  }
+
+  .rank-badge-wrap {
+    display: grid;
+    place-items: center;
+    width: 150px;
+    height: 140px;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .rank-badge-wrap .rank-badge {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transform: scale(10);
+  }
+
+  /* Supports the earlier HTML's emblem class too */
+  .player-info-group > .rank-badge-lg,
+  .player-info-group > .rank-badge {
+    width: 140px;
+    height: 140px;
+    flex-shrink: 0;
+    object-fit: contain;
+    transform: scale(6);
+    margin: 0 10px;
+  }
+
+  .player-info-group > div:last-child {
+    min-width: 0;
+    align-self: center;
+  }
+
+  .player-alias,
+  .player-name-alias {
+    margin: 0;
+    font-size: 21px;
+    line-height: 1.3;
+    font-weight: 800;
+  }
+
+  .player-riot-id {
+    margin-top: 6px;
+    font-size: 12px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+
+  .player-rank-stats {
+    grid-column: auto;
+    grid-row: auto;
+    align-self: center;
+    flex-shrink: 0;
+    width: auto;
+    min-width: 190px;
+    padding: 0;
+    text-align: right;
+  }
+
+  .tier-label {
+    margin: 0;
+    font-size: 20px;
+    line-height: 1.3;
+  }
+
+  .lp-sub {
+    margin-top: 8px;
+    font-size: 13px;
+    line-height: 1.8;
+  }
+
+  /* Sam: center emblem and text as one group */
+  .rank-showcase {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    min-height: 310px;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 24px 0;
+  }
+
+  .emblem-wrapper {
+    display: grid;
+    place-items: center;
+    width: 280px;
+    height: 280px;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  #rank-emblem {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transform: scale(6);
+    transform-origin: center;
+  }
+
+  .rank-showcase > div:last-child,
+  .rank-text-block {
+    min-width: 0;
+    text-align: left;
+    align-self: center;
+  }
+
+  .rank-tier-title {
+    font-size: 36px;
+    line-height: 1.2;
+  }
+
+  .rank-lp-text {
+    margin-top: 10px;
+    font-size: 28px;
+    line-height: 1.2;
+  }
+
+  .rank-record,
+  .rank-stats-pill {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: fit-content;
+    max-width: 100%;
+    margin-top: 16px;
+    padding: 10px 14px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  /* Mobile leaderboard: rank directly beneath the name */
+  @media (max-width: 700px) {
+    .player-row-card {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+      min-height: auto;
+      padding: 16px 12px;
+    }
+
+    .player-info-group {
+      display: grid;
+      grid-template-columns: 26px 100px minmax(0, 1fr);
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .placement {
+      width: 26px;
+      font-size: 15px;
+    }
+
+    .rank-badge-wrap {
+      width: 100px;
+      height: 110px;
+    }
+
+    .player-info-group > .rank-badge-lg,
+    .player-info-group > .rank-badge {
+      width: 100px;
+      height: 100px;
+      margin: 0;
+      transform: scale(6);
+    }
+
+    .player-alias,
+    .player-name-alias {
+      font-size: 18px;
+    }
+
+    .player-riot-id {
+      font-size: 10px;
+    }
+
+    .player-rank-stats {
+      align-self: stretch;
+      width: 100%;
+      min-width: 0;
+      padding-left: 146px;
+      text-align: left;
+    }
+
+    .tier-label {
+      font-size: 16px;
+    }
+
+    .lp-sub {
+      margin-top: 5px;
+      font-size: 11px;
+    }
+
+    /* Mobile Sam: centered emblem above rank details */
+    .rank-showcase {
+      flex-direction: column;
+      gap: 8px;
+      min-height: auto;
+      padding: 18px 0 24px;
+    }
+
+    .emblem-wrapper {
+      width: 240px;
+      height: 240px;
+      max-width: 100%;
+    }
+
+    .rank-showcase > div:last-child,
+    .rank-text-block {
+      width: 100%;
+      text-align: center;
+    }
+
+    .rank-tier-title {
+      font-size: 30px;
+    }
+
+    .rank-lp-text {
+      font-size: 26px;
+    }
+
+    .rank-record,
+    .rank-stats-pill {
+      justify-content: center;
+      margin: 14px auto 0;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .player-info-group {
+      grid-template-columns: 22px 80px minmax(0, 1fr);
+      gap: 8px;
+    }
+
+    .rank-badge-wrap {
+      width: 80px;
+      height: 100px;
+    }
+
+    .player-info-group > .rank-badge-lg,
+    .player-info-group > .rank-badge {
+      width: 80px;
+      height: 100px;
+    }
+
+    .player-rank-stats {
+      padding-left: 118px;
+    }
+
+    .player-alias,
+    .player-name-alias {
+      font-size: 16px;
+    }
+  }
+</style>
 <head>
   <style>
   /* First place — gold */
