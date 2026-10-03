@@ -420,11 +420,11 @@
           </div>
           <div class="stat-box">
             <div class="stat-val" id="stat-oct">—</div>
-            <div class="stat-lbl">Games (Last 25)</div>
+            <div class="stat-lbl">Total Games Since Sep 30</div>
           </div>
           <div class="stat-box">
             <div class="stat-val" id="stat-hours">—</div>
-            <div class="stat-lbl">Time Invested</div>
+            <div class="stat-lbl">Time Invested Since Sep 30</div>
           </div>
           <div class="stat-box">
             <div class="stat-val" id="stat-lp">—</div>
@@ -472,7 +472,7 @@
 
         <div class="analytics-grid">
           <div class="analytics-box">
-            <div class="analytics-box-title">🔥 Top Champions (Last 25)</div>
+            <div class="analytics-box-title">🔥 Top Champions (Last 5)</div>
             <div id="top-champs-list" style="display:flex; flex-direction:column; gap:0.6rem;">
               <span class="empty-note">Syncing matches...</span>
             </div>
@@ -641,8 +641,8 @@
 
       if (sam.statsTracker) {
         $("stat-today").textContent = sam.statsTracker.gamesToday;
-        $("stat-oct").textContent = sam.statsTracker.gamesSinceOct1;
-        $("stat-hours").textContent = `${sam.statsTracker.totalHoursPlayed}h`;
+        // Full history totals are loaded separately.
+        // Full history duration is loaded separately.
         const lpChange = sam.statsTracker.todayLpChange;
         const lpEl = $("stat-lp");
         lpEl.textContent = `${lpChange >= 0 ? '+' : ''}${lpChange} LP`;
@@ -751,6 +751,49 @@
       }).join('');
     }
 
+    let historyRunning = false;
+    async function loadHistoryTotals() {
+      if (historyRunning) return;
+      historyRunning = true;
+      const gamesEl = $("stat-oct");
+      const hoursEl = $("stat-hours");
+      gamesEl.textContent = "Counting…";
+      hoursEl.textContent = "Counting…";
+      const games = new Map();
+      let start = 0;
+      let endTime = Math.floor(Date.now() / 1000);
+      try {
+        for (;;) {
+          const url = new URL(WORKER_URL);
+          url.searchParams.set("view", "history");
+          url.searchParams.set("start", start);
+          url.searchParams.set("endTime", endTime);
+          const res = await fetch(url, { cache: "no-store", signal: AbortSignal.timeout(90000) });
+          const data = await res.json();
+          if (!res.ok || data.error) throw new Error(data.message || `History returned ${res.status}`);
+          for (const game of data.games) games.set(game.id, game.seconds);
+          if (data.done) break;
+          if (data.nextStart <= start) throw new Error("History pagination stalled.");
+          start = data.nextStart;
+          endTime = data.endTime;
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+        gamesEl.textContent = games.size;
+        hoursEl.textContent = `${([...games.values()].reduce((a, b) => a + b, 0) / 3600).toFixed(1)}h`;
+        gamesEl.title = "Ranked Solo/Duo since Sep 30, midnight Eastern";
+        hoursEl.title = "Sum of completed match durations; excludes queue time";
+      } catch (error) {
+        gamesEl.textContent = "Retry";
+        hoursEl.textContent = "Retry";
+        gamesEl.title = hoursEl.title = error.message;
+        console.warn("History totals failed:", error);
+      } finally {
+        historyRunning = false;
+      }
+    }
+    $("stat-oct").onclick = loadHistoryTotals;
+    $("stat-hours").onclick = loadHistoryTotals;
+
     const viewState = {};
     async function loadView(view) {
       const state = viewState[view] || (viewState[view] = {});
@@ -767,6 +810,7 @@
         if (view === "sam") {
           if (!data.samView) throw new Error((data.warnings || []).join("; ") || "Sam's data is unavailable.");
           updateSamUI(data.samView);
+          loadHistoryTotals();
         } else {
           if (!Array.isArray(data.leaderboard) || !data.leaderboard.length) throw new Error("No leaderboard players loaded.");
           updateLeaderboard(data.leaderboard);
