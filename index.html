@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sam's Emerald Challenge</title>
+  <title>Sam's Emerald Challenge & Squad Leaderboard</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏆</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -47,6 +47,40 @@
       align-items: center;
       gap: 1.8rem;
     }
+
+    /* Tab Navigation */
+    .tab-bar {
+      display: flex;
+      gap: 1rem;
+      background: rgba(4, 15, 11, 0.9);
+      padding: 0.5rem;
+      border-radius: 9999px;
+      border: 1px solid var(--card-border);
+      margin-bottom: 0.5rem;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-weight: 800;
+      font-size: 0.95rem;
+      padding: 0.65rem 1.5rem;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .tab-btn.active {
+      background: var(--emerald);
+      color: #03110c;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+    }
+
+    .tab-content { display: none; width: 100%; flex-direction: column; gap: 1.8rem; }
+    .tab-content.active { display: flex; }
 
     .card {
       width: 100%;
@@ -229,16 +263,6 @@
     .tier-groups span.current { color: var(--emerald-glow); border-top-color: var(--emerald-glow); }
 
     .player-card { padding: 2.2rem; display: flex; flex-direction: column; gap: 1.8rem; position: relative; }
-    
-    .sync-overlay {
-      position: absolute; inset: 0; background: rgba(4, 9, 7, 0.85); backdrop-filter: blur(4px);
-      z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem;
-      border-radius: 24px; transition: opacity 0.3s ease;
-    }
-    .sync-overlay.hidden { opacity: 0; pointer-events: none; }
-    .spinner { width: 40px; height: 40px; border: 4px solid rgba(16, 185, 129, 0.2); border-top-color: var(--emerald); border-radius: 50%; animation: spin 0.8s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .sync-text { font-weight: 900; letter-spacing: 0.1em; color: var(--emerald-glow); font-size: 0.95rem; text-transform: uppercase; }
 
     .player-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 1rem; }
     .player-id { font-weight: 900; font-size: 1.45rem; color: #fff; }
@@ -309,6 +333,32 @@
     .item-slot img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .match-roast { font-size: 0.92rem; line-height: 1.5; color: #cbd5e1; background: rgba(0, 0, 0, 0.25); border-radius: 10px; padding: 0.8rem 1rem; }
 
+    /* Leaderboard Tab Styles */
+    .leaderboard-list { display: flex; flex-direction: column; gap: 1.2rem; }
+    .player-row-card { background: rgba(13, 31, 26, 0.85); border: 1px solid var(--card-border); border-radius: 18px; padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+    .player-row-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .player-info-group { display: flex; align-items: center; gap: 1rem; }
+    .rank-badge-sm { width: 48px; height: 48px; object-fit: contain; }
+    .player-name-alias { font-size: 1.2rem; font-weight: 900; color: #fff; }
+    .player-riot-id { font-size: 0.85rem; color: var(--muted); font-weight: 600; }
+    .player-rank-stats { text-align: right; }
+    .tier-label { font-family: 'Cinzel', serif; font-size: 1.25rem; font-weight: 900; color: var(--gold); }
+    .lp-sub { font-size: 0.9rem; color: var(--subtext); font-weight: 800; }
+    .recent-matches-mini { display: flex; gap: 0.5rem; overflow-x: auto; padding-top: 0.5rem; border-top: 1px solid rgba(255,255,255,0.08); }
+    .mini-match-pill { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 0.4rem 0.8rem; font-size: 0.8rem; display: flex; align-items: center; gap: 0.5rem; border: 1px solid rgba(255,255,255,0.05); white-space: nowrap; }
+    .mini-match-pill.win { border-left: 3px solid var(--win); color: var(--win); }
+    .mini-match-pill.loss { border-left: 3px solid var(--loss); color: var(--loss); }
+
+    .sync-overlay {
+      position: fixed; inset: 0; background: rgba(4, 9, 7, 0.85); backdrop-filter: blur(4px);
+      z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem;
+      transition: opacity 0.3s ease;
+    }
+    .sync-overlay.hidden { opacity: 0; pointer-events: none; }
+    .spinner { width: 40px; height: 40px; border: 4px solid rgba(16, 185, 129, 0.2); border-top-color: var(--emerald); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .sync-text { font-weight: 900; letter-spacing: 0.1em; color: var(--emerald-glow); font-size: 0.95rem; text-transform: uppercase; }
+
     @media (max-width: 768px) {
       body { padding: 1.25rem 0.75rem; }
       .analytics-grid { grid-template-columns: 1fr; }
@@ -322,132 +372,148 @@
 </head>
 <body>
 
+  <div class="sync-overlay" id="sync-overlay">
+    <div class="spinner"></div>
+    <span class="sync-text">Syncing Telemetry & Squad Leaderboard...</span>
+  </div>
+
   <div class="dashboard">
 
     <header class="header-zone">
       <div class="trophy-badge">🏆 ROAD TO EMERALD</div>
       <h1>Sam’s Emerald Challenge</h1>
       <p class="subtitle">September 30 – October 31</p>
+
+      <!-- TAB SWITCHER -->
+      <nav class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('sam')">Sam's Challenge</button>
+        <button class="tab-btn" onclick="switchTab('leaderboard')">Squad Leaderboard</button>
+      </nav>
     </header>
 
-    <div class="profile-live-wrapper">
-      <div class="image-container">
-        <img src="sam.jpg" alt="Sam with Emerald Trophy" />
+    <!-- TAB 1: SAM'S CHALLENGE -->
+    <div id="tab-sam" class="tab-content active">
+      <div class="profile-live-wrapper">
+        <div class="image-container">
+          <img src="sam.jpg" alt="Sam with Emerald Trophy" />
+        </div>
+        <div id="live-status-banner" class="live-status-banner checking">
+          <span class="status-dot"></span> SYNCING WITH RIOT API...
+        </div>
+        <div id="streak-banner" class="streak-banner neutral-streak">
+          ⚡ FETCHING STREAK...
+        </div>
       </div>
-      <div id="live-status-banner" class="live-status-banner checking">
-        <span class="status-dot"></span> SYNCING WITH RIOT API...
-      </div>
-      <div id="streak-banner" class="streak-banner neutral-streak">
-        ⚡ FETCHING STREAK...
-      </div>
+
+      <section class="card countdown-card" aria-label="Challenge countdown">
+        <div class="card-title" id="status-banner">Time Remaining in Challenge</div>
+        <div class="countdown-grid">
+          <div class="timer-card"><span class="number" id="days">00</span><span class="label">Days</span></div>
+          <div class="timer-card"><span class="number" id="hours">00</span><span class="label">Hours</span></div>
+          <div class="timer-card"><span class="number" id="minutes">00</span><span class="label">Minutes</span></div>
+          <div class="timer-card"><span class="number" id="seconds">00</span><span class="label">Seconds</span></div>
+        </div>
+
+        <div class="stats-tracker-grid">
+          <div class="stat-box">
+            <div class="stat-val" id="stat-today">—</div>
+            <div class="stat-lbl">Games Today</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="stat-oct">—</div>
+            <div class="stat-lbl">Total Games</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="stat-hours">—</div>
+            <div class="stat-lbl">Time Invested</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="stat-lp">—</div>
+            <div class="stat-lbl">LP Gained Today</div>
+          </div>
+        </div>
+
+        <div class="month-bar-wrap">
+          <span class="month-bar-label">Challenge Elapsed</span>
+          <div class="horizontal-bar-box"><div class="horizontal-bar-fill" id="month-fill"></div></div>
+          <span class="month-pct-text" id="month-text">0.0% Complete</span>
+        </div>
+      </section>
+
+      <section class="card" aria-label="Rank progress">
+        <div class="card-title">Rank Progress</div>
+        <div class="stepper-scroll" id="stepper-scroll">
+          <div class="stepper" id="stepper">
+            <div class="track"><div class="track-fill" id="active-line"></div></div>
+            <ol class="steps" id="steps"></ol>
+            <div class="tier-groups" id="tier-groups"></div>
+          </div>
+        </div>
+      </section>
+
+      <main class="card player-card">
+        <div class="player-header">
+          <div class="player-id">BRODOODOOFART<span>#1738</span> (NA)</div>
+          <a class="opgg-link" href="https://op.gg/lol/summoners/na/BRODOODOOFART-1738" target="_blank" rel="noopener">View OP.GG ↗</a>
+        </div>
+
+        <div class="rank-showcase">
+          <div class="emblem-wrapper" id="emblem-wrapper" aria-label="Current rank emblem">
+            <img id="rank-emblem" alt="" decoding="async" />
+            <div class="emblem-fallback" aria-hidden="true">?</div>
+          </div>
+          <div class="rank-text-block">
+            <div class="rank-tier-title" id="current-tier">—</div>
+            <div class="rank-lp-text" id="current-lp">— LP</div>
+            <div class="rank-stats-pill" id="current-record">
+              <span class="win-num">—W</span> <span class="loss-num">—L</span> (— Win Rate)
+            </div>
+          </div>
+        </div>
+
+        <div class="analytics-grid">
+          <div class="analytics-box">
+            <div class="analytics-box-title">🔥 Top Challenge Champions</div>
+            <div id="top-champs-list" style="display:flex; flex-direction:column; gap:0.6rem;">
+              <span class="empty-note">Syncing matches...</span>
+            </div>
+          </div>
+          <div class="analytics-box">
+            <div class="analytics-box-title">📅 Daily LP Log</div>
+            <div id="daily-lp-list" style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%;">
+              <span class="empty-note">Syncing daily logs...</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="overall-analysis-card">
+          <div class="analysis-header">
+            <span class="analysis-label">🔮 Macro Scouting & Emerald Probability</span>
+          </div>
+          <p class="analysis-content" id="macro-analysis-text">Consulting AI coach...</p>
+        </div>
+
+        <div class="matches-section">
+          <div class="section-title">
+            <span>Recent Match Breakdowns & Build Roasts</span>
+            <small>Solo/Duo Matches Only (Last 5)</small>
+          </div>
+          <div class="matches-list" id="matches-list">
+            <span class="empty-note">Loading match history...</span>
+          </div>
+        </div>
+      </main>
     </div>
 
-    <!-- COUNTDOWN & STATS TRACKER -->
-    <section class="card countdown-card" aria-label="Challenge countdown">
-      <div class="card-title" id="status-banner">Time Remaining in Challenge</div>
-      <div class="countdown-grid">
-        <div class="timer-card"><span class="number" id="days">00</span><span class="label">Days</span></div>
-        <div class="timer-card"><span class="number" id="hours">00</span><span class="label">Hours</span></div>
-        <div class="timer-card"><span class="number" id="minutes">00</span><span class="label">Minutes</span></div>
-        <div class="timer-card"><span class="number" id="seconds">00</span><span class="label">Seconds</span></div>
-      </div>
-
-      <div class="stats-tracker-grid">
-        <div class="stat-box">
-          <div class="stat-val" id="stat-today">—</div>
-          <div class="stat-lbl">Games Today</div>
+    <!-- TAB 2: SQUAD LEADERBOARD -->
+    <div id="tab-leaderboard" class="tab-content">
+      <section class="card">
+        <div class="card-title">6-Player Squad Leaderboard (Recent 3 Games)</div>
+        <div class="leaderboard-list" id="leaderboard-container">
+          <span class="empty-note">Loading squad data...</span>
         </div>
-        <div class="stat-box">
-          <div class="stat-val" id="stat-oct">—</div>
-          <div class="stat-lbl">Total Games</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-val" id="stat-hours">—</div>
-          <div class="stat-lbl">Time Invested</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-val" id="stat-lp">—</div>
-          <div class="stat-lbl">LP Gained Today</div>
-        </div>
-      </div>
-
-      <div class="month-bar-wrap">
-        <span class="month-bar-label">Challenge Elapsed</span>
-        <div class="horizontal-bar-box"><div class="horizontal-bar-fill" id="month-fill"></div></div>
-        <span class="month-pct-text" id="month-text">0.0% Complete</span>
-      </div>
-    </section>
-
-    <!-- RANK PROGRESS STEPPER -->
-    <section class="card" aria-label="Rank progress">
-      <div class="card-title">Rank Progress</div>
-      <div class="stepper-scroll" id="stepper-scroll">
-        <div class="stepper" id="stepper">
-          <div class="track"><div class="track-fill" id="active-line"></div></div>
-          <ol class="steps" id="steps"></ol>
-          <div class="tier-groups" id="tier-groups"></div>
-        </div>
-      </div>
-    </section>
-
-    <main class="card player-card">
-      <div class="sync-overlay" id="sync-overlay">
-        <div class="spinner"></div>
-        <span class="sync-text">Syncing Live Telemetry & AI Coach...</span>
-      </div>
-
-      <div class="player-header">
-        <div class="player-id">BRODOODOOFART<span>#1738</span> (NA)</div>
-        <a class="opgg-link" href="https://op.gg/lol/summoners/na/BRODOODOOFART-1738" target="_blank" rel="noopener">View OP.GG ↗</a>
-      </div>
-
-      <div class="rank-showcase">
-        <div class="emblem-wrapper" id="emblem-wrapper" aria-label="Current rank emblem">
-          <img id="rank-emblem" alt="" decoding="async" />
-          <div class="emblem-fallback" aria-hidden="true">?</div>
-        </div>
-        <div class="rank-text-block">
-          <div class="rank-tier-title" id="current-tier">—</div>
-          <div class="rank-lp-text" id="current-lp">— LP</div>
-          <div class="rank-stats-pill" id="current-record">
-            <span class="win-num">—W</span> <span class="loss-num">—L</span> (— Win Rate)
-          </div>
-        </div>
-      </div>
-
-      <!-- ANALYTICS CARDS -->
-      <div class="analytics-grid">
-        <div class="analytics-box">
-          <div class="analytics-box-title">🔥 Top Challenge Champions</div>
-          <div id="top-champs-list" style="display:flex; flex-direction:column; gap:0.6rem;">
-            <span class="empty-note">Syncing matches...</span>
-          </div>
-        </div>
-        <div class="analytics-box">
-          <div class="analytics-box-title">📅 Daily LP Log</div>
-          <div id="daily-lp-list" style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%;">
-            <span class="empty-note">Syncing daily logs...</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="overall-analysis-card">
-        <div class="analysis-header">
-          <span class="analysis-label">🔮 Macro Scouting & Emerald Probability</span>
-        </div>
-        <p class="analysis-content" id="macro-analysis-text">Consulting AI coach...</p>
-      </div>
-
-      <div class="matches-section">
-        <div class="section-title">
-          <span>Recent Match Breakdowns & Build Roasts</span>
-          <small>Solo/Duo Matches Only (Last 5)</small>
-        </div>
-        <div class="matches-list" id="matches-list">
-          <span class="empty-note">Loading match history...</span>
-        </div>
-      </div>
-    </main>
+      </section>
+    </div>
 
   </div>
 
@@ -464,6 +530,19 @@
     const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
     const cap = s => s[0].toUpperCase() + s.slice(1);
     const formatChampName = name => String(name || "").replace(/([a-z])([A-Z])/g, '$1 $2');
+
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+
+      if (tabName === 'sam') {
+        document.querySelector('.tab-bar button:nth-child(1)').classList.add('active');
+        $('tab-sam').classList.add('active');
+      } else {
+        document.querySelector('.tab-bar button:nth-child(2)').classList.add('active');
+        $('tab-leaderboard').classList.add('active');
+      }
+    }
 
     const TIERS = ["iron", "bronze", "silver", "gold", "platinum", "emerald", "diamond", "master", "grandmaster", "challenger"];
     const DIVISIONS = ["IV", "III", "II", "I"];
@@ -503,7 +582,6 @@
     function updateStepper(tier, division, lp) {
       const last = LADDER.length - 1;
       const pos = rankValue(tier, division) - LADDER_START;
-
       const steps = $("steps").children;
       const tiers = $("tier-groups").children;
 
@@ -526,21 +604,21 @@
       img.src = `${CREST_BASE}${TIERS.includes(tier) ? tier : "gold"}.png`;
     }
 
-    function updateRankUI(data) {
-      setEmblem(data.tier);
+    function updateSamUI(sam) {
+      setEmblem(sam.tier);
 
       const liveBanner = $("live-status-banner");
-      if (data.liveGame && data.liveGame.inGame) {
+      if (sam.liveGame && sam.liveGame.inGame) {
         liveBanner.className = "live-status-banner is-live";
-        liveBanner.innerHTML = `<span class="status-dot"></span> LIVE IN GAME (${data.liveGame.gameLengthMin}m)`;
+        liveBanner.innerHTML = `<span class="status-dot"></span> LIVE IN GAME (${sam.liveGame.gameLengthMin}m)`;
       } else {
         liveBanner.className = "live-status-banner not-live";
         liveBanner.innerHTML = `<span class="status-dot"></span> NOT LIVE`;
       }
 
       const streakBanner = $("streak-banner");
-      if (data.statsTracker && data.statsTracker.streak) {
-        const { type, count } = data.statsTracker.streak;
+      if (sam.statsTracker && sam.statsTracker.streak) {
+        const { type, count } = sam.statsTracker.streak;
         if (type === 'win' && count >= 2) {
           streakBanner.className = "streak-banner hot-streak";
           streakBanner.innerHTML = `🔥 HOT STREAK (${count} WINS)`;
@@ -556,23 +634,20 @@
         }
       }
 
-      if (data.statsTracker) {
-        $("stat-today").textContent = data.statsTracker.gamesToday;
-        $("stat-oct").textContent = data.statsTracker.gamesSinceOct1;
-        $("stat-hours").textContent = `${data.statsTracker.totalHoursPlayed}h`;
-        
-        const lpChange = data.statsTracker.todayLpChange;
+      if (sam.statsTracker) {
+        $("stat-today").textContent = sam.statsTracker.gamesToday;
+        $("stat-oct").textContent = sam.statsTracker.gamesSinceOct1;
+        $("stat-hours").textContent = `${sam.statsTracker.totalHoursPlayed}h`;
+        const lpChange = sam.statsTracker.todayLpChange;
         const lpEl = $("stat-lp");
         lpEl.textContent = `${lpChange >= 0 ? '+' : ''}${lpChange} LP`;
         lpEl.style.color = lpChange >= 0 ? 'var(--win)' : 'var(--loss)';
       }
 
-      if (data.analytics && data.analytics.topChampions) {
+      if (sam.analytics && sam.analytics.topChampions) {
         const champContainer = $("top-champs-list");
-        if (data.analytics.topChampions.length === 0) {
-          champContainer.innerHTML = '<span class="empty-note">No games played yet.</span>';
-        } else {
-          champContainer.innerHTML = data.analytics.topChampions.map(c => `
+        champContainer.innerHTML = sam.analytics.topChampions.length === 0 ? '<span class="empty-note">No games played yet.</span>' :
+          sam.analytics.topChampions.map(c => `
             <div class="champ-row">
               <div style="display:flex; align-items:center; gap:0.6rem;">
                 <img src="${CHAMP_IMG}/${encodeURIComponent(c.name)}.png" alt="${esc(c.name)}" onerror="this.src='https://ddragon.leagueoflegends.com/cdn/${DDRAGON_VER}/img/profileicon/29.png'">
@@ -583,53 +658,35 @@
                 <span class="${c.winrate >= 50 ? 'win-num' : 'loss-num'}">${c.winrate}%</span>
               </div>
             </div>`).join("");
-        }
       }
 
-      if (data.analytics && data.analytics.dailyBreakdown) {
+      if (sam.analytics && sam.analytics.dailyBreakdown) {
         const dailyContainer = $("daily-lp-list");
-        if (data.analytics.dailyBreakdown.length === 0) {
+        if (sam.analytics.dailyBreakdown.length === 0) {
           dailyContainer.innerHTML = '<span class="empty-note">No matches completed today yet — climb to log LP!</span>';
         } else {
-          const todayLog = data.analytics.dailyBreakdown[0];
+          const todayLog = sam.analytics.dailyBreakdown[0];
           const netLpVal = todayLog.netLp || 0;
-          const lpColorClass = netLpVal >= 0 ? 'win-num' : 'loss-num';
           dailyContainer.innerHTML = `
             <div class="daily-row-centered">
               <span class="daily-date">${todayLog.date}</span>
               <div class="daily-stats">
                 <span style="color:var(--subtext);">${todayLog.wins}W - ${todayLog.losses}L</span>
-                <span class="${lpColorClass}">${netLpVal >= 0 ? '+' : ''}${netLpVal} LP</span>
+                <span class="${netLpVal >= 0 ? 'win-num' : 'loss-num'}">${netLpVal >= 0 ? '+' : ''}${netLpVal} LP</span>
               </div>
             </div>`;
         }
       }
 
-      $("current-tier").textContent = `${data.tier.toUpperCase()} ${data.division}`;
-      $("current-lp").textContent = `${data.lp} LP`;
+      $("current-tier").textContent = `${sam.tier.toUpperCase()} ${sam.division}`;
+      $("current-lp").textContent = `${sam.lp} LP`;
+      $("current-record").innerHTML = `<span class="win-num">${sam.wins}W</span> <span class="loss-num">${sam.losses}L</span> <span>(${sam.winrate}% Win Rate)</span>`;
+      $("macro-analysis-text").textContent = sam.aiAnalysis || "Analyzing telemetry...";
 
-      const totalGames = data.wins + data.losses;
-      const winratePct = totalGames > 0 ? Math.round((data.wins / totalGames) * 100) : 50;
+      updateStepper(sam.tier, sam.division, sam.lp);
 
-      $("current-record").innerHTML =
-        `<span class="win-num">${data.wins}W</span> <span class="loss-num">${data.losses}L</span> <span>(${winratePct}% Win Rate)</span>`;
-
-      $("macro-analysis-text").textContent = data.aiAnalysis || "Analyzing telemetry...";
-
-      updateStepper(data.tier, data.division, data.lp);
-      renderMatches(data.matches);
-
-      $("sync-overlay").classList.add("hidden");
-    }
-
-    function renderMatches(matches) {
       const container = $("matches-list");
-      if (!matches.length) {
-        container.innerHTML = '<div class="empty-note">No recent Solo/Duo ranked games found.</div>';
-        return;
-      }
-
-      container.innerHTML = matches.map(m => {
+      container.innerHTML = sam.matches.map(m => {
         const itemsHtml = (m.items || []).map(id =>
           `<div class="item-slot"><img src="${ITEM_IMG}/${id}.png" alt="Item ${id}" loading="lazy" onerror="this.closest('.item-slot').remove()"></div>`
         ).join("");
@@ -651,68 +708,87 @@
               <span class="item-label">Build:</span>
               ${itemsHtml || '<span class="empty-note">No items</span>'}
             </div>
-            <div class="match-roast">
-              ${esc(m.aiRoast || "Analyzing performance...")}
-            </div>
+            <div class="match-roast">${esc(m.aiRoast || "Analyzing performance...")}</div>
           </article>`;
       }).join("");
     }
 
-    async function fetchLiveRank() {
+    function updateLeaderboard(list) {
+      const lbContainer = $('leaderboard-container');
+      lbContainer.innerHTML = list.map((p, idx) => {
+        const tierLower = (p.tier || "gold").toLowerCase();
+        const crestUrl = `${CREST_BASE}${tierLower}.png`;
+        const winrate = (p.wins + p.losses) > 0 ? Math.round((p.wins / (p.wins + p.losses)) * 100) : 50;
+
+        const matchesHtml = p.matches && p.matches.length > 0 ? p.matches.map(m => `
+          <div class="mini-match-pill ${m.win ? 'win' : 'loss'}">
+            <img src="${CHAMP_IMG}/${encodeURIComponent(m.champion)}.png" style="width:22px; height:22px; border-radius:50%; object-fit:cover;" onerror="this.src='https://ddragon.leagueoflegends.com/cdn/${DDRAGON_VER}/img/profileicon/29.png'">
+            <span><b>${m.champion}</b> (${m.kills}/${m.deaths}/${m.assists})</span>
+            <span style="font-weight:800;">${m.win ? 'WIN' : 'LOSS'}</span>
+          </div>
+        `).join('') : '<span class="empty-note" style="padding:0.2rem 0;">No recent matches found</span>';
+
+        return `
+          <div class="player-row-card">
+            <div class="player-row-top">
+              <div class="player-info-group">
+                <span style="font-size:1.1rem; font-weight:900; color:var(--muted); width:20px;">#${idx + 1}</span>
+                <img class="rank-badge-sm" src="${crestUrl}" onerror="this.src='${CREST_BASE}gold.png'">
+                <div>
+                  <div class="player-name-alias">${p.alias} <span style="font-size:0.85rem; color:var(--muted); font-weight:600;">(${p.liveGame.inGame ? '🔴 IN GAME' : 'Offline'})</span></div>
+                  <div class="player-riot-id">${p.gameName}#${p.tagLine}</div>
+                </div>
+              </div>
+              <div class="player-rank-stats">
+                <div class="tier-label">${p.tier.toUpperCase()} ${p.division}</div>
+                <div class="lp-sub">${p.lp} LP &nbsp;|&nbsp; <span class="win-num">${p.wins}W</span> <span class="loss-num">${p.losses}L</span> (${winrate}%)</div>
+              </div>
+            </div>
+            <div class="recent-matches-mini">${matchesHtml}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function loadAllData() {
       try {
         const res = await fetch(WORKER_URL, { headers: { Accept: "application/json" }, cache: "no-store" });
         if (!res.ok) throw new Error(`Worker returned ${res.status}`);
         const data = await res.json();
-        updateRankUI(data);
+
+        if (data.samView) updateSamUI(data.samView);
+        if (data.leaderboard) updateLeaderboard(data.leaderboard);
+
+        $('sync-overlay').classList.add('hidden');
       } catch (err) {
-        console.warn("Live rank telemetry unavailable:", err);
-        $("sync-overlay").classList.add("hidden");
+        console.warn("Failed loading telemetry:", err);
+        $('sync-overlay').classList.add('hidden');
       }
     }
 
     buildStepper();
-    fetchLiveRank();
+    loadAllData();
 
     const START = new Date(2026, 8, 30, 0, 0, 0).getTime();
     const END = new Date(2026, 9, 31, 23, 59, 59).getTime();
-
     const UNIT_MS = [86400000, 3600000, 60000, 1000];
     const timeEls = ["days", "hours", "minutes", "seconds"].map($);
     const bannerEl = $("status-banner");
     const monthFill = $("month-fill");
     const monthText = $("month-text");
 
-    function setTime(ms) {
-      let rest = Math.max(0, ms);
+    function updateCountdown() {
+      const now = Date.now();
+      let rest = Math.max(0, END - now);
       timeEls.forEach((el, i) => {
         const v = Math.floor(rest / UNIT_MS[i]);
         rest -= v * UNIT_MS[i];
         el.textContent = String(v).padStart(2, "0");
       });
-    }
-
-    function setMonthProgress(pct, text) {
+      const pct = clamp(((now - START) / (END - START)) * 100, 0, 100);
       monthFill.style.width = `${pct.toFixed(1)}%`;
-      monthText.textContent = text ?? `${pct.toFixed(1)}% Complete`;
+      monthText.textContent = `${pct.toFixed(1)}% Complete`;
     }
-
-    function updateCountdown() {
-      const now = Date.now();
-      if (now < START) {
-        bannerEl.textContent = "Challenge Begins In";
-        setTime(START - now);
-        setMonthProgress(0);
-      } else if (now <= END) {
-        bannerEl.textContent = "Time Remaining in Challenge";
-        setTime(END - now);
-        setMonthProgress(clamp(((now - START) / (END - START)) * 100, 0, 100));
-      } else {
-        bannerEl.textContent = "Challenge Completed! 🎉";
-        setTime(0);
-        setMonthProgress(100, "Challenge is over!");
-      }
-    }
-
     updateCountdown();
     setInterval(updateCountdown, 1000);
   </script>
