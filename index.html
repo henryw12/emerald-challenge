@@ -289,16 +289,7 @@
     .champ-row { display: flex; align-items: center; justify-content: space-between; font-size: 0.9rem; font-weight: 700; color: #f1f5f9; }
     .champ-row img { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 1px solid var(--emerald); }
 
-    .daily-row-centered {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 0.4rem;
-      text-align: center;
-      padding: 1rem 0;
-      width: 100%;
-    }
+    .daily-row-centered { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.4rem; text-align: center; padding: 1rem 0; width: 100%; }
     .daily-date { font-size: 0.85rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
     .daily-stats { font-size: 1.25rem; font-weight: 900; color: #fff; display: flex; align-items: center; gap: 0.75rem; }
 
@@ -333,21 +324,26 @@
     .item-slot img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .match-roast { font-size: 0.92rem; line-height: 1.5; color: #cbd5e1; background: rgba(0, 0, 0, 0.25); border-radius: 10px; padding: 0.8rem 1rem; }
 
-    /* Leaderboard Tab Styles */
+    /* Leaderboard Tab Styles - Large Emblems & Clean Stat Rows */
     .leaderboard-list { display: flex; flex-direction: column; gap: 1.2rem; }
-    .player-row-card { background: rgba(13, 31, 26, 0.85); border: 1px solid var(--card-border); border-radius: 18px; padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
-    .player-row-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
-    .player-info-group { display: flex; align-items: center; gap: 1rem; }
-    .rank-badge-sm { width: 48px; height: 48px; object-fit: contain; }
-    .player-name-alias { font-size: 1.2rem; font-weight: 900; color: #fff; }
+    .player-row-card { background: rgba(13, 31, 26, 0.85); border: 1px solid var(--card-border); border-radius: 18px; padding: 1.25rem 1.75rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .player-info-group { display: flex; align-items: center; gap: 1.25rem; }
+    
+    /* BIGGER RANK EMBLEM STYLING */
+    .rank-badge-lg { width: 72px; height: 72px; object-fit: contain; filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.4)); }
+
+    .player-name-alias { font-size: 1.25rem; font-weight: 900; color: #fff; }
     .player-riot-id { font-size: 0.85rem; color: var(--muted); font-weight: 600; }
+    
+    .live-indicator {
+      display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; font-weight: 900; text-transform: uppercase; padding: 0.25rem 0.75rem; border-radius: 9999px; margin-left: 0.5rem;
+    }
+    .live-indicator.live { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #fca5a5; }
+    .live-indicator.offline { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: var(--muted); }
+
     .player-rank-stats { text-align: right; }
-    .tier-label { font-family: 'Cinzel', serif; font-size: 1.25rem; font-weight: 900; color: var(--gold); }
-    .lp-sub { font-size: 0.9rem; color: var(--subtext); font-weight: 800; }
-    .recent-matches-mini { display: flex; gap: 0.5rem; overflow-x: auto; padding-top: 0.5rem; border-top: 1px solid rgba(255,255,255,0.08); }
-    .mini-match-pill { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 0.4rem 0.8rem; font-size: 0.8rem; display: flex; align-items: center; gap: 0.5rem; border: 1px solid rgba(255,255,255,0.05); white-space: nowrap; }
-    .mini-match-pill.win { border-left: 3px solid var(--win); color: var(--win); }
-    .mini-match-pill.loss { border-left: 3px solid var(--loss); color: var(--loss); }
+    .tier-label { font-family: 'Cinzel', serif; font-size: 1.35rem; font-weight: 900; color: var(--gold); }
+    .lp-sub { font-size: 0.95rem; color: var(--subtext); font-weight: 800; }
 
     .sync-overlay {
       position: fixed; inset: 0; background: rgba(4, 9, 7, 0.85); backdrop-filter: blur(4px);
@@ -367,6 +363,8 @@
       .rank-showcase { grid-template-columns: 1fr; justify-items: center; text-align: center; }
       .emblem-wrapper { width: 100%; height: 240px; }
       .rank-text-block { justify-items: center; text-align: center; }
+      .player-row-card { flex-direction: column; align-items: flex-start; }
+      .player-rank-stats { text-align: left; width: 100%; padding-top: 0.5rem; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center; }
     }
   </style>
 </head>
@@ -374,7 +372,7 @@
 
   <div class="sync-overlay" id="sync-overlay">
     <div class="spinner"></div>
-    <span class="sync-text">Syncing Telemetry & Squad Leaderboard...</span>
+    <span class="sync-text">Syncing Squad Leaderboard...</span>
   </div>
 
   <div class="dashboard">
@@ -508,7 +506,7 @@
     <!-- TAB 2: SQUAD LEADERBOARD -->
     <div id="tab-leaderboard" class="tab-content">
       <section class="card">
-        <div class="card-title">6-Player Squad Leaderboard (Recent 3 Games)</div>
+        <div class="card-title">6-Player Squad Leaderboard</div>
         <div class="leaderboard-list" id="leaderboard-container">
           <span class="empty-note">Loading squad data...</span>
         </div>
@@ -630,7 +628,7 @@
           streakBanner.innerHTML = `⚡ 1 WIN STREAK`;
         } else {
           streakBanner.className = "streak-banner tilt-detector";
-          streakBanner.innerHTML = `⚠️ RECENT LOSS`;
+          streakBanner.innerHTML = `⚠️️ RECENT LOSS`;
         }
       }
 
@@ -719,32 +717,28 @@
         const tierLower = (p.tier || "gold").toLowerCase();
         const crestUrl = `${CREST_BASE}${tierLower}.png`;
         const winrate = (p.wins + p.losses) > 0 ? Math.round((p.wins / (p.wins + p.losses)) * 100) : 50;
-
-        const matchesHtml = p.matches && p.matches.length > 0 ? p.matches.map(m => `
-          <div class="mini-match-pill ${m.win ? 'win' : 'loss'}">
-            <img src="${CHAMP_IMG}/${encodeURIComponent(m.champion)}.png" style="width:22px; height:22px; border-radius:50%; object-fit:cover;" onerror="this.src='https://ddragon.leagueoflegends.com/cdn/${DDRAGON_VER}/img/profileicon/29.png'">
-            <span><b>${m.champion}</b> (${m.kills}/${m.deaths}/${m.assists})</span>
-            <span style="font-weight:800;">${m.win ? 'WIN' : 'LOSS'}</span>
-          </div>
-        `).join('') : '<span class="empty-note" style="padding:0.2rem 0;">No recent matches found</span>';
+        const isLive = p.liveGame && p.liveGame.inGame;
 
         return `
           <div class="player-row-card">
-            <div class="player-row-top">
-              <div class="player-info-group">
-                <span style="font-size:1.1rem; font-weight:900; color:var(--muted); width:20px;">#${idx + 1}</span>
-                <img class="rank-badge-sm" src="${crestUrl}" onerror="this.src='${CREST_BASE}gold.png'">
-                <div>
-                  <div class="player-name-alias">${p.alias} <span style="font-size:0.85rem; color:var(--muted); font-weight:600;">(${p.liveGame.inGame ? '🔴 IN GAME' : 'Offline'})</span></div>
-                  <div class="player-riot-id">${p.gameName}#${p.tagLine}</div>
+            <div class="player-info-group">
+              <span style="font-size:1.15rem; font-weight:900; color:var(--muted); width:24px;">#${idx + 1}</span>
+              <img class="rank-badge-lg" src="${crestUrl}" onerror="this.src='${CREST_BASE}gold.png'" alt="${p.tier}">
+              <div>
+                <div class="player-name-alias">
+                  ${p.alias} 
+                  <span class="live-indicator ${isLive ? 'live' : 'offline'}">
+                    <span style="width:6px; height:6px; border-radius:50%; background:currentColor; display:inline-block;"></span>
+                    ${isLive ? `Live (${p.liveGame.gameLengthMin}m)` : 'Offline'}
+                  </span>
                 </div>
-              </div>
-              <div class="player-rank-stats">
-                <div class="tier-label">${p.tier.toUpperCase()} ${p.division}</div>
-                <div class="lp-sub">${p.lp} LP &nbsp;|&nbsp; <span class="win-num">${p.wins}W</span> <span class="loss-num">${p.losses}L</span> (${winrate}%)</div>
+                <div class="player-riot-id">${p.gameName}#${p.tagLine}</div>
               </div>
             </div>
-            <div class="recent-matches-mini">${matchesHtml}</div>
+            <div class="player-rank-stats">
+              <div class="tier-label">${p.tier.toUpperCase()} ${p.division}</div>
+              <div class="lp-sub">${p.lp} LP &nbsp;|&nbsp; <span class="win-num">${p.wins}W</span> <span class="loss-num">${p.losses}L</span> (${winrate}%)</div>
+            </div>
           </div>
         `;
       }).join('');
@@ -773,7 +767,6 @@
     const END = new Date(2026, 9, 31, 23, 59, 59).getTime();
     const UNIT_MS = [86400000, 3600000, 60000, 1000];
     const timeEls = ["days", "hours", "minutes", "seconds"].map($);
-    const bannerEl = $("status-banner");
     const monthFill = $("month-fill");
     const monthText = $("month-text");
 
