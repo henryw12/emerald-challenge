@@ -346,20 +346,21 @@
       text-decoration: none;
     }
 
+    /* Larger Sam challenge emblem */
     .rank-showcase {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 30px;
-      min-height: 280px;
-      padding: 25px 0;
+      gap: 35px;
+      min-height: 390px;
+      padding: 30px 0;
     }
 
     .emblem-wrapper {
       display: grid;
       flex-shrink: 0;
-      width: 230px;
-      height: 230px;
+      width: 340px;
+      height: 340px;
       place-items: center;
       overflow: hidden;
     }
@@ -368,14 +369,14 @@
       width: 100%;
       height: 100%;
       object-fit: contain;
-      transform: scale(2.15);
-      filter: drop-shadow(0 0 20px #10b98135);
+      transform: scale(2.8);
+      filter: drop-shadow(0 0 25px #10b98145);
     }
 
     .emblem-fallback {
       display: none;
       color: var(--muted);
-      font-size: 50px;
+      font-size: 70px;
     }
 
     .is-fallback #rank-emblem {
@@ -612,15 +613,15 @@
     .leaderboard-list {
       display: flex;
       flex-direction: column;
-      gap: 13px;
+      gap: 16px;
     }
 
     .player-row-card {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 18px;
-      padding: 17px;
+      gap: 24px;
+      padding: 24px;
       border: 1px solid #ffffff12;
       border-radius: 16px;
       background: #0002;
@@ -629,32 +630,45 @@
     .player-info-group {
       display: flex;
       align-items: center;
-      gap: 13px;
+      gap: 20px;
       min-width: 0;
     }
 
     .placement {
       color: var(--muted);
-      font-size: 17px;
+      font-size: 20px;
       font-weight: 800;
-    }
-
-    .rank-badge {
-      width: 68px;
-      height: 68px;
-      object-fit: contain;
       flex-shrink: 0;
     }
 
+    /* Larger leaderboard emblems, with reserved layout space */
+    .rank-badge-wrap {
+      display: grid;
+      width: 160px;
+      height: 150px;
+      flex-shrink: 0;
+      place-items: center;
+      overflow: hidden;
+    }
+
+    .rank-badge {
+      display: block;
+      width: 130px;
+      height: 130px;
+      object-fit: contain;
+      transform: scale(1.6);
+      filter: drop-shadow(0 0 12px #10b98125);
+    }
+
     .player-alias {
-      font-size: 17px;
+      font-size: 19px;
       font-weight: 800;
     }
 
     .player-riot-id {
-      margin-top: 4px;
+      margin-top: 5px;
       color: var(--muted);
-      font-size: 11px;
+      font-size: 12px;
       overflow-wrap: anywhere;
     }
 
@@ -664,14 +678,14 @@
     }
 
     .tier-label {
-      font-size: 15px;
+      font-size: 17px;
       font-weight: 800;
     }
 
     .lp-sub {
-      margin-top: 7px;
+      margin-top: 8px;
       color: var(--muted);
-      font-size: 11px;
+      font-size: 12px;
     }
 
     .refresh-wrap {
@@ -692,6 +706,17 @@
     .refresh-btn:disabled {
       cursor: wait;
       opacity: 0.5;
+    }
+
+    @media (max-width: 800px) {
+      .player-row-card {
+        flex-wrap: wrap;
+      }
+
+      .player-rank-stats {
+        width: 100%;
+        text-align: left;
+      }
     }
 
     @media (max-width: 650px) {
@@ -718,8 +743,15 @@
 
       .rank-showcase {
         flex-direction: column;
-        gap: 5px;
+        gap: 10px;
         text-align: center;
+        min-height: auto;
+      }
+
+      .emblem-wrapper {
+        width: min(280px, 100%);
+        height: 280px;
+        flex-shrink: 1;
       }
 
       .analytics-grid {
@@ -727,18 +759,36 @@
       }
 
       .player-row-card {
-        flex-wrap: wrap;
+        padding: 18px;
+        gap: 14px;
       }
 
-      .player-rank-stats {
+      .player-info-group {
         width: 100%;
-        padding-left: 35px;
-        text-align: left;
+        gap: 12px;
+      }
+
+      .rank-badge-wrap {
+        width: 110px;
+        height: 120px;
       }
 
       .rank-badge {
-        width: 55px;
-        height: 55px;
+        width: 100px;
+        height: 100px;
+        transform: scale(1.6);
+      }
+
+      .placement {
+        font-size: 16px;
+      }
+
+      .player-alias {
+        font-size: 17px;
+      }
+
+      .player-riot-id {
+        font-size: 10px;
       }
     }
   </style>
@@ -866,14 +916,18 @@
 
         <div class="analytics-grid">
           <div class="analytics-box">
-            <div class="analytics-title">🔥 Top Champions · Recent 5</div>
+            <div class="analytics-title">
+              🔥 Top Champions · Recent 5
+            </div>
             <div id="top-champs-list">
               <span class="empty-note">Loading champions…</span>
             </div>
           </div>
 
           <div class="analytics-box">
-            <div class="analytics-title">📅 Estimated LP · Recent 5</div>
+            <div class="analytics-title">
+              📅 Estimated LP · Recent 5
+            </div>
             <div id="daily-lp-list">
               <span class="empty-note">Loading match log…</span>
             </div>
@@ -903,6 +957,7 @@
     <div id="tab-leaderboard" class="tab-content">
       <section class="card">
         <h2 class="card-title">Squad Leaderboard</h2>
+
         <p id="leaderboard-notice" class="notice" role="status"></p>
 
         <div id="leaderboard-container" class="leaderboard-list">
@@ -912,7 +967,11 @@
     </div>
 
     <div class="refresh-wrap">
-      <button id="refresh-btn" class="refresh-btn" onclick="loadAllData()">
+      <button
+        id="refresh-btn"
+        class="refresh-btn"
+        onclick="loadAllData()"
+      >
         Refresh Data
       </button>
     </div>
@@ -934,7 +993,10 @@
       "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-";
 
     const $ = id => document.getElementById(id);
-    const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+    const sleep = ms =>
+      new Promise(resolve => setTimeout(resolve, ms));
+
     const clamp = (value, min, max) =>
       Math.min(max, Math.max(min, value));
 
@@ -983,6 +1045,7 @@
       });
 
       $("tab-sam").classList.toggle("active", name === "sam");
+
       $("tab-leaderboard").classList.toggle(
         "active",
         name === "leaderboard"
@@ -1006,7 +1069,10 @@
 
       $("tier-groups").innerHTML =
         LADDER_TIERS.map(([tier, count]) => `
-          <span data-tier="${tier}" style="grid-column:span ${count}">
+          <span
+            data-tier="${tier}"
+            style="grid-column:span ${count}"
+          >
             ${tier.charAt(0).toUpperCase() + tier.slice(1)}
           </span>
         `).join("");
@@ -1071,14 +1137,18 @@
         });
 
         if (response.status === 429 && attempt < 2) {
-          const raw = Number(response.headers.get("Retry-After"));
+          const raw = Number(
+            response.headers.get("Retry-After")
+          );
 
           const seconds = Number.isFinite(raw) && raw > 0
             ? Math.ceil(raw)
             : 120;
 
           await response.text();
+
           onWait(`Riot cooldown: retrying in ${seconds}s…`);
+
           await sleep((seconds + 1) * 1000);
           continue;
         }
@@ -1108,28 +1178,35 @@
           const wins = Number(player.wins) || 0;
           const losses = Number(player.losses) || 0;
           const total = wins + losses;
+
           const winrate = total
             ? Math.round(wins / total * 100)
             : 0;
 
           const badge = TIERS.includes(tier)
             ? `
-              <img
-                class="rank-badge"
-                src="${CREST_BASE}${tier}.png"
-                alt="${esc(player.tier)}"
-                onerror="this.style.visibility='hidden'"
-              >
+              <div class="rank-badge-wrap">
+                <img
+                  class="rank-badge"
+                  src="${CREST_BASE}${tier}.png"
+                  alt="${esc(player.tier)}"
+                  onerror="this.style.visibility='hidden'"
+                >
+              </div>
             `
-            : '<span class="rank-badge"></span>';
+            : '<div class="rank-badge-wrap">—</div>';
 
           return `
             <div class="player-row-card">
               <div class="player-info-group">
                 <span class="placement">#${index + 1}</span>
+
                 ${badge}
+
                 <div>
-                  <div class="player-alias">${esc(player.alias)}</div>
+                  <div class="player-alias">
+                    ${esc(player.alias)}
+                  </div>
                   <div class="player-riot-id">
                     ${esc(player.gameName)}#${esc(player.tagLine)}
                   </div>
@@ -1224,6 +1301,7 @@
                 >
                 <span>${esc(champion.name)}</span>
               </div>
+
               <div>
                 ${Number(champion.games)} games ·
                 <span class="${
@@ -1405,7 +1483,8 @@
         $("stat-today").textContent =
           values.filter(game => game.date === today).length;
 
-        $("stat-oct").title = "Total ranked Solo/Duo games";
+        $("stat-oct").title =
+          "Total ranked Solo/Duo games";
 
         $("stat-hours").title =
           "Total match time; excludes queue time";
@@ -1432,7 +1511,6 @@
       $("refresh-btn").disabled = true;
 
       try {
-        // Avoid overlapping commentary jobs across refreshes.
         await coachingTask;
 
         notice("leaderboard", "Loading ranks…");
@@ -1472,14 +1550,19 @@
 
           updateSamUI(data.samView);
 
-          notice("sam", (data.warnings || []).join(" • "));
+          notice(
+            "sam",
+            (data.warnings || []).join(" • ")
+          );
 
-          // AI runs separately. Totals do not wait for it.
           coachingTask = loadCoaching(
             data.samView.matches || []
           );
         } catch (error) {
-          notice("sam", `Unable to load Sam: ${error.message}`);
+          notice(
+            "sam",
+            `Unable to load Sam: ${error.message}`
+          );
 
           $("macro-analysis-text").textContent =
             "Sam's data is unavailable.";
