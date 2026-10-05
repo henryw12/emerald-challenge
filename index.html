@@ -237,12 +237,14 @@
     }
 
     .step.passed .node { color: var(--glow); border-color: #059669; }
+
     .step.active .node {
       color: #03110c;
       border-color: var(--glow);
       background: var(--glow);
       box-shadow: 0 0 20px #34d39960;
     }
+
     .step.goal .node { border-color: #fbbf24; }
 
     .step-sub {
@@ -700,7 +702,6 @@
             <div class="analytics-title">🔥 Top Champions · Recent 5</div>
             <div id="top-champs-list"><span class="empty-note">Loading champions…</span></div>
           </div>
-
           <div class="analytics-box">
             <div class="analytics-title">📅 Estimated LP · Recent 5</div>
             <div id="daily-lp-list"><span class="empty-note">Loading match log…</span></div>
@@ -765,6 +766,8 @@
 
     let loading = false;
     let historyRunning = false;
+    let recentMatches = [];
+    let samLoaded = false;
 
     function switchTab(name) {
       document.querySelectorAll(".tab-btn").forEach((button, index) => {
@@ -832,8 +835,6 @@
       image.src = `${CREST_BASE}${tier}.png`;
     }
 
-    // All data requests use this function.
-    // It retries temporary network failures and Riot cooldowns.
     async function api(view, params = {}, onWait = () => {}) {
       const url = new URL(WORKER_URL);
       url.searchParams.set("view", view);
@@ -842,9 +843,7 @@
         url.searchParams.set(key, value);
       });
 
-      const maxAttempts = 4;
-
-      for (let attempt = 0; attempt < maxAttempts; attempt++) {
+      for (let attempt = 0; attempt < 4; attempt++) {
         let response;
 
         try {
@@ -854,12 +853,8 @@
             signal: AbortSignal.timeout(90000)
           });
         } catch (error) {
-          if (attempt === maxAttempts - 1) {
-            throw new Error(
-              error.name === "TimeoutError"
-                ? "The history request timed out."
-                : `Network request failed: ${error.message}`
-            );
+          if (attempt === 3) {
+            throw new Error(`Network request failed: ${error.message}`);
           }
 
           onWait("Connection interrupted. Retrying…");
@@ -873,7 +868,7 @@
         try {
           data = JSON.parse(body);
         } catch {
-          if (response.status >= 500 && attempt < maxAttempts - 1) {
+          if (response.status >= 500 && attempt < 3) {
             onWait("Worker temporarily unavailable. Retrying…");
             await sleep(3000 * (attempt + 1));
             continue;
@@ -882,7 +877,7 @@
           throw new Error(`Worker returned a non-JSON response (${response.status}).`);
         }
 
-        if (response.status === 429 && attempt < maxAttempts - 1) {
+        if (response.status === 429 && attempt < 3) {
           const raw = Number(response.headers.get("Retry-After"));
           const seconds = Number.isFinite(raw) && raw > 0
             ? Math.ceil(raw)
@@ -893,7 +888,7 @@
           continue;
         }
 
-        if (response.status >= 500 && attempt < maxAttempts - 1) {
+        if (response.status >= 500 && attempt < 3) {
           onWait("Worker request failed temporarily. Retrying…");
           await sleep(3000 * (attempt + 1));
           continue;
@@ -1143,14 +1138,22 @@
       $("stat-today").textContent = "Counting…";
 
       const games = new Map();
-      const endTime = Math.floor(Date.now() / 1000);
       let start = 0;
+      let endTime = null;
 
       try {
         while (true) {
+          const params = { start };
+
+          // First request omits endTime.
+          // Later requests reuse Cloudflare's returned cutoff.
+          if (endTime !== null) {
+            params.endTime = endTime;
+          }
+
           const data = await api(
             "history",
-            { start, endTime },
+            params,
             message => {
               $("stat-oct").textContent = "Waiting…";
               $("stat-hours").textContent = "Waiting…";
@@ -1160,6 +1163,18 @@
 
           if (!Array.isArray(data.games)) {
             throw new Error("History endpoint returned no games array.");
+          }
+
+          const returnedEndTime = Number(data.endTime);
+
+          if (!Number.isSafeInteger(returnedEndTime)) {
+            throw new Error("History endpoint returned an invalid cutoff.");
+          }
+
+          if (endTime === null) {
+            endTime = returnedEndTime;
+          } else if (endTime !== returnedEndTime) {
+            throw new Error("History cutoff changed during pagination.");
           }
 
           for (const game of data.games) {
@@ -1203,9 +1218,11 @@
           0
         );
 
-        const today = new Date().toLocaleDateString("en-CA", {
-          timeZone: "America/New_York"
-        });
+        // Use the server's snapshot date for Games Today too.
+        const today = new Date(endTime * 1000).toLocaleDateString(
+          "en-CA",
+          { timeZone: "America/New_York" }
+        );
 
         $("stat-oct").textContent = games.size;
 
@@ -1254,9 +1271,8 @@
 
       loading = true;
       $("refresh-btn").disabled = true;
-
-      let recentMatches = [];
-      let samLoaded = false;
+      recentMatches = [];
+      samLoaded = false;
 
       try {
         notice("leaderboard", "Loading ranks…");
@@ -1295,7 +1311,6 @@
           }
 
           updateSamUI(data.samView);
-
           recentMatches = data.samView.matches || [];
           samLoaded = true;
 
@@ -1313,23 +1328,12 @@
             "Sam's data is unavailable.";
         }
 
-        // Complete history collection before making AI requests.
-        const historyLoaded = await loadHistoryTotals();
+        // History and AI requests do not overlap.
+        await loadHistoryTotals();
 
-        if (samLoaded && historyLoaded) {
+        // A history failure does not disable AI.
+        if (samLoaded) {
           await loadCoaching(recentMatches);
-        } else if (samLoaded) {
-          $("macro-analysis-text").textContent =
-            "AI commentary paused while history totals are unavailable.";
-
-          recentMatches.forEach((match, index) => {
-            const element = $(`roast-${index}`);
-
-            if (element) {
-              element.textContent =
-                "AI commentary paused while history totals are unavailable.";
-            }
-          });
         }
       } finally {
         loading = false;
